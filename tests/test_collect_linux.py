@@ -37,6 +37,7 @@ def test_record_then_replay_round_trip(tmp_path):
     second = linux.collect(ReplayRunner(tmp_path))
     assert first.facts == second.facts
     assert json.loads((tmp_path / "_meta.json").read_text())["auditctl"]["exit_code"] == 1
+    assert b"\r\n" not in (tmp_path / "_meta.json").read_bytes()
 
 
 class FakeRunner:

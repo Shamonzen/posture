@@ -1,3 +1,4 @@
+import hashlib
 import operator
 import re
 from collections.abc import Callable
@@ -109,6 +110,12 @@ def evaluate(check: Check, snapshot: Snapshot) -> Finding:
             status = Status.SKIP
     except FactError as exc:
         status, message, evidence = Status.ERROR, str(exc), []
+    # The resource is who offends (for_each keys), never an observed value such as a package
+    # count, so a baseline entry survives that number moving.
+    resource = sorted(map(str, evidence)) if isinstance(check.check, ForEach) else []
+    fingerprint = hashlib.sha256(
+        "\0".join([check.id, snapshot.target, *resource]).encode()
+    ).hexdigest()
     if len(evidence) > EVIDENCE_CAP:
         message = f"{len(evidence) - EVIDENCE_CAP} more not shown"
         evidence = evidence[:EVIDENCE_CAP]
@@ -126,6 +133,7 @@ def evaluate(check: Check, snapshot: Snapshot) -> Finding:
         references=check.references,
         evidence=evidence,
         message=message,
+        fingerprint=fingerprint,
     )
 
 

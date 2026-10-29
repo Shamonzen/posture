@@ -3,7 +3,7 @@ from datetime import datetime
 from enum import StrEnum
 from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Discriminator, Field, Tag, model_validator
+from pydantic import BaseModel, ConfigDict, Discriminator, Field, PrivateAttr, Tag, model_validator
 
 
 class Strict(BaseModel):
@@ -136,6 +136,7 @@ class Check(Strict):
     check: Condition
     remediation: Remediation
     references: list[str] = []
+    _source: tuple[str, int] = PrivateAttr(default=("checks", 1))  # (yaml file, line), for SARIF
 
     @model_validator(mode="after")
     def _source_given(self) -> "Check":
@@ -174,3 +175,13 @@ class Finding(Strict):
     references: list[str]
     evidence: list[Any] = []
     message: str | None = None
+    fingerprint: str  # sha256(check_id, target, resource): stable across runs, for baselines
+
+
+class Report(Strict):
+    """The JSON report, which is also the baseline format."""
+
+    schema_version: Literal[1] = 1
+    tool_version: str
+    snapshot: Snapshot  # facts dropped: the snapshot file is the evidence, not the report
+    findings: list[Finding]

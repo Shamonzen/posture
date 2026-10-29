@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; style-src &#39;sha256-KUwlgByUQdyMlLQWeH2o9y/XgHGrO3vz/oKpOSC38lc=&#39;">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Posture report: posture-ubuntu</title>
+<style>:root {
+  --bg: #fafafa; --fg: #1d1f21; --muted: #5f6368; --card: #fff; --line: #dadce0;
+  --critical: #a50e0e; --high: #d93025; --medium: #e37400; --low: #1a73e8;
+  --pass: #188038; --skip: #5f6368;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #18191b; --fg: #e8eaed; --muted: #9aa0a6; --card: #222326; --line: #3c4043;
+    --critical: #f28b82; --high: #f6aea9; --medium: #fdd663; --low: #8ab4f8;
+    --pass: #81c995; --skip: #9aa0a6;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 system-ui, sans-serif; }
+header, main, footer { max-width: 960px; margin: 0 auto; padding: 16px; }
+h1 { font-size: 1.5rem; margin: 0 0 4px; overflow-wrap: anywhere; }
+h2 { font-size: 1.15rem; border-bottom: 2px solid currentColor; padding-bottom: 4px; }
+h3 { font-size: .95rem; margin: 12px 0 4px; }
+.meta, footer, .message { color: var(--muted); }
+.counts { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+.counts li { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; }
+.counts b { font-size: 1.2rem; }
+.sev-critical { color: var(--critical); } .sev-high { color: var(--high); }
+.sev-medium { color: var(--medium); } .sev-low { color: var(--low); }
+.finding { background: var(--card); border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; padding: 8px 12px; }
+.finding[open] summary { margin-bottom: 8px; }
+summary { cursor: pointer; overflow-wrap: anywhere; }
+.status { display: inline-block; min-width: 3.5em; font-weight: 600; text-transform: uppercase; font-size: .8rem; }
+.status.fail { color: var(--high); } .status.error { color: var(--medium); }
+.status.pass { color: var(--pass); } .status.skip { color: var(--skip); }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; margin: 8px 0; }
+dt { font-weight: 600; } dd { margin: 0; grid-column: 2; }
+pre { background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px; overflow-x: auto; font-size: .85rem; }
+code { font-size: .9em; }
+a { color: var(--low); overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Posture report: posture-ubuntu</h1>
+  <p class="meta">linux · collected 2026-10-29 14:09 UTC
+ as posture · posture 0.1.0</p>
+  <ul class="counts">
+    <li class="fail"><b>0</b> fail</li>
+    <li class="error"><b>0</b> error</li>
+    <li class="pass"><b>25</b> pass</li>
+    <li class="skip"><b>1</b> skip</li>
+  </ul>
+</header>
+<main>
+<section>
+  <details>
+    <summary>Passed and skipped (26)</summary>
+    <ul>
+      <li><span class="status pass">pass</span> <code>LNX-ACC-001</code> root is the only account with UID 0</li>
+      <li><span class="status pass">pass</span> <code>LNX-ACC-002</code> No account has an empty password</li>
+      <li><span class="status pass">pass</span> <code>LNX-SUDO-001</code> No sudo rule grants every command without a password</li>
+      <li><span class="status pass">pass</span> <code>LNX-SUDO-002</code> sudo runs commands in a pseudo-terminal</li>
+      <li><span class="status pass">pass</span> <code>LNX-SUDO-003</code> sudo keeps its own log file</li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-001</code> /etc/shadow is owned by root and not readable by everyone</li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-002</code> /etc/passwd and /etc/group can only be changed by root</li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-003</code> sshd_config is owned by root and private</li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-004</code> No world-writable files outside temporary directories</li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-005</code> Only expected programs are setuid</li>
+      <li><span class="status pass">pass</span> <code>LNX-FW-001</code> ufw is active and denies incoming traffic by default</li>
+      <li><span class="status skip">skip</span> <code>LNX-FW-002</code> firewalld is running and its zone doesn&#39;t accept everything</li>
+      <li><span class="status pass">pass</span> <code>LNX-LOG-001</code> auditd is enabled and running</li>
+      <li><span class="status pass">pass</span> <code>LNX-LOG-002</code> Changes to accounts and sudo rules are audited</li>
+      <li><span class="status pass">pass</span> <code>LNX-LOG-003</code> journald keeps logs across reboots</li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-001</code> SSH root login is disabled</li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-002</code> SSH refuses empty passwords</li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-003</code> SSH password authentication is disabled</li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-004</code> SSH allows at most 4 authentication attempts per connection</li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-005</code> SSH offers no weak ciphers</li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-006</code> SSH offers no weak MACs</li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-007</code> SSH offers no weak key exchange algorithms</li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-008</code> SSH forwarding (X11, agent, TCP) is disabled</li>
+      <li><span class="status pass">pass</span> <code>LNX-UPD-001</code> No security updates are waiting to be installed</li>
+      <li><span class="status pass">pass</span> <code>LNX-UPD-002</code> Package metadata was refreshed in the last 7 days</li>
+      <li><span class="status pass">pass</span> <code>LNX-UPD-003</code> Security updates are installed automatically</li>
+    </ul>
+  </details>
+</section>
+</main>
+<footer>Read-only audit: remediation is printed here, never run by Posture. Review a script before running it.</footer>
+</body>
+</html>

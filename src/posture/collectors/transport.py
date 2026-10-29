@@ -107,4 +107,4 @@ def write_recording(directory: Path, results: dict[str, Result]) -> None:
             meta[name] = {"exit_code": result.exit_code, "stderr": result.stderr}
     if meta:
         text = json.dumps(meta, indent=2, sort_keys=True) + "\n"
-        (directory / META_FILE).write_text(text, encoding="utf-8")
+        (directory / META_FILE).write_text(text, encoding="utf-8", newline="")

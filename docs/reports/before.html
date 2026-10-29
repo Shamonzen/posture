@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; style-src &#39;sha256-KUwlgByUQdyMlLQWeH2o9y/XgHGrO3vz/oKpOSC38lc=&#39;">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Posture report: posture-ubuntu</title>
+<style>:root {
+  --bg: #fafafa; --fg: #1d1f21; --muted: #5f6368; --card: #fff; --line: #dadce0;
+  --critical: #a50e0e; --high: #d93025; --medium: #e37400; --low: #1a73e8;
+  --pass: #188038; --skip: #5f6368;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #18191b; --fg: #e8eaed; --muted: #9aa0a6; --card: #222326; --line: #3c4043;
+    --critical: #f28b82; --high: #f6aea9; --medium: #fdd663; --low: #8ab4f8;
+    --pass: #81c995; --skip: #9aa0a6;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 system-ui, sans-serif; }
+header, main, footer { max-width: 960px; margin: 0 auto; padding: 16px; }
+h1 { font-size: 1.5rem; margin: 0 0 4px; overflow-wrap: anywhere; }
+h2 { font-size: 1.15rem; border-bottom: 2px solid currentColor; padding-bottom: 4px; }
+h3 { font-size: .95rem; margin: 12px 0 4px; }
+.meta, footer, .message { color: var(--muted); }
+.counts { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+.counts li { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; }
+.counts b { font-size: 1.2rem; }
+.sev-critical { color: var(--critical); } .sev-high { color: var(--high); }
+.sev-medium { color: var(--medium); } .sev-low { color: var(--low); }
+.finding { background: var(--card); border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; padding: 8px 12px; }
+.finding[open] summary { margin-bottom: 8px; }
+summary { cursor: pointer; overflow-wrap: anywhere; }
+.status { display: inline-block; min-width: 3.5em; font-weight: 600; text-transform: uppercase; font-size: .8rem; }
+.status.fail { color: var(--high); } .status.error { color: var(--medium); }
+.status.pass { color: var(--pass); } .status.skip { color: var(--skip); }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; margin: 8px 0; }
+dt { font-weight: 600; } dd { margin: 0; grid-column: 2; }
+pre { background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px; overflow-x: auto; font-size: .85rem; }
+code { font-size: .9em; }
+a { color: var(--low); overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Posture report: posture-ubuntu</h1>
+  <p class="meta">linux · collected 2026-10-29 14:09 UTC
+ as posture · posture 0.1.0</p>
+  <ul class="counts">
+    <li class="fail"><b>25</b> fail</li>
+    <li class="error"><b>0</b> error</li>
+    <li class="pass"><b>0</b> pass</li>
+    <li class="skip"><b>1</b> skip</li>
+  </ul>
+</header>
+<main>
+<section>
+  <h2 class="sev-critical">Critical (3)</h2>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-ACC-001</code> root is the only account with UID 0</summary>
+    <p>Any account with UID 0 is root under another name: a classic backdoor that survives a root password change and hides in the user list.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.4.2.1</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.4.2.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1136/001/">T1136.001</a> <a href="https://attack.mitre.org/techniques/T1078/003/">T1078.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>toor
+</pre>
+    <h3>Remediation</h3>
+    <p>Find out who created each account listed, then lock and remove it (`sudo userdel &lt;name&gt;`).</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-ACC-002</code> No account has an empty password</summary>
+    <p>An empty password field means anyone can log in as that account (locally, and over SSH if PermitEmptyPasswords is on) or `su` to it without knowing anything.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 7.2.2</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 7.2.2</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/003/">T1078.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>guest
+</pre>
+    <h3>Remediation</h3>
+    <p>Lock each listed account (`sudo passwd -l &lt;name&gt;`), then set a password if it is needed.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-002</code> /etc/passwd and /etc/group can only be changed by root</summary>
+    <p>Whoever can write /etc/passwd or /etc/group can create a UID 0 account or join the sudo group: instant root. (CIS 7.1.3 covers /etc/group.)</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 7.1.1</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 7.1.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1136/001/">T1136.001</a> <a href="https://attack.mitre.org/techniques/T1098/">T1098</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;files./etc/passwd.owner&#34;,
+  &#34;value&#34;: &#34;root&#34;
+}
+{
+  &#34;fact&#34;: &#34;files./etc/passwd.world_writable&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;files./etc/passwd.group_writable&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;files./etc/group.owner&#34;,
+  &#34;value&#34;: &#34;root&#34;
+}
+{
+  &#34;fact&#34;: &#34;files./etc/group.world_writable&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;files./etc/group.group_writable&#34;,
+  &#34;value&#34;: true
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set both files to `root:root 644`.</p>
+<pre>sudo chown root:root /etc/passwd /etc/group &amp;&amp; sudo chmod 644 /etc/passwd /etc/group
+</pre>  </details>
+</section>
+<section>
+  <h2 class="sev-high">High (6)</h2>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SUDO-001</code> No sudo rule grants every command without a password</summary>
+    <p>`NOPASSWD: ALL` makes root one command away for anyone who gets that user&#39;s session (a stolen SSH key, a hijacked process), with no password standing in the way.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.2.4</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.2.4</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1548/003/">T1548.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>alice
+vagrant
+vagrant
+</pre>
+    <h3>Remediation</h3>
+    <p>Remove NOPASSWD from the listed rules, or limit them to the exact commands needed (as deploy/sudoers.posture does). Edit with `sudo visudo -f &lt;file&gt;`.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-001</code> /etc/shadow is owned by root and not readable by everyone</summary>
+    <p>/etc/shadow holds every password hash. If any user can read it, offline cracking needs nothing more than a copy of the file.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 7.1.5</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 7.1.5</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1003/008/">T1003.008</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;files./etc/shadow.owner&#34;,
+  &#34;value&#34;: &#34;root&#34;
+}
+{
+  &#34;fact&#34;: &#34;files./etc/shadow.world_readable&#34;,
+  &#34;value&#34;: true
+}
+{
+  &#34;fact&#34;: &#34;files./etc/shadow.world_writable&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;files./etc/shadow.group_writable&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Restore owner and mode (Ubuntu `root:shadow 640`, Rocky `root:root 000`).</p>
+<pre>sudo chown root /etc/shadow &amp;&amp; sudo chmod o-rwx,g-wx /etc/shadow
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FW-001</code> ufw is active and denies incoming traffic by default</summary>
+    <p>With no host firewall, every service that listens on the network (a debug port, a database bound to 0.0.0.0) is reachable by anyone who can route to the host. CIS 4.2.7 covers the default deny policy.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 4.2.3</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1190/">T1190</a> <a href="https://attack.mitre.org/techniques/T1021/">T1021</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ufw.active&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;ufw.default_incoming&#34;,
+  &#34;value&#34;: null
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Allow SSH first so you don&#39;t lock yourself out, then enable ufw with a default deny.</p>
+<pre>sudo ufw allow OpenSSH
+sudo ufw default deny incoming
+sudo ufw --force enable
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-001</code> SSH root login is disabled</summary>
+    <p>root exists on every Linux host, so it is the first account password guessers try, and logging in as root directly leaves no trail of which person used it. Admins should log in as themselves and escalate with sudo.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.20</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.20</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1110/001/">T1110.001</a> <a href="https://attack.mitre.org/techniques/T1078/003/">T1078.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.permitrootlogin&#34;,
+  &#34;value&#34;: &#34;yes&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set `PermitRootLogin no` and reload sshd.</p>
+<pre>echo &#39;PermitRootLogin no&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-002</code> SSH refuses empty passwords</summary>
+    <p>With PermitEmptyPasswords on, any account whose password is empty can be logged into over the network with no secret at all.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.19</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.19</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/003/">T1078.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.permitemptypasswords&#34;,
+  &#34;value&#34;: &#34;yes&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set `PermitEmptyPasswords no` and reload sshd.</p>
+<pre>echo &#39;PermitEmptyPasswords no&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-UPD-001</code> No security updates are waiting to be installed</summary>
+    <p>A published security fix is also a published description of the bug: exploits for unpatched local privilege escalation and network services follow within days.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 1.2.2.1</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 1.2.2.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1068/">T1068</a> <a href="https://attack.mitre.org/techniques/T1190/">T1190</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;updates.pending_security&#34;,
+  &#34;value&#34;: 165
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Install the pending updates and reboot if the kernel or libc changed.</p>
+<pre>if command -v apt-get &gt;/dev/null; then sudo apt-get update &amp;&amp; sudo apt-get -y upgrade; else sudo dnf -y upgrade --security; fi
+</pre>  </details>
+</section>
+<section>
+  <h2 class="sev-medium">Medium (11)</h2>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-003</code> sshd_config is owned by root and private</summary>
+    <p>Whoever can write sshd_config can enable root login or point AuthorizedKeysFile at a file they control; reading it maps the SSH attack surface. CIS asks for mode 600.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.1</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1556/">T1556</a> <a href="https://attack.mitre.org/techniques/T1098/004/">T1098.004</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;files./etc/ssh/sshd_config.owner&#34;,
+  &#34;value&#34;: &#34;root&#34;
+}
+{
+  &#34;fact&#34;: &#34;files./etc/ssh/sshd_config.world_readable&#34;,
+  &#34;value&#34;: true
+}
+{
+  &#34;fact&#34;: &#34;files./etc/ssh/sshd_config.world_writable&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;files./etc/ssh/sshd_config.group_writable&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set it to `root:root 600`.</p>
+<pre>sudo chown root:root /etc/ssh/sshd_config &amp;&amp; sudo chmod 600 /etc/ssh/sshd_config
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-004</code> No world-writable files outside temporary directories</summary>
+    <p>A world-writable script or binary runs whatever any local user puts in it, as whoever runs it next: often root, from cron or a service. (/tmp, /var/tmp and /dev/shm are not counted.)</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 7.1.11</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 7.1.11</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1053/003/">T1053.003</a> <a href="https://attack.mitre.org/techniques/T1574/">T1574</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;special_files.world_writable&#34;,
+  &#34;value&#34;: [
+    &#34;/etc/cron.daily/posture-lab-backup&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Remove write for others on each file listed (`sudo chmod o-w &lt;file&gt;`) after checking who needs it.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-005</code> Only expected programs are setuid</summary>
+    <p>A setuid program runs as its owner (usually root) whoever starts it. Programs like find, vim or python made setuid are a one-line path to root (see GTFOBins). This allowlist holds the setuid programs Ubuntu 24.04 and Rocky 9 ship; anything else needs a reason.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 7.1.13</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 7.1.13</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1548/001/">T1548.001</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;special_files.setuid&#34;,
+  &#34;value&#34;: [
+    &#34;/opt/VBoxGuestAdditions-7.2.4/bin/VBoxDRMClient&#34;,
+    &#34;/usr/bin/find&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Remove the setuid bit from each program listed (`sudo chmod u-s &lt;file&gt;`), or add it to the allowlist with a reason.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-LOG-001</code> auditd is enabled and running</summary>
+    <p>auditd records who changed what at the kernel level (file writes, privilege use). With it stopped, an intruder doesn&#39;t need to tamper with the audit system: there is none.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 6.2.1.2</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 6.3.1.4</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1562/012/">T1562.012</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;units.auditd_service.active&#34;,
+  &#34;value&#34;: &#34;inactive&#34;
+}
+{
+  &#34;fact&#34;: &#34;units.auditd_service.enabled&#34;,
+  &#34;value&#34;: &#34;&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Install and enable auditd.</p>
+<pre>if command -v apt-get &gt;/dev/null; then sudo apt-get install -y auditd; else sudo dnf install -y audit; fi
+sudo systemctl enable --now auditd
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-LOG-002</code> Changes to accounts and sudo rules are audited</summary>
+    <p>Adding a user, changing a group or granting sudo are the usual first steps of persistence. Watching these files records when it happened and which process did it. (CIS 6.2.3.1 / 6.3.3.1 cover sudoers.)</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 6.2.3.8</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 6.3.3.8</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1136/001/">T1136.001</a> <a href="https://attack.mitre.org/techniques/T1098/">T1098</a> <a href="https://attack.mitre.org/techniques/T1548/003/">T1548.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;audit.rules&#34;,
+  &#34;value&#34;: []
+}
+{
+  &#34;fact&#34;: &#34;audit.rules&#34;,
+  &#34;value&#34;: []
+}
+{
+  &#34;fact&#34;: &#34;audit.rules&#34;,
+  &#34;value&#34;: []
+}
+{
+  &#34;fact&#34;: &#34;audit.rules&#34;,
+  &#34;value&#34;: []
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Add watch rules for the identity files and sudoers, then load them.</p>
+<pre>printf &#39;%s\n&#39; &#39;-w /etc/passwd -p wa -k identity&#39; &#39;-w /etc/shadow -p wa -k identity&#39; \
+  &#39;-w /etc/group -p wa -k identity&#39; &#39;-w /etc/gshadow -p wa -k identity&#39; \
+  &#39;-w /etc/sudoers -p wa -k scope&#39; &#39;-w /etc/sudoers.d -p wa -k scope&#39; \
+  | sudo tee /etc/audit/rules.d/50-posture.rules
+sudo augenrules --load
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-003</code> SSH password authentication is disabled</summary>
+    <p>Passwords can be guessed, sprayed or reused from other breaches; SSH keys (or certificates) can&#39;t. Not a CIS Level 1 control, but the single most effective SSH hardening step for a host reachable from untrusted networks.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1110/001/">T1110.001</a> <a href="https://attack.mitre.org/techniques/T1110/003/">T1110.003</a> <a href="https://attack.mitre.org/techniques/T1110/004/">T1110.004</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.passwordauthentication&#34;,
+  &#34;value&#34;: &#34;yes&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Make sure every admin has a working key first, then set `PasswordAuthentication no` and reload sshd.</p>
+<pre>echo &#39;PasswordAuthentication no&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>    <ul class="refs"><li><a href="https://attack.mitre.org/techniques/T1110/">https://attack.mitre.org/techniques/T1110/</a></li><li><a href="https://man.openbsd.org/sshd_config#PasswordAuthentication">https://man.openbsd.org/sshd_config#PasswordAuthentication</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-005</code> SSH offers no weak ciphers</summary>
+    <p>CBC-mode, 3DES, RC4 (arcfour), Blowfish and CAST ciphers have known weaknesses; a man-in-the-middle can downgrade a connection to whatever the server still accepts.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.6</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.4</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1557/">T1557</a> <a href="https://attack.mitre.org/techniques/T1040/">T1040</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.ciphers&#34;,
+  &#34;value&#34;: [
+    &#34;aes128-cbc&#34;,
+    &#34;aes256-cbc&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Allow only AEAD and CTR ciphers. On Rocky, prefer the system crypto policy (`update-crypto-policies --set DEFAULT`).</p>
+<pre>echo &#39;Ciphers aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-006</code> SSH offers no weak MACs</summary>
+    <p>MD5, RIPEMD-160, SHA-1 and truncated (-96, 64-bit) MACs weaken the integrity protection of the session, which is what stops a man-in-the-middle from altering traffic.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.15</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.6</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1557/">T1557</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.macs&#34;,
+  &#34;value&#34;: [
+    &#34;umac-64-etm@openssh.com&#34;,
+    &#34;hmac-sha1-etm@openssh.com&#34;,
+    &#34;umac-64@openssh.com&#34;,
+    &#34;hmac-sha1&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Allow only SHA-2 and umac-128 MACs, preferably the encrypt-then-MAC (-etm) ones.</p>
+<pre>echo &#39;MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-007</code> SSH offers no weak key exchange algorithms</summary>
+    <p>1024-bit Diffie-Hellman groups and SHA-1 based key exchange are within reach of well-funded attackers and let a man-in-the-middle negotiate down to them.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.12</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.5</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1557/">T1557</a> <a href="https://attack.mitre.org/techniques/T1040/">T1040</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.kexalgorithms&#34;,
+  &#34;value&#34;: [
+    &#34;diffie-hellman-group14-sha1&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Allow only curve25519, sntrup/mlkem hybrids, ECDH and SHA-2 DH groups.</p>
+<pre>echo &#39;KexAlgorithms sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-008</code> SSH forwarding (X11, agent, TCP) is disabled</summary>
+    <p>Forwarding turns any SSH login into a tunnel: an attacker with one account can reach internal services through this host, or hijack a forwarded agent or X display.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.8</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.10</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1572/">T1572</a> <a href="https://attack.mitre.org/techniques/T1090/">T1090</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.disableforwarding&#34;,
+  &#34;value&#34;: &#34;no&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set `DisableForwarding yes` (allow it per user with a Match block if someone needs it).</p>
+<pre>echo &#39;DisableForwarding yes&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-UPD-003</code> Security updates are installed automatically</summary>
+    <p>Manual patching slips. Automatic security updates close the window between a fix being published and it being exploited, without waiting for someone to remember.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1068/">T1068</a> <a href="https://attack.mitre.org/techniques/T1190/">T1190</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;updates.automatic&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Ubuntu: install and enable unattended-upgrades. Rocky: install dnf-automatic with `apply_updates = yes` and enable dnf-automatic.timer.</p>
+<pre>if command -v apt-get &gt;/dev/null; then
+  sudo apt-get install -y unattended-upgrades &amp;&amp; echo &#39;APT::Periodic::Unattended-Upgrade &#34;1&#34;;&#39; | sudo tee /etc/apt/apt.conf.d/20auto-upgrades
+else
+  sudo dnf install -y dnf-automatic &amp;&amp; sudo systemctl enable --now dnf-automatic-install.timer
+fi
+</pre>    <ul class="refs"><li><a href="https://documentation.ubuntu.com/server/how-to/software/automatic-updates/">https://documentation.ubuntu.com/server/how-to/software/automatic-updates/</a></li><li><a href="https://dnf.readthedocs.io/en/latest/automatic.html">https://dnf.readthedocs.io/en/latest/automatic.html</a></li></ul>
+  </details>
+</section>
+<section>
+  <h2 class="sev-low">Low (5)</h2>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SUDO-002</code> sudo runs commands in a pseudo-terminal</summary>
+    <p>Without use_pty, a command run through sudo can keep running in the background after sudo returns and inject keystrokes into the user&#39;s terminal.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.2.2</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.2.2</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1548/003/">T1548.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;sudoers.defaults&#34;,
+  &#34;value&#34;: [
+    &#34;env_reset&#34;,
+    &#34;exempt_group=sudo&#34;,
+    &#34;mail_badpass&#34;,
+    &#34;secure_path=\&#34;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin\&#34;&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Add `Defaults use_pty`.</p>
+<pre>echo &#39;Defaults use_pty&#39; | sudo tee -a /etc/sudoers.d/00-posture-defaults
+sudo chmod 440 /etc/sudoers.d/00-posture-defaults &amp;&amp; sudo visudo -c
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SUDO-003</code> sudo keeps its own log file</summary>
+    <p>A dedicated sudo log records every privileged command and who ran it, and survives an attacker clearing the general system logs.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.2.3</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.2.3</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1548/003/">T1548.003</a> <a href="https://attack.mitre.org/techniques/T1070/002/">T1070.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;sudoers.defaults&#34;,
+  &#34;value&#34;: [
+    &#34;env_reset&#34;,
+    &#34;exempt_group=sudo&#34;,
+    &#34;mail_badpass&#34;,
+    &#34;secure_path=\&#34;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin\&#34;&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Add `Defaults logfile=&#34;/var/log/sudo.log&#34;`.</p>
+<pre>echo &#39;Defaults logfile=&#34;/var/log/sudo.log&#34;&#39; | sudo tee -a /etc/sudoers.d/00-posture-defaults
+sudo chmod 440 /etc/sudoers.d/00-posture-defaults &amp;&amp; sudo visudo -c
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-LOG-003</code> journald keeps logs across reboots</summary>
+    <p>With volatile storage the journal lives in RAM: a reboot (or a crash an attacker causes) erases the evidence.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 6.1.2.4</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 6.2.2.4</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1070/002/">T1070.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;journald.persistent&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set `Storage=persistent`.</p>
+<pre>sudo mkdir -p /etc/systemd/journald.conf.d
+printf &#39;[Journal]\nStorage=persistent\n&#39; | sudo tee /etc/systemd/journald.conf.d/00-posture.conf
+sudo systemctl restart systemd-journald
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-004</code> SSH allows at most 4 authentication attempts per connection</summary>
+    <p>Each connection may try MaxAuthTries passwords; a low limit slows online guessing and makes it show up sooner in the logs.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.16</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.16</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1110/001/">T1110.001</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.maxauthtries&#34;,
+  &#34;value&#34;: 10
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set `MaxAuthTries 4` and reload sshd.</p>
+<pre>echo &#39;MaxAuthTries 4&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-UPD-002</code> Package metadata was refreshed in the last 7 days</summary>
+    <p>The pending-update count above is only as current as the package cache. A cache weeks old can report zero pending updates on a host that is far behind.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1068/">T1068</a> <a href="https://attack.mitre.org/techniques/T1190/">T1190</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;updates.cache_age_days&#34;,
+  &#34;value&#34;: 40.0
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Refresh the cache regularly (automatic updates do it daily).</p>
+<pre>if command -v apt-get &gt;/dev/null; then sudo apt-get update; else sudo dnf makecache; fi
+</pre>    <ul class="refs"><li><a href="https://ubuntu.com/server/docs/package-management">https://ubuntu.com/server/docs/package-management</a></li><li><a href="https://docs.rockylinux.org/books/admin_guide/13-softwares/">https://docs.rockylinux.org/books/admin_guide/13-softwares/</a></li></ul>
+  </details>
+</section>
+<section>
+  <details>
+    <summary>Passed and skipped (1)</summary>
+    <ul>
+      <li><span class="status skip">skip</span> <code>LNX-FW-002</code> firewalld is running and its zone doesn&#39;t accept everything</li>
+    </ul>
+  </details>
+</section>
+</main>
+<footer>Read-only audit: remediation is printed here, never run by Posture. Review a script before running it.</footer>
+</body>
+</html>

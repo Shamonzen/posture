@@ -19,8 +19,9 @@ def load_checks(directory: Path) -> list[Check]:
     checks: list[Check] = []
     seen: dict[str, Path] = {}
     for path in sorted(directory.rglob("*.yaml")):
+        text = path.read_text(encoding="utf-8")
         try:
-            data = yaml.safe_load(path.read_text(encoding="utf-8"))
+            data = yaml.safe_load(text)
         except yaml.YAMLError as exc:
             raise CheckError(f"{path}: {exc}") from exc
         if not isinstance(data, list):
@@ -35,5 +36,8 @@ def load_checks(directory: Path) -> list[Check]:
                     f"{path}: duplicate check id {check.id} (also in {seen[check.id]})"
                 )
             seen[check.id] = path
+            # Where SARIF points: findings are about hosts, so the location is the check itself.
+            line = text.count("\n", 0, max(text.find(f"id: {check.id}"), 0)) + 1
+            check._source = (path.relative_to(directory.parent).as_posix(), line)
         checks.extend(file_checks)
     return checks

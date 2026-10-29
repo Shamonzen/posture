@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="{{ csp }}">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Posture report: {{ snap.target }}</title>
+<style>{{ css }}</style>
+</head>
+<body>
+<header>
+  <h1>Posture report: {{ snap.target }}</h1>
+  <p class="meta">{{ snap.platform }} · collected {{ snap.collected_at.strftime("%Y-%m-%d %H:%M") }} UTC
+  {% if snap.identity %} as {{ snap.identity }}{% endif %} · posture {{ report.tool_version }}</p>
+  <ul class="counts">
+  {% for status in ["fail", "error", "pass", "skip"] %}
+    <li class="{{ status }}"><b>{{ report.findings | selectattr("status", "eq", status) | list | length }}</b> {{ status }}</li>
+  {% endfor %}
+  </ul>
+</header>
+<main>
+{% if snap.errors %}
+<section>
+  <h2>Collection errors</h2>
+  <p>These facts could not be read; every check that needs them reports <b>error</b>, never pass.</p>
+  <ul>
+  {% for e in snap.errors %}
+    <li><code>{{ e.source }}</code>: {{ e.message }}</li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% for severity, findings in groups if findings %}
+<section>
+  <h2 class="sev-{{ severity }}">{{ severity | capitalize }} ({{ findings | length }})</h2>
+  {% for f in findings %}
+  <details class="finding">
+    <summary><span class="status {{ f.status }}">{{ f.status }}</span> <code>{{ f.check_id }}</code> {{ f.title }}</summary>
+    <p>{{ f.rationale }}</p>
+    <dl>
+      {% if f.cis %}
+      <dt>CIS</dt>
+      {% for key, control in f.cis.items() %}<dd>{{ benchmarks[key] }}, control {{ control }}</dd>{% endfor %}
+      {% endif %}
+      <dt>ATT&amp;CK</dt>
+      <dd>{% for t in f.attack %}<a href="{{ t | attack_url }}">{{ t }}</a> {% endfor %}</dd>
+    </dl>
+    {% if f.message %}<p class="message">{{ f.message }}</p>{% endif %}
+    {% if f.evidence %}
+    <h3>Evidence</h3>
+    <pre>{% for item in f.evidence %}{{ item | pretty }}
+{% endfor %}</pre>
+    {% endif %}
+    <h3>Remediation</h3>
+    <p>{{ f.remediation.text }}</p>
+    {% if f.remediation.script %}<pre>{{ f.remediation.script }}</pre>{% endif %}
+    {% if f.references %}
+    <ul class="refs">{% for r in f.references %}<li><a href="{{ r }}">{{ r }}</a></li>{% endfor %}</ul>
+    {% endif %}
+  </details>
+  {% endfor %}
+</section>
+{% endfor %}
+<section>
+  <details>
+    <summary>Passed and skipped ({{ passed | length }})</summary>
+    <ul>
+    {% for f in passed %}
+      <li><span class="status {{ f.status }}">{{ f.status }}</span> <code>{{ f.check_id }}</code> {{ f.title }}</li>
+    {% endfor %}
+    </ul>
+  </details>
+</section>
+</main>
+<footer>Read-only audit: remediation is printed here, never run by Posture. Review a script before running it.</footer>
+</body>
+</html>
