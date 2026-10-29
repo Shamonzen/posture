@@ -1,25 +1,35 @@
-# Posture lab: posture-ubuntu and posture-rocky (posture-dc joins in milestone 7).
+# Posture lab: posture-dc (Windows Server 2019, domain posture.test), posture-ubuntu, posture-rocky.
 #
 # - Run vagrant only from this folder and only against these VMs (CLAUDE.md, hard rule 3);
 #   lab.sh does that for you.
 # - Host-only network 192.168.57.0/24, never bridged. The NAT adapter Vagrant adds is only
-#   for `vagrant ssh` and package downloads.
+#   for `vagrant ssh` / WinRM and package downloads.
 # - No synced folder: the deliberately weak VMs get no write path into the host.
-# - Every shell provisioner runs guard_lab.sh first (prepended below), so a profile can't
-#   run on a machine that isn't a Posture lab VM.
+# - Every shell provisioner runs guard_lab.sh / guard_lab.ps1 first (prepended below), so a
+#   profile can't run on a machine that isn't a Posture lab VM.
 
 LAB_NET = "192.168.57"
-BOX_VERSION = "202510.26.0"
 MACHINES = {
-  "posture-ubuntu" => { box: "bento/ubuntu-24.04", ip: "#{LAB_NET}.11" },
-  "posture-rocky" => { box: "bento/rockylinux-9", ip: "#{LAB_NET}.12" },
+  "posture-dc" => { box: "gusztavvargadr/windows-server-2019-standard", version: "1809.0.2407",
+                    ip: "#{LAB_NET}.10", memory: 3584 },
+  "posture-ubuntu" => { box: "bento/ubuntu-24.04", version: "202510.26.0", ip: "#{LAB_NET}.11", memory: 1024 },
+  "posture-rocky" => { box: "bento/rockylinux-9", version: "202510.26.0", ip: "#{LAB_NET}.12", memory: 1024 },
 }.freeze
 
-GUARD = File.read(File.join(__dir__, "guard_lab.sh"))
+GUARDS = { ".sh" => "guard_lab.sh", ".ps1" => "guard_lab.ps1" }.freeze
+WINDOWS_COMMON = "profiles/windows/common.ps1"
 
+# The guard for the script's language, then (Windows) the shared helpers, then the script.
 def guarded(script)
-  GUARD + "\n" + File.read(File.join(__dir__, script))
+  parts = [GUARDS.fetch(File.extname(script))]
+  parts << WINDOWS_COMMON if script.end_with?(".ps1")
+  (parts << script).map { |part| File.read(File.join(__dir__, part)) }.join("\n")
 end
+
+# Lab-only passwords for the DC, from the repo's .env (template: .env.example).
+ENV_FILE = File.join(__dir__, "..", ".env")
+LAB_ENV = Hash.new("").merge((File.exist?(ENV_FILE) ? File.readlines(ENV_FILE) : [])
+  .filter_map { |line| line.strip.split("=", 2) if line.match?(/\A[A-Z_]+=/) }.to_h).freeze
 
 Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", disabled: true
@@ -27,15 +37,38 @@ Vagrant.configure("2") do |config|
   MACHINES.each do |name, machine|
     config.vm.define name do |node|
       node.vm.box = machine[:box]
-      node.vm.box_version = BOX_VERSION
+      node.vm.box_version = machine[:version]
       node.vm.hostname = name
       node.vm.network "private_network", ip: machine[:ip]
 
       node.vm.provider "virtualbox" do |vb|
         vb.name = name
-        vb.memory = 1024
+        vb.memory = machine[:memory]
         vb.cpus = 2
         vb.linked_clone = true
+      end
+
+      if name == "posture-dc"
+        node.vm.guest = :windows
+        node.vm.communicator = "winrm"
+        node.vm.boot_timeout = 900
+        # The box forwards RDP on every host interface; same id, so this replaces it: localhost only.
+        node.vm.network "forwarded_port", id: "tcp53389", guest: 3389, host: 53389, host_ip: "127.0.0.1"
+
+        # First `lab.sh up` only: marker + forest promotion, a reboot, the audit account. lab.sh
+        # reboots it from outside: a just-promoted DC refuses WinRM logons until it has rebooted,
+        # so Vagrant's own `reboot: true` can't send the command.
+        node.vm.provision "promote", type: "shell", inline: guarded("profiles/windows/promote-dc.ps1"),
+          env: { "POSTURE_LAB_BASE" => "1", "LAB_DOMAIN_ADMIN_PASSWORD" => LAB_ENV["LAB_DOMAIN_ADMIN_PASSWORD"] }
+        node.vm.provision "base", type: "shell", inline: guarded("profiles/windows/base.ps1"),
+          env: { "POSTURE_AUDIT_PASSWORD" => LAB_ENV["POSTURE_AUDIT_PASSWORD"] }
+
+        # Only on request, on top of the `base` snapshot: lab.sh weak | lab.sh hardened.
+        node.vm.provision "weak", type: "shell", run: "never", inline: guarded("profiles/windows/weak.ps1"),
+          env: LAB_ENV.slice("LAB_WEAK_USER_PASSWORD", "LAB_DOMAIN_ADMIN_PASSWORD")
+        node.vm.provision "hardened", type: "shell", run: "never", inline: guarded("profiles/windows/hardened.ps1"),
+          env: LAB_ENV.slice("LAB_WEAK_USER_PASSWORD", "LAB_DOMAIN_ADMIN_PASSWORD")
+        next
       end
 
       # First `vagrant up` only: audit account, its sudoers file, the lab marker.

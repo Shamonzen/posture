@@ -186,9 +186,9 @@
     "semantic_hash": ""
   },
   "docs/PLAN.md": {
-    "mtime": 1793283007.528162,
-    "seen": 1793283022.5228589,
-    "ast_hash": "ce8b2bf4222514e8d6b1852aa6f9268b",
+    "mtime": 1793296498.9820716,
+    "seen": 1793296507.0493665,
+    "ast_hash": "877b559d673ec7f1d5f092f436df73e4",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/rocky-hardened/auditctl.txt": {
@@ -594,9 +594,9 @@
     "semantic_hash": ""
   },
   "lab/lab.sh": {
-    "mtime": 1793281288.3979535,
-    "seen": 1793282060.68622,
-    "ast_hash": "425e9ca753b179bf813c7d554350b834",
+    "mtime": 1793295293.363913,
+    "seen": 1793296507.0493665,
+    "ast_hash": "ddcd6c80077b3527b84c9675b12e7e9d",
     "semantic_hash": ""
   },
   "lab/profiles/linux/base.sh": {
@@ -636,9 +636,9 @@
     "semantic_hash": ""
   },
   "tests/test_lab_files.py": {
-    "mtime": 1793279305.5472393,
-    "seen": 1793282060.68622,
-    "ast_hash": "374140ea1b0c67f5c456cef4a853fb70",
+    "mtime": 1793295297.8423781,
+    "seen": 1793296507.0493665,
+    "ast_hash": "2857423e548aa8c82e46174f5ec0a5f4",
     "semantic_hash": ""
   },
   "src/posture/baseline.py": {
@@ -699,6 +699,42 @@
     "mtime": 1793282848.778486,
     "seen": 1793283022.5228589,
     "ast_hash": "9dfa1477de0bcb7272d8336805b7532a",
+    "semantic_hash": ""
+  },
+  "lab/guard_lab.ps1": {
+    "mtime": 1793285006.0411935,
+    "seen": 1793296507.0493665,
+    "ast_hash": "8a57bb96000c861ddb7c29dc95e10de4",
+    "semantic_hash": ""
+  },
+  "lab/profiles/windows/base.ps1": {
+    "mtime": 1793285038.692107,
+    "seen": 1793296507.0493665,
+    "ast_hash": "dd72dfe596fc0576c79a0a4fbf4c630e",
+    "semantic_hash": ""
+  },
+  "lab/profiles/windows/common.ps1": {
+    "mtime": 1793296153.7640362,
+    "seen": 1793296507.0493665,
+    "ast_hash": "d419a0176463f08f69a0bafc1a0db55f",
+    "semantic_hash": ""
+  },
+  "lab/profiles/windows/hardened.ps1": {
+    "mtime": 1793296153.8155012,
+    "seen": 1793296507.0493665,
+    "ast_hash": "d3c67f677f2fd6d09771afd1d1514202",
+    "semantic_hash": ""
+  },
+  "lab/profiles/windows/promote-dc.ps1": {
+    "mtime": 1793285038.5124938,
+    "seen": 1793296507.0493665,
+    "ast_hash": "fff529ed44804a2292e31776a95c8389",
+    "semantic_hash": ""
+  },
+  "lab/profiles/windows/weak.ps1": {
+    "mtime": 1793285048.6952174,
+    "seen": 1793296507.0493665,
+    "ast_hash": "4bdffd57dd063538a65243976db6c505",
     "semantic_hash": ""
   }
 }
