@@ -45,10 +45,11 @@ Portfolio project #2, for security engineer interviews (cloud / infrastructure /
       echo 'PermitRootLogin no' | sudo tee /etc/ssh/sshd_config.d/50-posture.conf && sudo systemctl reload ssh
   references: ["https://attack.mitre.org/techniques/T1110/001/"]
 ```
-- **Operators:** `eq, ne, in, not_in, lt, le, gt, ge, regex, exists, empty, not_empty`, combined with `all` / `any`. For lists of objects: `for_each: ad.users` + `where: {...}` + `expect: none` → every matching object is an offender, listed as evidence (capped at 50).
+- **Operators:** `eq, ne, in, not_in, lt, le, gt, ge, regex, exists, empty, not_empty`, combined with `all` / `any`. For lists of objects: `for_each: ad.users` + `key: sam` + `where: {...}` → every matching object is an offender, listed by its `key` as evidence (capped at 50); the check passes when there are none. A missing fact or a wrong type (e.g. `lt` on a string) is an `error`; `all`/`any` evaluate every branch, so an uncollected fact is never hidden by short-circuiting.
 - **Results:** `pass | fail | error | skip`. Missing fact → `error` (never a silent pass). `applies_to` not matched → `skip`.
 - **`cis` may be null** where CIS has no control (Kerberoasting, AS-REP roasting, delegation are not CIS controls); `references` then points at Microsoft / ANSSI guidance. Severity is our own call, documented in the rationale.
-- **Validation at load:** unknown keys rejected, unique ids, ATT&CK ids match `T\d{4}(\.\d{3})?`, known fact names per platform, regexes compile. A bad check stops Posture at startup.
+- **Validation at load:** unknown keys rejected, unique ids, ATT&CK ids match `T\d{4}(\.\d{3})?`, each op gets the value type it needs, regexes compile, `cis` stated explicitly (null needs `references`). Known fact names per platform are checked from milestone 4, once parsers define them.
+- **YAML gotcha:** unquoted `no` / `yes` are booleans in YAML 1.1 (`safe_load`), so string values like `"no"` must be quoted. A bad check stops Posture at startup.
 
 ## Data model
 - **Snapshot:** `schema_version, tool_version, platform, target, collected_at (UTC), identity, facts {…}, errors [{source, message}]`.
@@ -142,9 +143,9 @@ posture/
 Status: ✅ done · ⏭️ next. Update this list when a milestone is committed.
 
 1. ✅ **Scaffold + DevSecOps CI:** git init, pyproject/uv, ruff, package skeleton, `posture --help` smoke test, full CI (lint, test, Bandit, pip-audit, gitleaks, SBOM), Dependabot, LICENSE, `.gitignore` (`out/`, `.env`, raw recordings), `.env.example`.
-2. ⏭️ **Models + check loader + engine:** pydantic models, YAML validation (unknown keys, duplicate ids, bad ATT&CK ids, bad regex), every operator, `for_each/where`, `pass/fail/error/skip`. Tests per operator and per validation error.
-3. **Linux collector + parsers:** local and SSH transports, record/replay, command allowlist + `test_readonly.py`, `deploy/sudoers.posture` checked against the allowlist, parsers with tests, shadow hashes dropped. Hand-written Ubuntu fixtures for now.
-4. **Linux checks (~20)** + the generic weak-fails / hardened-passes test.
+2. ✅ **Models + check loader + engine:** pydantic models, YAML validation (unknown keys, duplicate ids, bad ATT&CK ids, bad regex), every operator, `for_each/where`, `pass/fail/error/skip`. Tests per operator and per validation error.
+3. ⏭️ **Linux collector + parsers:** local and SSH transports, record/replay, command allowlist + `test_readonly.py`, `deploy/sudoers.posture` checked against the allowlist, parsers with tests, shadow hashes dropped. Hand-written Ubuntu fixtures for now.
+4. **Linux checks (~20)** + the generic weak-fails / hardened-passes test + validation that every check's facts are ones the Linux parsers produce.
 5. **Linux lab:** Vagrantfile (ubuntu, rocky), `guard_lab`, weak + hardened profiles, `make record`; replace the hand-written fixtures with scrubbed recordings (Ubuntu and Rocky). `pytest -m lab` audits the live VMs.
 6. **Reports + baseline + CI mode:** terminal, JSON, static HTML (CSP, escaping test with hostile fixtures), SARIF (schema-validated), `posture diff`, `--baseline`, `--fail-on`, exit codes; the CI `posture` job. Commit `docs/reports/before.html` / `after.html` for Linux.
 7. **DC lab:** `dc` VM, promotion to `posture.test`, weak + hardened Windows profiles, `guard_lab.ps1`, a non-admin audit account in *Remote Management Users*.

@@ -1,0 +1,167 @@
+import re
+from datetime import datetime
+from enum import StrEnum
+from typing import Annotated, Any, Literal
+
+from pydantic import BaseModel, ConfigDict, Discriminator, Field, Tag, model_validator
+
+
+class Strict(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+
+class Severity(StrEnum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+    @property
+    def rank(self) -> int:
+        return list(Severity).index(self)
+
+
+class Status(StrEnum):
+    # A check status, not a password.
+    PASS = "pass"  # noqa: S105  # nosec B105
+    FAIL = "fail"
+    ERROR = "error"  # the facts needed were not collected: never counted as a pass
+    SKIP = "skip"  # applies_to did not match this target
+
+
+Platform = Literal["linux", "ad", "azure"]
+Op = Literal[
+    "eq", "ne", "in", "not_in", "lt", "le", "gt", "ge", "regex", "exists", "empty", "not_empty"
+]
+NO_VALUE_OPS = {"exists", "empty", "not_empty"}
+NUMBER_OPS = {"lt", "le", "gt", "ge"}
+
+
+class Compare(Strict):
+    fact: str
+    op: Op
+    value: Any = None
+
+    @model_validator(mode="after")
+    def _value_fits_op(self) -> "Compare":
+        given = "value" in self.model_fields_set
+        if self.op in NO_VALUE_OPS:
+            if given:
+                raise ValueError(f"op {self.op} takes no value")
+            return self
+        if not given:
+            raise ValueError(f"op {self.op} needs a value")
+        if self.op in {"in", "not_in"} and not isinstance(self.value, list):
+            raise ValueError(f"op {self.op} needs a list value")
+        if self.op in NUMBER_OPS and (
+            isinstance(self.value, bool) or not isinstance(self.value, int | float)
+        ):
+            raise ValueError(f"op {self.op} needs a number value")
+        if self.op == "regex":
+            if not isinstance(self.value, str):
+                raise ValueError("op regex needs a string value")
+            try:
+                re.compile(self.value)
+            except re.error as exc:
+                raise ValueError(f"bad regex {self.value!r}: {exc}") from exc
+        return self
+
+
+class AllOf(Strict):
+    all: list["Condition"] = Field(min_length=1)
+
+
+class AnyOf(Strict):
+    any: list["Condition"] = Field(min_length=1)
+
+
+class ForEach(Strict):
+    """Every item of the list `for_each` that matches `where` is an offender, named by `key`."""
+
+    for_each: str
+    key: str
+    where: "Condition"
+
+
+def _condition_kind(value: Any) -> str:
+    if isinstance(value, dict):
+        return next((k for k in ("for_each", "all", "any") if k in value), "fact")
+    return {AllOf: "all", AnyOf: "any", ForEach: "for_each"}.get(type(value), "fact")
+
+
+# Picked by key, so a typo in a check reports one clear error instead of one per union member.
+Condition = Annotated[
+    Annotated[Compare, Tag("fact")]
+    | Annotated[AllOf, Tag("all")]
+    | Annotated[AnyOf, Tag("any")]
+    | Annotated[ForEach, Tag("for_each")],
+    Discriminator(_condition_kind),
+]
+for _model in (AllOf, AnyOf, ForEach):
+    _model.model_rebuild()
+
+
+class Cis(Strict):
+    benchmark: str
+    version: str
+    control: str
+
+
+class Remediation(Strict):
+    text: str
+    script: str | None = None
+
+
+AttackId = Annotated[str, Field(pattern=r"^T\d{4}(\.\d{3})?$")]
+
+
+class Check(Strict):
+    id: str = Field(pattern=r"^[A-Z]+(-[A-Z0-9]+)+$")
+    title: str
+    platform: Platform
+    applies_to: dict[str, list[Any]] = {}
+    cis: Cis | None  # required: null means "no CIS control", stated on purpose
+    severity: Severity
+    attack: list[AttackId] = Field(min_length=1)
+    rationale: str
+    check: Condition
+    remediation: Remediation
+    references: list[str] = []
+
+    @model_validator(mode="after")
+    def _source_given(self) -> "Check":
+        if self.cis is None and not self.references:
+            raise ValueError("a check without a CIS control needs references")
+        return self
+
+
+class CollectError(Strict):
+    source: str
+    message: str
+
+
+class Snapshot(Strict):
+    schema_version: Literal[1] = 1
+    tool_version: str
+    platform: Platform
+    target: str
+    collected_at: datetime
+    identity: str | None = None
+    facts: dict[str, Any]
+    errors: list[CollectError] = []
+
+
+class Finding(Strict):
+    check_id: str
+    title: str
+    platform: Platform
+    target: str
+    status: Status
+    severity: Severity
+    cis: Cis | None
+    attack: list[str]
+    rationale: str
+    remediation: Remediation
+    references: list[str]
+    evidence: list[Any] = []
+    message: str | None = None
