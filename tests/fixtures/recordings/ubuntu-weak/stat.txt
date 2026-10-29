@@ -1,0 +1,6 @@
+644 root root /etc/passwd
+644 root shadow /etc/shadow
+644 root root /etc/group
+640 root shadow /etc/gshadow
+440 root root /etc/sudoers
+666 root root /etc/ssh/sshd_config

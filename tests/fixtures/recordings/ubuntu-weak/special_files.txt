@@ -1,0 +1,7 @@
+4755 /usr/bin/passwd
+4755 /usr/bin/sudo
+4755 /usr/bin/su
+2755 /usr/bin/chage
+4755 /usr/bin/find
+777 /etc/cron.daily/backup.sh
+666 /tmp/session.lock

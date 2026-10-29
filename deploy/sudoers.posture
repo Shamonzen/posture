@@ -1,0 +1,13 @@
+# Posture audit account: exactly the read-only commands that need root, with exact arguments.
+# sudo matches arguments literally, so none of these can be turned into a shell or a write.
+# Must stay identical to the sudo=True commands in src/posture/collectors/linux.py
+# (tests/test_readonly.py checks it).
+#
+# Install: sudo visudo -cf sudoers.posture && sudo install -m 0440 sudoers.posture /etc/sudoers.d/posture
+posture ALL=(root) NOPASSWD: \
+    /usr/sbin/sshd -T, \
+    /usr/bin/getent shadow, \
+    /usr/bin/grep -rH . /etc/sudoers /etc/sudoers.d, \
+    /usr/sbin/auditctl -l, \
+    /usr/sbin/ufw status verbose, \
+    /usr/bin/firewall-cmd --list-all

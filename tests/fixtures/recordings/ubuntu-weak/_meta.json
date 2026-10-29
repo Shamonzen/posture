@@ -1,0 +1,10 @@
+{
+  "auditctl": {
+    "exit_code": 1,
+    "stderr": "sudo: /usr/sbin/auditctl: command not found\n"
+  },
+  "stat": {
+    "exit_code": 1,
+    "stderr": "stat: cannot statx '/var/log/journal': No such file or directory\n"
+  }
+}
