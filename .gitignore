@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+dist/
+.env
+# Reports and snapshots map a system's weaknesses: never commit them.
+out/
+# Unscrubbed recordings; only scrubbed ones under tests/fixtures/recordings/ are committed.
+/recordings/
+.vagrant/
+lab/.ssh-config
+requirements.txt
+bandit.sarif

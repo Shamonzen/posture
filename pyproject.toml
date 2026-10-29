@@ -1,0 +1,42 @@
+[project]
+name = "posture"
+version = "0.1.0"
+description = "Read-only security posture auditor for Linux, Active Directory and Azure, mapped to CIS and MITRE ATT&CK"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+posture = "posture.cli:main"
+
+[dependency-groups]
+dev = [
+    "bandit[sarif]>=1.8",
+    "pip-audit>=2.9",
+    "pytest>=8",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["uv_build>=0.8,<0.14"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# S = flake8-bandit security checks
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["lab: needs the Vagrant lab running (make lab-linux / make lab-dc)"]
+addopts = "-m 'not lab'"
