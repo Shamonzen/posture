@@ -1,0 +1,11 @@
+/etc/sudoers:Defaults	env_reset
+/etc/sudoers:Defaults	mail_badpass
+/etc/sudoers:Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+/etc/sudoers:Defaults	use_pty
+/etc/sudoers:root	ALL=(ALL:ALL) ALL
+/etc/sudoers:%wheel	ALL=(ALL:ALL) ALL
+/etc/sudoers:@includedir /etc/sudoers.d
+/etc/sudoers.d/00-posture-defaults:Defaults logfile="/var/log/sudo.log"
+/etc/sudoers.d/posture:posture ALL=(root) NOPASSWD: \
+/etc/sudoers.d/posture:    /usr/sbin/sshd -T, \
+/etc/sudoers.d/posture:    /usr/bin/getent shadow

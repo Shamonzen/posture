@@ -8,7 +8,7 @@ VALID = """\
 - id: LNX-SSH-001
   title: SSH root login is disabled
   platform: linux
-  cis: {benchmark: CIS Ubuntu Linux 24.04 LTS, version: "1.0.0", control: "x"}
+  cis: {ubuntu-24.04: "5.1.20", rhel-9: "5.1.20"}
   severity: high
   attack: [T1110.001, T1078.003]
   rationale: Root is the account every password guesser tries first.
@@ -17,6 +17,9 @@ VALID = """\
     text: Set PermitRootLogin no.
     script: echo 'PermitRootLogin no' | sudo tee /etc/ssh/sshd_config.d/50-posture.conf
 """
+
+
+CIS_LINE = '  cis: {ubuntu-24.04: "5.1.20", rhel-9: "5.1.20"}'
 
 
 def write(tmp_path, text, name="checks.yaml"):
@@ -53,6 +56,12 @@ def test_nested_files_load(tmp_path):
         ('op: in, value: ["no", prohibit-password]', "op: eq", "needs a value"),
         ('op: in, value: ["no", prohibit-password]', "op: like, value: x", "op"),
         ("{fact: ssh.permitrootlogin,", "{fakt: ssh.permitrootlogin,", "fakt"),
+        ('op: in, value: ["no", prohibit-password]', "op: subset, value: x", "needs a list"),
+        ('op: in, value: ["no", prohibit-password]', "op: any_match, value: 1", "string"),
+        ('op: in, value: ["no", prohibit-password]', "op: none_match, value: '('", "bad regex"),
+        ('ubuntu-24.04: "5.1.20"', 'ubuntu-22.04: "5.1.20"', "ubuntu-22.04"),
+        ('rhel-9: "5.1.20"', 'rhel-9: "five"', "rhel-9"),
+        (CIS_LINE, "  cis: {}", "cis"),
     ],
 )
 def test_invalid_check_rejected(tmp_path, old, new, error):
@@ -71,10 +80,7 @@ def test_for_each_needs_key_and_where(tmp_path):
 
 
 def test_cis_null_needs_references(tmp_path):
-    no_cis = VALID.replace("  cis: {benchmark", "  cis: null\n  x: {benchmark")
-    no_cis = no_cis.replace(
-        '  x: {benchmark: CIS Ubuntu Linux 24.04 LTS, version: "1.0.0", control: "x"}\n', ""
-    )
+    no_cis = VALID.replace(CIS_LINE, "  cis: null")
     with pytest.raises(CheckError, match="needs references"):
         load_checks(write(tmp_path, no_cis))
     with_refs = no_cis + '  references: ["https://attack.mitre.org/techniques/T1110/001/"]\n'
@@ -82,9 +88,7 @@ def test_cis_null_needs_references(tmp_path):
 
 
 def test_cis_must_be_stated(tmp_path):
-    no_cis = VALID.replace(
-        '  cis: {benchmark: CIS Ubuntu Linux 24.04 LTS, version: "1.0.0", control: "x"}\n', ""
-    )
+    no_cis = VALID.replace(CIS_LINE + "\n", "")
     with pytest.raises(CheckError, match="cis"):
         load_checks(write(tmp_path, no_cis))
 

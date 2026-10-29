@@ -1,0 +1,118 @@
+# File permissions (stat) and special files (find over / with -xdev, run without root).
+
+- id: LNX-FILE-001
+  title: /etc/shadow is owned by root and not readable by everyone
+  platform: linux
+  cis: {ubuntu-24.04: "7.1.5", rhel-9: "7.1.5"}
+  severity: high
+  attack: [T1003.008]
+  rationale: >-
+    /etc/shadow holds every password hash. If any user can read it, offline cracking needs
+    nothing more than a copy of the file.
+  check:
+    all:
+      - {fact: files./etc/shadow.owner, op: eq, value: root}
+      - {fact: files./etc/shadow.world_readable, op: eq, value: false}
+      - {fact: files./etc/shadow.world_writable, op: eq, value: false}
+      - {fact: files./etc/shadow.group_writable, op: eq, value: false}
+  remediation:
+    text: Restore owner and mode (Ubuntu `root:shadow 640`, Rocky `root:root 000`).
+    script: |
+      sudo chown root /etc/shadow && sudo chmod o-rwx,g-wx /etc/shadow
+
+- id: LNX-FILE-002
+  title: /etc/passwd and /etc/group can only be changed by root
+  platform: linux
+  cis: {ubuntu-24.04: "7.1.1", rhel-9: "7.1.1"}
+  severity: critical
+  attack: [T1136.001, T1098]
+  rationale: >-
+    Whoever can write /etc/passwd or /etc/group can create a UID 0 account or join the sudo
+    group: instant root. (CIS 7.1.3 covers /etc/group.)
+  check:
+    all:
+      - {fact: files./etc/passwd.owner, op: eq, value: root}
+      - {fact: files./etc/passwd.world_writable, op: eq, value: false}
+      - {fact: files./etc/passwd.group_writable, op: eq, value: false}
+      - {fact: files./etc/group.owner, op: eq, value: root}
+      - {fact: files./etc/group.world_writable, op: eq, value: false}
+      - {fact: files./etc/group.group_writable, op: eq, value: false}
+  remediation:
+    text: Set both files to `root:root 644`.
+    script: |
+      sudo chown root:root /etc/passwd /etc/group && sudo chmod 644 /etc/passwd /etc/group
+
+- id: LNX-FILE-003
+  title: sshd_config is owned by root and private
+  platform: linux
+  cis: {ubuntu-24.04: "5.1.1", rhel-9: "5.1.1"}
+  severity: medium
+  attack: [T1556, T1098.004]
+  rationale: >-
+    Whoever can write sshd_config can enable root login or point AuthorizedKeysFile at a file
+    they control; reading it maps the SSH attack surface. CIS asks for mode 600.
+  check:
+    all:
+      - {fact: files./etc/ssh/sshd_config.owner, op: eq, value: root}
+      - {fact: files./etc/ssh/sshd_config.world_readable, op: eq, value: false}
+      - {fact: files./etc/ssh/sshd_config.world_writable, op: eq, value: false}
+      - {fact: files./etc/ssh/sshd_config.group_writable, op: eq, value: false}
+  remediation:
+    text: Set it to `root:root 600`.
+    script: |
+      sudo chown root:root /etc/ssh/sshd_config && sudo chmod 600 /etc/ssh/sshd_config
+
+- id: LNX-FILE-004
+  title: No world-writable files outside temporary directories
+  platform: linux
+  cis: {ubuntu-24.04: "7.1.11", rhel-9: "7.1.11"}
+  severity: medium
+  attack: [T1053.003, T1574]
+  rationale: >-
+    A world-writable script or binary runs whatever any local user puts in it, as whoever runs
+    it next: often root, from cron or a service. (/tmp, /var/tmp and /dev/shm are not counted.)
+  check: {fact: special_files.world_writable, op: empty}
+  remediation:
+    text: Remove write for others on each file listed (`sudo chmod o-w <file>`) after checking who needs it.
+
+- id: LNX-FILE-005
+  title: Only expected programs are setuid
+  platform: linux
+  cis: {ubuntu-24.04: "7.1.13", rhel-9: "7.1.13"}
+  severity: medium
+  attack: [T1548.001]
+  rationale: >-
+    A setuid program runs as its owner (usually root) whoever starts it. Programs like find,
+    vim or python made setuid are a one-line path to root (see GTFOBins). This allowlist holds
+    the setuid programs Ubuntu 24.04 and Rocky 9 ship; anything else needs a reason.
+  check:
+    fact: special_files.setuid
+    op: subset
+    value:
+      - /usr/bin/at
+      - /usr/bin/chage
+      - /usr/bin/chfn
+      - /usr/bin/chsh
+      - /usr/bin/crontab
+      - /usr/bin/fusermount
+      - /usr/bin/fusermount3
+      - /usr/bin/gpasswd
+      - /usr/bin/mount
+      - /usr/bin/newgrp
+      - /usr/bin/passwd
+      - /usr/bin/pkexec
+      - /usr/bin/su
+      - /usr/bin/sudo
+      - /usr/bin/umount
+      - /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+      - /usr/lib/openssh/ssh-keysign
+      - /usr/lib/polkit-1/polkit-agent-helper-1
+      - /usr/lib/snapd/snap-confine
+      - /usr/libexec/dbus-1/dbus-daemon-launch-helper
+      - /usr/libexec/polkit-1/polkit-agent-helper-1
+      - /usr/sbin/grub2-set-bootflag
+      - /usr/sbin/pam_timestamp_check
+      - /usr/sbin/unix_chkpwd
+      - /usr/sbin/userhelper
+  remediation:
+    text: Remove the setuid bit from each program listed (`sudo chmod u-s <file>`), or add it to the allowlist with a reason.

@@ -172,7 +172,13 @@ def test_firewalld():
         "ports": ["8080/tcp"],
     }
     stopped = p.firewalld(Result("FirewallD is not running\n", exit_code=252))
-    assert stopped == {"firewalld": {"running": False}}
+    assert stopped["firewalld"] == {
+        "running": False,
+        "zone": None,
+        "target": None,
+        "services": [],
+        "ports": [],
+    }
 
 
 def test_dnf_security():

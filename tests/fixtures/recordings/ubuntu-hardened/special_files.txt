@@ -1,0 +1,8 @@
+4755 /usr/bin/passwd
+4755 /usr/bin/sudo
+4755 /usr/bin/su
+4755 /usr/bin/mount
+4755 /usr/bin/umount
+2755 /usr/bin/chage
+4755 /usr/lib/openssh/ssh-keysign
+1777 /tmp/.X11-unix/X0

@@ -1,0 +1,147 @@
+# SSH server, from `sshd -T` (the effective config after every Include and Match default).
+# Remediation uses a 00- drop-in: sshd keeps the FIRST value it reads, and Ubuntu cloud images
+# ship 50-cloud-init.conf with `PasswordAuthentication yes`.
+
+- id: LNX-SSH-001
+  title: SSH root login is disabled
+  platform: linux
+  cis: {ubuntu-24.04: "5.1.20", rhel-9: "5.1.20"}
+  severity: high
+  attack: [T1110.001, T1078.003]
+  rationale: >-
+    root exists on every Linux host, so it is the first account password guessers try, and
+    logging in as root directly leaves no trail of which person used it. Admins should log in
+    as themselves and escalate with sudo.
+  check: {fact: ssh.permitrootlogin, op: eq, value: "no"}
+  remediation:
+    text: Set `PermitRootLogin no` and reload sshd.
+    script: |
+      echo 'PermitRootLogin no' | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+      sudo sshd -t && { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+
+- id: LNX-SSH-002
+  title: SSH refuses empty passwords
+  platform: linux
+  cis: {ubuntu-24.04: "5.1.19", rhel-9: "5.1.19"}
+  severity: high
+  attack: [T1078.003]
+  rationale: >-
+    With PermitEmptyPasswords on, any account whose password is empty can be logged into over
+    the network with no secret at all.
+  check: {fact: ssh.permitemptypasswords, op: eq, value: "no"}
+  remediation:
+    text: Set `PermitEmptyPasswords no` and reload sshd.
+    script: |
+      echo 'PermitEmptyPasswords no' | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+      sudo sshd -t && { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+
+- id: LNX-SSH-003
+  title: SSH password authentication is disabled
+  platform: linux
+  cis: null
+  severity: medium
+  attack: [T1110.001, T1110.003, T1110.004]
+  rationale: >-
+    Passwords can be guessed, sprayed or reused from other breaches; SSH keys (or certificates)
+    can't. Not a CIS Level 1 control, but the single most effective SSH hardening step for a
+    host reachable from untrusted networks.
+  check: {fact: ssh.passwordauthentication, op: eq, value: "no"}
+  remediation:
+    text: >-
+      Make sure every admin has a working key first, then set `PasswordAuthentication no` and
+      reload sshd.
+    script: |
+      echo 'PasswordAuthentication no' | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+      sudo sshd -t && { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+  references:
+    - https://attack.mitre.org/techniques/T1110/
+    - https://man.openbsd.org/sshd_config#PasswordAuthentication
+
+- id: LNX-SSH-004
+  title: SSH allows at most 4 authentication attempts per connection
+  platform: linux
+  cis: {ubuntu-24.04: "5.1.16", rhel-9: "5.1.16"}
+  severity: low
+  attack: [T1110.001]
+  rationale: >-
+    Each connection may try MaxAuthTries passwords; a low limit slows online guessing and makes
+    it show up sooner in the logs.
+  check: {fact: ssh.maxauthtries, op: le, value: 4}
+  remediation:
+    text: Set `MaxAuthTries 4` and reload sshd.
+    script: |
+      echo 'MaxAuthTries 4' | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+      sudo sshd -t && { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+
+- id: LNX-SSH-005
+  title: SSH offers no weak ciphers
+  platform: linux
+  cis: {ubuntu-24.04: "5.1.6", rhel-9: "5.1.4"}
+  severity: medium
+  attack: [T1557, T1040]
+  rationale: >-
+    CBC-mode, 3DES, RC4 (arcfour), Blowfish and CAST ciphers have known weaknesses; a
+    man-in-the-middle can downgrade a connection to whatever the server still accepts.
+  check:
+    fact: ssh.ciphers
+    op: none_match
+    value: '-cbc$|^3des|^arcfour|^blowfish|^cast128|^rijndael'
+  remediation:
+    text: Allow only AEAD and CTR ciphers. On Rocky, prefer the system crypto policy (`update-crypto-policies --set DEFAULT`).
+    script: |
+      echo 'Ciphers aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr' | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+      sudo sshd -t && { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+
+- id: LNX-SSH-006
+  title: SSH offers no weak MACs
+  platform: linux
+  cis: {ubuntu-24.04: "5.1.15", rhel-9: "5.1.6"}
+  severity: medium
+  attack: [T1557]
+  rationale: >-
+    MD5, RIPEMD-160, SHA-1 and truncated (-96, 64-bit) MACs weaken the integrity protection of
+    the session, which is what stops a man-in-the-middle from altering traffic.
+  check:
+    fact: ssh.macs
+    op: none_match
+    value: 'md5|ripemd160|-96|^umac-64|^hmac-sha1'
+  remediation:
+    text: Allow only SHA-2 and umac-128 MACs, preferably the encrypt-then-MAC (-etm) ones.
+    script: |
+      echo 'MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256' | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+      sudo sshd -t && { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+
+- id: LNX-SSH-007
+  title: SSH offers no weak key exchange algorithms
+  platform: linux
+  cis: {ubuntu-24.04: "5.1.12", rhel-9: "5.1.5"}
+  severity: medium
+  attack: [T1557, T1040]
+  rationale: >-
+    1024-bit Diffie-Hellman groups and SHA-1 based key exchange are within reach of
+    well-funded attackers and let a man-in-the-middle negotiate down to them.
+  check:
+    fact: ssh.kexalgorithms
+    op: none_match
+    value: '^diffie-hellman-group1-|^diffie-hellman-group14-sha1$|^diffie-hellman-group-exchange-sha1$|^gss-'
+  remediation:
+    text: Allow only curve25519, sntrup/mlkem hybrids, ECDH and SHA-2 DH groups.
+    script: |
+      echo 'KexAlgorithms sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512' | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+      sudo sshd -t && { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+
+- id: LNX-SSH-008
+  title: SSH forwarding (X11, agent, TCP) is disabled
+  platform: linux
+  cis: {ubuntu-24.04: "5.1.8", rhel-9: "5.1.10"}
+  severity: medium
+  attack: [T1572, T1090]
+  rationale: >-
+    Forwarding turns any SSH login into a tunnel: an attacker with one account can reach
+    internal services through this host, or hijack a forwarded agent or X display.
+  check: {fact: ssh.disableforwarding, op: eq, value: "yes"}
+  remediation:
+    text: Set `DisableForwarding yes` (allow it per user with a Match block if someone needs it).
+    script: |
+      echo 'DisableForwarding yes' | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+      sudo sshd -t && { sudo systemctl reload ssh || sudo systemctl reload sshd; }

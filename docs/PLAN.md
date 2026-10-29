@@ -30,7 +30,7 @@ Portfolio project #2, for security engineer interviews (cloud / infrastructure /
   title: SSH root login is disabled
   platform: linux
   applies_to: {distro: [ubuntu, rocky]}
-  cis: {benchmark: "CIS Ubuntu Linux 24.04 LTS", version: "x.y.z", control: "<id>"}   # filled from the benchmark when the check is written
+  cis: {ubuntu-24.04: "5.1.20", rhel-9: "5.1.20"}   # benchmark key -> control ID (keys and full names in models.BENCHMARKS)
   severity: high
   attack: [T1110.001, T1078.003]
   rationale: >-
@@ -45,10 +45,10 @@ Portfolio project #2, for security engineer interviews (cloud / infrastructure /
       echo 'PermitRootLogin no' | sudo tee /etc/ssh/sshd_config.d/50-posture.conf && sudo systemctl reload ssh
   references: ["https://attack.mitre.org/techniques/T1110/001/"]
 ```
-- **Operators:** `eq, ne, in, not_in, lt, le, gt, ge, regex, exists, empty, not_empty`, combined with `all` / `any`. For lists of objects: `for_each: ad.users` + `key: sam` + `where: {...}` → every matching object is an offender, listed by its `key` as evidence (capped at 50); the check passes when there are none. A missing fact or a wrong type (e.g. `lt` on a string) is an `error`; `all`/`any` evaluate every branch, so an uncollected fact is never hidden by short-circuiting.
+- **Operators:** `eq, ne, in, not_in, lt, le, gt, ge, regex, exists, empty, not_empty`, and for lists of strings `contains, any_match, none_match, subset` (a string where a list is expected is an `error`, never a substring test; a failed `none_match` / `subset` shows only the offending items), combined with `all` / `any`. For lists of objects: `for_each: ad.users` + `key: sam` + `where: {...}` → every matching object is an offender, listed by its `key` as evidence (capped at 50); the check passes when there are none. A missing fact or a wrong type (e.g. `lt` on a string) is an `error`; `all`/`any` evaluate every branch, so an uncollected fact is never hidden by short-circuiting.
 - **Results:** `pass | fail | error | skip`. Missing fact → `error` (never a silent pass). `applies_to` not matched → `skip`.
 - **`cis` may be null** where CIS has no control (Kerberoasting, AS-REP roasting, delegation are not CIS controls); `references` then points at Microsoft / ANSSI guidance. Severity is our own call, documented in the rationale.
-- **Validation at load:** unknown keys rejected, unique ids, ATT&CK ids match `T\d{4}(\.\d{3})?`, each op gets the value type it needs, regexes compile, `cis` stated explicitly (null needs `references`). Known fact names per platform are checked from milestone 4, once parsers define them.
+- **Validation at load:** unknown keys rejected, unique ids, ATT&CK ids match `T\d{4}(\.\d{3})?`, each op gets the value type it needs, regexes compile, `cis` stated explicitly (null needs `references`). Fact names are proven by the weak/hardened contract test: a fact no parser produces makes the check `error`, which fails the test.
 - **YAML gotcha:** unquoted `no` / `yes` are booleans in YAML 1.1 (`safe_load`), so string values like `"no"` must be quoted. A bad check stops Posture at startup.
 
 ## Data model
@@ -94,7 +94,7 @@ If a fact can't be read with these rights, its checks report `error` with the re
 | Azure | Storage | `allowBlobPublicAccess`, public containers, HTTP allowed, min TLS < 1.2 | T1530 |
 | Azure | Network | NSG inbound from `*`/Internet to 22, 3389, 1433, 3306, 5985/5986 | T1133, T1021.001, T1021.004 |
 | Azure | Logging | no Activity Log export, Defender for Cloud plans off | T1562.008 |
-Exact CIS control IDs are looked up per check when it is written (Ubuntu 24.04, Rocky Linux 9, Windows Server 2019, Microsoft Azure Foundations, Microsoft 365 for Entra items).
+Exact CIS control IDs are looked up per check when it is written (Ubuntu 24.04, Rocky Linux 9, Windows Server 2019, Microsoft Azure Foundations, Microsoft 365 for Entra items). Linux IDs come from CIS Ubuntu 24.04 v1.0.0 and RHEL 9 v2.0.0 as implemented by ansible-lockdown (UBUNTU24-CIS, RHEL9-CIS); Rocky 9 uses the RHEL 9 numbering.
 
 ## Folder structure
 ```
@@ -145,8 +145,8 @@ Status: ✅ done · ⏭️ next. Update this list when a milestone is committed.
 1. ✅ **Scaffold + DevSecOps CI:** git init, pyproject/uv, ruff, package skeleton, `posture --help` smoke test, full CI (lint, test, Bandit, pip-audit, gitleaks, SBOM), Dependabot, LICENSE, `.gitignore` (`out/`, `.env`, raw recordings), `.env.example`.
 2. ✅ **Models + check loader + engine:** pydantic models, YAML validation (unknown keys, duplicate ids, bad ATT&CK ids, bad regex), every operator, `for_each/where`, `pass/fail/error/skip`. Tests per operator and per validation error.
 3. ✅ **Linux collector + parsers:** local and SSH transports, record/replay, command allowlist + `test_readonly.py`, `deploy/sudoers.posture` checked against the allowlist, parsers with tests, shadow hashes dropped. Hand-written Ubuntu fixtures for now.
-4. ⏭️ **Linux checks (~20)** + the generic weak-fails / hardened-passes test + validation that every check's facts are ones the Linux parsers produce.
-5. **Linux lab:** Vagrantfile (ubuntu, rocky), `guard_lab`, weak + hardened profiles, `make record`; replace the hand-written fixtures with scrubbed recordings (Ubuntu and Rocky). `pytest -m lab` audits the live VMs. Verify on real hosts: `sshd -T` works with Ubuntu 24.04's socket-activated ssh (it needs `/run/sshd`); `dnf -C updateinfo` works as the non-root `posture` user; the Vagrant box's own `vagrant ALL=(ALL) NOPASSWD: ALL` would fail the sudo check on the hardened profile (decide: drop it at the end of hardening, or scope the check and document why).
+4. ✅ **Linux checks (26)** in `checks/linux/` (ssh, accounts, files, firewall, updates, logging) + the weak-fails / hardened-passes contract test over hand-written `ubuntu-` and `rocky-` `weak` / `hardened` recordings. Added the list operators and the `cis` benchmark map.
+5. ⏭️ **Linux lab:** Vagrantfile (ubuntu, rocky), `guard_lab`, weak + hardened profiles, `make record`; replace the hand-written fixtures with scrubbed recordings (Ubuntu and Rocky). `pytest -m lab` audits the live VMs. Verify on real hosts: `sshd -T` works with Ubuntu 24.04's socket-activated ssh (it needs `/run/sshd`); `dnf -C updateinfo` works as the non-root `posture` user; the Vagrant box's own `vagrant ALL=(ALL) NOPASSWD: ALL` would fail the sudo check on the hardened profile (decide: drop it at the end of hardening, or scope the check and document why); the setuid allowlist in `checks/linux/files.yaml` matches what the real boxes ship.
 6. **Reports + baseline + CI mode:** terminal, JSON, static HTML (CSP, escaping test with hostile fixtures), SARIF (schema-validated), `posture diff`, `--baseline`, `--fail-on`, exit codes; the CI `posture` job. Commit `docs/reports/before.html` / `after.html` for Linux.
 7. **DC lab:** `dc` VM, promotion to `posture.test`, weak + hardened Windows profiles, `guard_lab.ps1`, a non-admin audit account in *Remote Management Users*.
 8. **AD collector (LDAP):** ldap3 search-only layer, paging, `userAccountControl` / `msDS-SupportedEncryptionTypes` decoding, `lastLogonTimestamp`, LAPS attributes, privileged group expansion. Spike first: authenticate with signing/sealing against the hardened DC (ldap3 NTLM/Kerberos vs LDAPS with a lab certificate) and write down which one works.

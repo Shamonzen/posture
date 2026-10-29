@@ -31,10 +31,13 @@ class Status(StrEnum):
 
 Platform = Literal["linux", "ad", "azure"]
 Op = Literal[
-    "eq", "ne", "in", "not_in", "lt", "le", "gt", "ge", "regex", "exists", "empty", "not_empty"
-]
+    "eq", "ne", "in", "not_in", "lt", "le", "gt", "ge", "regex", "exists", "empty", "not_empty",
+    "contains", "any_match", "none_match", "subset",
+]  # fmt: skip
 NO_VALUE_OPS = {"exists", "empty", "not_empty"}
 NUMBER_OPS = {"lt", "le", "gt", "ge"}
+LIST_VALUE_OPS = {"in", "not_in", "subset"}
+REGEX_OPS = {"regex", "any_match", "none_match"}
 
 
 class Compare(Strict):
@@ -51,15 +54,15 @@ class Compare(Strict):
             return self
         if not given:
             raise ValueError(f"op {self.op} needs a value")
-        if self.op in {"in", "not_in"} and not isinstance(self.value, list):
+        if self.op in LIST_VALUE_OPS and not isinstance(self.value, list):
             raise ValueError(f"op {self.op} needs a list value")
         if self.op in NUMBER_OPS and (
             isinstance(self.value, bool) or not isinstance(self.value, int | float)
         ):
             raise ValueError(f"op {self.op} needs a number value")
-        if self.op == "regex":
+        if self.op in REGEX_OPS:
             if not isinstance(self.value, str):
-                raise ValueError("op regex needs a string value")
+                raise ValueError(f"op {self.op} needs a string value")
             try:
                 re.compile(self.value)
             except re.error as exc:
@@ -101,10 +104,16 @@ for _model in (AllOf, AnyOf, ForEach):
     _model.model_rebuild()
 
 
-class Cis(Strict):
-    benchmark: str
-    version: str
-    control: str
+# Benchmarks a check can cite, as `cis: {<key>: "<control id>"}`. Control IDs are taken from the
+# benchmark itself or its ansible-lockdown implementation; the benchmark text is never copied.
+BENCHMARKS = {
+    "ubuntu-24.04": "CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0",
+    # Rocky Linux 9 is audited with RHEL 9 numbering (ansible-lockdown RHEL9-CIS supports Rocky).
+    "rhel-9": "CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0",
+}
+Benchmark = Literal["ubuntu-24.04", "rhel-9"]
+ControlId = Annotated[str, Field(pattern=r"^\d+(\.\d+)+$")]
+Cis = dict[Benchmark, ControlId]
 
 
 class Remediation(Strict):
@@ -120,7 +129,7 @@ class Check(Strict):
     title: str
     platform: Platform
     applies_to: dict[str, list[Any]] = {}
-    cis: Cis | None  # required: null means "no CIS control", stated on purpose
+    cis: Annotated[Cis, Field(min_length=1)] | None  # required: null = "no CIS control"
     severity: Severity
     attack: list[AttackId] = Field(min_length=1)
     rationale: str

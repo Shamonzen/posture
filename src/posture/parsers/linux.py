@@ -267,12 +267,14 @@ def ufw(r: Result) -> Facts:
 
 
 def firewalld(r: Result) -> Facts:
+    # Same keys whether running or not, so a stopped firewall fails checks instead of erroring.
+    zone: Facts = {"running": False, "zone": None, "target": None, "services": [], "ports": []}
     if "not running" in (r.stdout + r.stderr).lower():
-        return {"firewalld": {"running": False}}
+        return {"firewalld": zone}
     lines = _lines(r.stdout)
     if not lines:
         raise ValueError("firewall-cmd printed nothing")
-    zone: Facts = {"running": True, "zone": lines[0].split()[0]}
+    zone |= {"running": True, "zone": lines[0].split()[0]}
     for line in lines[1:]:
         key, sep, value = line.strip().partition(":")
         if sep and key in ("target", "services", "ports"):

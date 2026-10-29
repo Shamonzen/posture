@@ -1,0 +1,62 @@
+# Audit and logging: auditd (service + rules from `auditctl -l`) and journald storage.
+
+- id: LNX-LOG-001
+  title: auditd is enabled and running
+  platform: linux
+  cis: {ubuntu-24.04: "6.2.1.2", rhel-9: "6.3.1.4"}
+  severity: medium
+  attack: [T1562.012]
+  rationale: >-
+    auditd records who changed what at the kernel level (file writes, privilege use). With it
+    stopped, an intruder doesn't need to tamper with the audit system: there is none.
+  check:
+    all:
+      - {fact: units.auditd_service.active, op: eq, value: active}
+      - {fact: units.auditd_service.enabled, op: eq, value: enabled}
+  remediation:
+    text: Install and enable auditd.
+    script: |
+      if command -v apt-get >/dev/null; then sudo apt-get install -y auditd; else sudo dnf install -y audit; fi
+      sudo systemctl enable --now auditd
+
+- id: LNX-LOG-002
+  title: Changes to accounts and sudo rules are audited
+  platform: linux
+  cis: {ubuntu-24.04: "6.2.3.8", rhel-9: "6.3.3.8"}
+  severity: medium
+  attack: [T1136.001, T1098, T1548.003]
+  rationale: >-
+    Adding a user, changing a group or granting sudo are the usual first steps of persistence.
+    Watching these files records when it happened and which process did it. (CIS 6.2.3.1 /
+    6.3.3.1 cover sudoers.)
+  check:
+    all:
+      - {fact: audit.rules, op: any_match, value: '^-w /etc/passwd\b'}
+      - {fact: audit.rules, op: any_match, value: '^-w /etc/shadow\b'}
+      - {fact: audit.rules, op: any_match, value: '^-w /etc/group\b'}
+      - {fact: audit.rules, op: any_match, value: '^-w /etc/sudoers\b'}
+  remediation:
+    text: Add watch rules for the identity files and sudoers, then load them.
+    script: |
+      printf '%s\n' '-w /etc/passwd -p wa -k identity' '-w /etc/shadow -p wa -k identity' \
+        '-w /etc/group -p wa -k identity' '-w /etc/gshadow -p wa -k identity' \
+        '-w /etc/sudoers -p wa -k scope' '-w /etc/sudoers.d -p wa -k scope' \
+        | sudo tee /etc/audit/rules.d/50-posture.rules
+      sudo augenrules --load
+
+- id: LNX-LOG-003
+  title: journald keeps logs across reboots
+  platform: linux
+  cis: {ubuntu-24.04: "6.1.2.4", rhel-9: "6.2.2.4"}
+  severity: low
+  attack: [T1070.002]
+  rationale: >-
+    With volatile storage the journal lives in RAM: a reboot (or a crash an attacker causes)
+    erases the evidence.
+  check: {fact: journald.persistent, op: eq, value: true}
+  remediation:
+    text: Set `Storage=persistent`.
+    script: |
+      sudo mkdir -p /etc/systemd/journald.conf.d
+      printf '[Journal]\nStorage=persistent\n' | sudo tee /etc/systemd/journald.conf.d/00-posture.conf
+      sudo systemctl restart systemd-journald

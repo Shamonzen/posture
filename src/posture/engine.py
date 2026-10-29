@@ -8,6 +8,14 @@ from posture.models import AllOf, AnyOf, Check, Compare, Finding, ForEach, Snaps
 EVIDENCE_CAP = 50
 _MISSING = object()
 
+
+def _items(actual: Any) -> list[Any]:
+    """List ops on a string would silently do substring tests: refuse anything but a list."""
+    if not isinstance(actual, list):
+        raise TypeError(f"expected a list, got {type(actual).__name__}")
+    return actual
+
+
 OPS: dict[str, Callable[[Any, Any], bool]] = {
     "eq": operator.eq,
     "ne": operator.ne,
@@ -20,6 +28,15 @@ OPS: dict[str, Callable[[Any, Any], bool]] = {
     "regex": lambda actual, value: re.search(value, actual) is not None,
     "empty": lambda actual, _: len(actual) == 0,
     "not_empty": lambda actual, _: len(actual) > 0,
+    "contains": lambda actual, value: value in _items(actual),
+    "any_match": lambda actual, value: any(re.search(value, x) for x in _items(actual)),
+    "none_match": lambda actual, value: not any(re.search(value, x) for x in _items(actual)),
+    "subset": lambda actual, value: all(x in value for x in _items(actual)),
+}
+# On failure, these show only the items at fault (e.g. the weak ciphers), not the whole list.
+OFFENDERS: dict[str, Callable[[Any, Any], list[Any]]] = {
+    "none_match": lambda actual, value: [x for x in actual if re.search(value, x)],
+    "subset": lambda actual, value: [x for x in actual if x not in value],
 }
 
 
@@ -48,11 +65,14 @@ def _compare(cond: Compare, data: Any, evidence: list[Any]) -> bool:
         return actual is not _MISSING
     if actual is _MISSING:
         raise FactError(f"fact {cond.fact!r} was not collected")
-    evidence.append({"fact": cond.fact, "value": actual})
     try:
-        return OPS[cond.op](actual, cond.value)
+        ok = OPS[cond.op](actual, cond.value)
     except TypeError as exc:
         raise FactError(f"fact {cond.fact!r}: can't apply {cond.op} to {actual!r}") from exc
+    if not ok and cond.op in OFFENDERS:
+        actual = OFFENDERS[cond.op](actual, cond.value)
+    evidence.append({"fact": cond.fact, "value": actual})
+    return ok
 
 
 def _holds(cond: Any, data: Any, evidence: list[Any]) -> bool:

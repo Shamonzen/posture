@@ -13,6 +13,7 @@ permitemptypasswords yes
 hostbasedauthentication no
 ignorerhosts yes
 x11forwarding yes
+disableforwarding no
 allowtcpforwarding yes
 allowagentforwarding yes
 usepam yes

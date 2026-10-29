@@ -14,7 +14,7 @@ Collection and evaluation are separate: `collect` writes a snapshot, `evaluate` 
 
 ## Conventions
 - Python 3.12, uv, ruff (lint + format), type hints on public functions, argparse CLI.
-- Checks are data: one YAML entry per check in `checks/<platform>/*.yaml` with id, title, cis (benchmark + control, or null), severity, attack (technique IDs), rationale, applies_to, check logic (fact + op + value, or for_each/where), remediation, references. Validated by pydantic, unknown keys rejected. No check logic in Python; parsing and derived facts belong in parsers.
+- Checks are data: one YAML entry per check in `checks/<platform>/*.yaml` with id, title, cis (map of benchmark key to control ID, e.g. `{ubuntu-24.04: "5.1.20"}`, or null), severity, attack (technique IDs), rationale, applies_to, check logic (fact + op + value, or for_each/where), remediation, references. Validated by pydantic, unknown keys rejected. No check logic in Python; parsing and derived facts belong in parsers.
 - Check results are `pass | fail | error | skip`. A fact that could not be collected is `error`, never a silent pass; in `--ci` mode errors fail closed.
 - CIS: cite the benchmark name, version and control ID; write our own rationale, never copy benchmark text.
 - Tests need no real system or cloud account: collectors record raw output, tests replay it from `tests/fixtures/recordings/`. Every check must fail on the weak recording and pass on the hardened one (one generic parametrized test enforces it).

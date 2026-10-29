@@ -1,0 +1,8 @@
+# /etc/systemd/journald.conf
+[Journal]
+#Storage=auto
+#Compress=yes
+
+# /etc/systemd/journald.conf.d/00-posture.conf
+[Journal]
+Storage=persistent

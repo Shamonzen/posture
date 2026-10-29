@@ -1,0 +1,89 @@
+# Local accounts (getent passwd + shadow state) and sudo rules (/etc/sudoers, /etc/sudoers.d).
+
+- id: LNX-ACC-001
+  title: root is the only account with UID 0
+  platform: linux
+  cis: {ubuntu-24.04: "5.4.2.1", rhel-9: "5.4.2.1"}
+  severity: critical
+  attack: [T1136.001, T1078.003]
+  rationale: >-
+    Any account with UID 0 is root under another name: a classic backdoor that survives a root
+    password change and hides in the user list.
+  check:
+    for_each: users
+    key: name
+    where:
+      all:
+        - {fact: uid, op: eq, value: 0}
+        - {fact: name, op: ne, value: root}
+  remediation:
+    text: Find out who created each account listed, then lock and remove it (`sudo userdel <name>`).
+
+- id: LNX-ACC-002
+  title: No account has an empty password
+  platform: linux
+  cis: {ubuntu-24.04: "7.2.2", rhel-9: "7.2.2"}
+  severity: critical
+  attack: [T1078.003]
+  rationale: >-
+    An empty password field means anyone can log in as that account (locally, and over SSH if
+    PermitEmptyPasswords is on) or `su` to it without knowing anything.
+  check:
+    for_each: users
+    key: name
+    where: {fact: shadow_state, op: eq, value: empty}
+  remediation:
+    text: Lock each listed account (`sudo passwd -l <name>`), then set a password if it is needed.
+
+- id: LNX-SUDO-001
+  title: No sudo rule grants every command without a password
+  platform: linux
+  cis: {ubuntu-24.04: "5.2.4", rhel-9: "5.2.4"}
+  severity: high
+  attack: [T1548.003]
+  rationale: >-
+    `NOPASSWD: ALL` makes root one command away for anyone who gets that user's session (a
+    stolen SSH key, a hijacked process), with no password standing in the way.
+  check:
+    for_each: sudoers.rules
+    key: principal
+    where:
+      all:
+        - {fact: nopasswd, op: eq, value: true}
+        - {fact: all_commands, op: eq, value: true}
+  remediation:
+    text: >-
+      Remove NOPASSWD from the listed rules, or limit them to the exact commands needed (as
+      deploy/sudoers.posture does). Edit with `sudo visudo -f <file>`.
+
+- id: LNX-SUDO-002
+  title: sudo runs commands in a pseudo-terminal
+  platform: linux
+  cis: {ubuntu-24.04: "5.2.2", rhel-9: "5.2.2"}
+  severity: low
+  attack: [T1548.003]
+  rationale: >-
+    Without use_pty, a command run through sudo can keep running in the background after sudo
+    returns and inject keystrokes into the user's terminal.
+  check: {fact: sudoers.defaults, op: contains, value: use_pty}
+  remediation:
+    text: Add `Defaults use_pty`.
+    script: |
+      echo 'Defaults use_pty' | sudo tee -a /etc/sudoers.d/00-posture-defaults
+      sudo chmod 440 /etc/sudoers.d/00-posture-defaults && sudo visudo -c
+
+- id: LNX-SUDO-003
+  title: sudo keeps its own log file
+  platform: linux
+  cis: {ubuntu-24.04: "5.2.3", rhel-9: "5.2.3"}
+  severity: low
+  attack: [T1548.003, T1070.002]
+  rationale: >-
+    A dedicated sudo log records every privileged command and who ran it, and survives an
+    attacker clearing the general system logs.
+  check: {fact: sudoers.defaults, op: any_match, value: '^logfile='}
+  remediation:
+    text: Add `Defaults logfile="/var/log/sudo.log"`.
+    script: |
+      echo 'Defaults logfile="/var/log/sudo.log"' | sudo tee -a /etc/sudoers.d/00-posture-defaults
+      sudo chmod 440 /etc/sudoers.d/00-posture-defaults && sudo visudo -c

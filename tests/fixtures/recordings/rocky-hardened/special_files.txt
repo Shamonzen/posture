@@ -1,0 +1,10 @@
+4755 /usr/bin/passwd
+4111 /usr/bin/sudo
+4755 /usr/bin/su
+4755 /usr/bin/mount
+4755 /usr/bin/umount
+4755 /usr/bin/crontab
+4755 /usr/sbin/unix_chkpwd
+4755 /usr/sbin/pam_timestamp_check
+4755 /usr/libexec/dbus-1/dbus-daemon-launch-helper
+4755 /usr/sbin/grub2-set-bootflag

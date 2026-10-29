@@ -1,0 +1,59 @@
+# Patching. Posture reads the package cache as it is (refreshing it would be a write),
+# so LNX-UPD-002 says how fresh the answer to LNX-UPD-001 is.
+
+- id: LNX-UPD-001
+  title: No security updates are waiting to be installed
+  platform: linux
+  cis: {ubuntu-24.04: "1.2.2.1", rhel-9: "1.2.2.1"}
+  severity: high
+  attack: [T1068, T1190]
+  rationale: >-
+    A published security fix is also a published description of the bug: exploits for
+    unpatched local privilege escalation and network services follow within days.
+  check: {fact: updates.pending_security, op: eq, value: 0}
+  remediation:
+    text: Install the pending updates and reboot if the kernel or libc changed.
+    script: |
+      if command -v apt-get >/dev/null; then sudo apt-get update && sudo apt-get -y upgrade; else sudo dnf -y upgrade --security; fi
+
+- id: LNX-UPD-002
+  title: Package metadata was refreshed in the last 7 days
+  platform: linux
+  cis: null
+  severity: low
+  attack: [T1068, T1190]
+  rationale: >-
+    The pending-update count above is only as current as the package cache. A cache weeks old
+    can report zero pending updates on a host that is far behind.
+  check: {fact: updates.cache_age_days, op: le, value: 7}
+  remediation:
+    text: Refresh the cache regularly (automatic updates do it daily).
+    script: |
+      if command -v apt-get >/dev/null; then sudo apt-get update; else sudo dnf makecache; fi
+  references:
+    - https://ubuntu.com/server/docs/package-management
+    - https://docs.rockylinux.org/books/admin_guide/13-softwares/
+
+- id: LNX-UPD-003
+  title: Security updates are installed automatically
+  platform: linux
+  cis: null
+  severity: medium
+  attack: [T1068, T1190]
+  rationale: >-
+    Manual patching slips. Automatic security updates close the window between a fix being
+    published and it being exploited, without waiting for someone to remember.
+  check: {fact: updates.automatic, op: eq, value: true}
+  remediation:
+    text: >-
+      Ubuntu: install and enable unattended-upgrades. Rocky: install dnf-automatic with
+      `apply_updates = yes` and enable dnf-automatic.timer.
+    script: |
+      if command -v apt-get >/dev/null; then
+        sudo apt-get install -y unattended-upgrades && echo 'APT::Periodic::Unattended-Upgrade "1";' | sudo tee /etc/apt/apt.conf.d/20auto-upgrades
+      else
+        sudo dnf install -y dnf-automatic && sudo systemctl enable --now dnf-automatic-install.timer
+      fi
+  references:
+    - https://documentation.ubuntu.com/server/how-to/software/automatic-updates/
+    - https://dnf.readthedocs.io/en/latest/automatic.html

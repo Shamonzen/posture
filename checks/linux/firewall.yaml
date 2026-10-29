@@ -1,0 +1,43 @@
+# Host firewall: ufw on Ubuntu, firewalld on Rocky.
+
+- id: LNX-FW-001
+  title: ufw is active and denies incoming traffic by default
+  platform: linux
+  applies_to: {distro: [ubuntu]}
+  cis: {ubuntu-24.04: "4.2.3"}
+  severity: high
+  attack: [T1190, T1021]
+  rationale: >-
+    With no host firewall, every service that listens on the network (a debug port, a
+    database bound to 0.0.0.0) is reachable by anyone who can route to the host. CIS 4.2.7
+    covers the default deny policy.
+  check:
+    all:
+      - {fact: ufw.active, op: eq, value: true}
+      - {fact: ufw.default_incoming, op: in, value: [deny, reject]}
+  remediation:
+    text: Allow SSH first so you don't lock yourself out, then enable ufw with a default deny.
+    script: |
+      sudo ufw allow OpenSSH
+      sudo ufw default deny incoming
+      sudo ufw --force enable
+
+- id: LNX-FW-002
+  title: firewalld is running and its zone doesn't accept everything
+  platform: linux
+  applies_to: {distro: [rocky]}
+  cis: {rhel-9: "4.1.2"}
+  severity: high
+  attack: [T1190, T1021]
+  rationale: >-
+    With firewalld stopped, or a zone whose target is ACCEPT, every listening service is
+    reachable from the network. CIS 4.2.1 covers dropping unneeded services and ports.
+  check:
+    all:
+      - {fact: firewalld.running, op: eq, value: true}
+      - {fact: firewalld.target, op: in, value: [default, DROP, "%%REJECT%%"]}
+  remediation:
+    text: Start firewalld and set the zone target back to default.
+    script: |
+      sudo systemctl enable --now firewalld
+      sudo firewall-cmd --permanent --set-target=default && sudo firewall-cmd --reload

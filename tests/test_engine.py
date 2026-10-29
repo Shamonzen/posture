@@ -30,10 +30,42 @@ def run(check, facts, **overrides):
         ("ge", 14, 8, Status.FAIL),
         ("regex", r"^aes\d+-gcm", "aes256-gcm@openssh.com", Status.PASS),
         ("regex", r"^aes\d+-gcm", "3des-cbc", Status.FAIL),
+        ("contains", "use_pty", ["env_reset", "use_pty"], Status.PASS),
+        ("contains", "use_pty", ["env_reset"], Status.FAIL),
+        ("any_match", "^logfile=", ["logfile=/var/log/sudo.log"], Status.PASS),
+        ("any_match", "^logfile=", [], Status.FAIL),
+        ("none_match", "-cbc$", ["aes128-ctr"], Status.PASS),
+        ("none_match", "-cbc$", ["aes128-ctr", "aes128-cbc"], Status.FAIL),
+        ("subset", ["/usr/bin/su", "/usr/bin/sudo"], ["/usr/bin/su"], Status.PASS),
+        ("subset", ["/usr/bin/su"], ["/usr/bin/su", "/usr/bin/find"], Status.FAIL),
     ],
 )
 def test_operators(op, value, actual, status):
     assert run({"fact": "x", "op": op, "value": value}, {"x": actual}).status == status
+
+
+@pytest.mark.parametrize("op", ["contains", "any_match", "none_match", "subset"])
+def test_list_ops_refuse_strings(op):
+    # "use_pty" in "nouse_ptyx" would be a substring test: a string is an error, not a list.
+    value = ["x"] if op == "subset" else "x"
+    assert run({"fact": "x", "op": op, "value": value}, {"x": "x"}).status == Status.ERROR
+
+
+@pytest.mark.parametrize(
+    ("op", "value", "actual", "offenders"),
+    [
+        (
+            "none_match",
+            "-cbc$",
+            ["aes128-ctr", "aes128-cbc", "aes256-cbc"],
+            ["aes128-cbc", "aes256-cbc"],
+        ),
+        ("subset", ["/usr/bin/su"], ["/usr/bin/su", "/usr/bin/find"], ["/usr/bin/find"]),
+    ],
+)
+def test_failed_list_ops_show_only_offenders(op, value, actual, offenders):
+    finding = run({"fact": "x", "op": op, "value": value}, {"x": actual})
+    assert finding.evidence == [{"fact": "x", "value": offenders}]
 
 
 @pytest.mark.parametrize(
