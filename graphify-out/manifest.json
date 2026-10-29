@@ -1,0 +1,590 @@
+{
+  "pyproject.toml": {
+    "mtime": 1793274625.570479,
+    "seen": 1793278945.6498914,
+    "ast_hash": "7a427a4b285e3465e27b1c476ce1e872",
+    "semantic_hash": ""
+  },
+  "src/posture/__init__.py": {
+    "mtime": 1793272971.374542,
+    "seen": 1793278945.6498914,
+    "ast_hash": "4867131295172353fe6c2295851defc7",
+    "semantic_hash": ""
+  },
+  "src/posture/checks.py": {
+    "mtime": 1793273928.6453762,
+    "seen": 1793278945.6498914,
+    "ast_hash": "90b3436b161c9d99df34baf5582146f8",
+    "semantic_hash": ""
+  },
+  "src/posture/cli.py": {
+    "mtime": 1793274449.1523244,
+    "seen": 1793278945.6498914,
+    "ast_hash": "254802396cbeec99955e030f88808781",
+    "semantic_hash": ""
+  },
+  "src/posture/collectors/__init__.py": {
+    "mtime": 1793274449.6969056,
+    "seen": 1793278945.6498914,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "src/posture/collectors/linux.py": {
+    "mtime": 1793274625.4994547,
+    "seen": 1793278945.6498914,
+    "ast_hash": "847cdb1f8d1f90932733348dcbd3f496",
+    "semantic_hash": ""
+  },
+  "src/posture/collectors/transport.py": {
+    "mtime": 1793274575.510719,
+    "seen": 1793278945.6498914,
+    "ast_hash": "36b0716104c5a905895f146b44689042",
+    "semantic_hash": ""
+  },
+  "src/posture/engine.py": {
+    "mtime": 1793276841.159496,
+    "seen": 1793278945.6498914,
+    "ast_hash": "9c4b4504ab18024469e2fb0f18aabe42",
+    "semantic_hash": ""
+  },
+  "src/posture/models.py": {
+    "mtime": 1793276825.0139134,
+    "seen": 1793278945.6498914,
+    "ast_hash": "40dbeebfe16fd68e6b7dd5d33a456c35",
+    "semantic_hash": ""
+  },
+  "src/posture/parsers/__init__.py": {
+    "mtime": 1793274449.6972055,
+    "seen": 1793278945.6498914,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "src/posture/parsers/linux.py": {
+    "mtime": 1793276852.3255167,
+    "seen": 1793278945.6498914,
+    "ast_hash": "3d7f24a481b78654bf7c42eaa7bf388b",
+    "semantic_hash": ""
+  },
+  "tests/conftest.py": {
+    "mtime": 1793273924.289864,
+    "seen": 1793278945.6498914,
+    "ast_hash": "38a84a2d7af0e77351db320b37d749fb",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/_meta.json": {
+    "mtime": 1793276986.2618115,
+    "seen": 1793278945.6498914,
+    "ast_hash": "b8557c579e2e2ac6c1676bcdb4cc16bc",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/_meta.json": {
+    "mtime": 1793274479.680338,
+    "seen": 1793278945.6498914,
+    "ast_hash": "66d3a72b0a95e981a17c1a7d7c4aab6f",
+    "semantic_hash": ""
+  },
+  "tests/test_checks_load.py": {
+    "mtime": 1793277013.0163026,
+    "seen": 1793278945.6498914,
+    "ast_hash": "1ba2bc7122e5aaca62d0ae5d878e8654",
+    "semantic_hash": ""
+  },
+  "tests/test_checks_weak_hardened.py": {
+    "mtime": 1793277034.685179,
+    "seen": 1793278945.6498914,
+    "ast_hash": "f92924ad73b298b26ed2f75c7223e2fe",
+    "semantic_hash": ""
+  },
+  "tests/test_cli.py": {
+    "mtime": 1793272971.6209908,
+    "seen": 1793278945.6498914,
+    "ast_hash": "9178264e89aa9515a39d12fc64452503",
+    "semantic_hash": ""
+  },
+  "tests/test_collect_linux.py": {
+    "mtime": 1793278263.4141843,
+    "seen": 1793278945.6498914,
+    "ast_hash": "b27ffe4055bb47e8330512bc18de39ab",
+    "semantic_hash": ""
+  },
+  "tests/test_engine.py": {
+    "mtime": 1793277034.685179,
+    "seen": 1793278945.6498914,
+    "ast_hash": "9d3c16063deb74f007074d2d70fa7c2a",
+    "semantic_hash": ""
+  },
+  "tests/test_parsers_linux.py": {
+    "mtime": 1793276852.375132,
+    "seen": 1793278945.6498914,
+    "ast_hash": "cb5f40a865f1781fdd543aed1e3fafe6",
+    "semantic_hash": ""
+  },
+  "tests/test_readonly.py": {
+    "mtime": 1793278263.4151487,
+    "seen": 1793278945.6498914,
+    "ast_hash": "8b01ff41e8f3137b43d65c8370247a8a",
+    "semantic_hash": ""
+  },
+  ".github/dependabot.yml": {
+    "mtime": 1793272988.0465555,
+    "seen": 1793278945.6498914,
+    "ast_hash": "b4cc27c14bc3f11ac3417593deeb09d7",
+    "semantic_hash": ""
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1793272987.9922955,
+    "seen": 1793278945.6498914,
+    "ast_hash": "8f8f4c1f38bbf65f950fdbb76ea78930",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1793278263.4122286,
+    "seen": 1793278945.6498914,
+    "ast_hash": "9c4b63b13fb19416b185a48d572a782e",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1793272988.3053856,
+    "seen": 1793278945.6498914,
+    "ast_hash": "8cc9c2a186c833f88d5ed0203d4dd9b6",
+    "semantic_hash": ""
+  },
+  "checks/linux/accounts.yaml": {
+    "mtime": 1793276947.241894,
+    "seen": 1793278945.6498914,
+    "ast_hash": "6805d58ff6af45cf23545fb0c94ce719",
+    "semantic_hash": ""
+  },
+  "checks/linux/files.yaml": {
+    "mtime": 1793276947.3182104,
+    "seen": 1793278945.6498914,
+    "ast_hash": "44ccc8709a92b8ec29833c9614cfedc5",
+    "semantic_hash": ""
+  },
+  "checks/linux/firewall.yaml": {
+    "mtime": 1793276928.9496832,
+    "seen": 1793278945.6498914,
+    "ast_hash": "5911f131135cfca9f905b2f873680bb1",
+    "semantic_hash": ""
+  },
+  "checks/linux/logging.yaml": {
+    "mtime": 1793276929.1788933,
+    "seen": 1793278945.6498914,
+    "ast_hash": "d1f93cb79e55e1ed9cc0ec8900bace42",
+    "semantic_hash": ""
+  },
+  "checks/linux/ssh.yaml": {
+    "mtime": 1793276928.6474736,
+    "seen": 1793278945.6498914,
+    "ast_hash": "0123d9423732c19aef7b4a1649b374cf",
+    "semantic_hash": ""
+  },
+  "checks/linux/updates.yaml": {
+    "mtime": 1793276929.1288075,
+    "seen": 1793278945.6498914,
+    "ast_hash": "a0fe416000435edb36338e85b5628b10",
+    "semantic_hash": ""
+  },
+  "docs/PLAN.md": {
+    "mtime": 1793278263.413202,
+    "seen": 1793278945.6498914,
+    "ast_hash": "68795e18d9fb2ff0af3f938653b9ed8a",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/auditctl.txt": {
+    "mtime": 1793276985.9352067,
+    "seen": 1793278945.6498914,
+    "ast_hash": "ecbb61db8e598224d1cdbcf77b4bccf5",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/dnf_cache.txt": {
+    "mtime": 1793276986.3351882,
+    "seen": 1793278945.6498914,
+    "ast_hash": "e3a535056fb3af8aeab824be5a01a421",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/dnf_security.txt": {
+    "mtime": 1793276986.3351882,
+    "seen": 1793278945.6498914,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/firewalld.txt": {
+    "mtime": 1793276986.2929351,
+    "seen": 1793278945.6498914,
+    "ast_hash": "da85c89e0e85043f58d843b4f8e344b8",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/group.txt": {
+    "mtime": 1793276986.1570394,
+    "seen": 1793278945.6498914,
+    "ast_hash": "3bf6e65b2b28001394542e731e935f31",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/hostname.txt": {
+    "mtime": 1793278263.4141843,
+    "seen": 1793278945.6498914,
+    "ast_hash": "2f8f8f05b583921d9997f8d1d120a098",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/identity.txt": {
+    "mtime": 1793276985.9404225,
+    "seen": 1793278945.6498914,
+    "ast_hash": "295ec0b0b18939b914342d65371af91a",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/journald.txt": {
+    "mtime": 1793276985.9415736,
+    "seen": 1793278945.6498914,
+    "ast_hash": "ee16aeec0d14f96e288696c5683012c6",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/now.txt": {
+    "mtime": 1793276985.943028,
+    "seen": 1793278945.6498914,
+    "ast_hash": "08ce784cc8764546f0ced21e13662f1b",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/os_release.txt": {
+    "mtime": 1793276986.08135,
+    "seen": 1793278945.6498914,
+    "ast_hash": "824b908127551186d4019c39eda71977",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/shadow.txt": {
+    "mtime": 1793276985.9631867,
+    "seen": 1793278945.6498914,
+    "ast_hash": "f5ec7c67303bd1e87be12e8cac101769",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/special_files.txt": {
+    "mtime": 1793276992.332982,
+    "seen": 1793278945.6498914,
+    "ast_hash": "b183aa692cf665b2a2271ea7e147b806",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/sshd.txt": {
+    "mtime": 1793276985.984257,
+    "seen": 1793278945.6498914,
+    "ast_hash": "9005a3451ca3eede0d38cf1c2923f4aa",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/stat.txt": {
+    "mtime": 1793276986.3547287,
+    "seen": 1793278945.6498914,
+    "ast_hash": "6056eb868ad1b361e9245da4845fbd6d",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/sudoers.txt": {
+    "mtime": 1793276986.1146796,
+    "seen": 1793278945.6498914,
+    "ast_hash": "7bd9d11d94a40472c31f4c4e056da4f9",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-hardened/units.txt": {
+    "mtime": 1793276986.2295785,
+    "seen": 1793278945.6498914,
+    "ast_hash": "e1fbebffae247e0ce4fbe9955fd4bd92",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/auditctl.txt": {
+    "mtime": 1793276985.690674,
+    "seen": 1793278945.6498914,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/dnf_cache.txt": {
+    "mtime": 1793276986.3351882,
+    "seen": 1793278945.6498914,
+    "ast_hash": "ffcd88c84a5bc6b687278836a577654b",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/dnf_security.txt": {
+    "mtime": 1793276986.3231432,
+    "seen": 1793278945.6498914,
+    "ast_hash": "ddee13074c4c36ec364ca07da471a1f9",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/firewalld.txt": {
+    "mtime": 1793276986.2414005,
+    "seen": 1793278945.6498914,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/group.txt": {
+    "mtime": 1793276985.8319967,
+    "seen": 1793278945.6498914,
+    "ast_hash": "306ac3bd349f3b778eeaab14a625ba66",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/hostname.txt": {
+    "mtime": 1793278263.4141843,
+    "seen": 1793278945.6498914,
+    "ast_hash": "2f8f8f05b583921d9997f8d1d120a098",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/identity.txt": {
+    "mtime": 1793276985.6951876,
+    "seen": 1793278945.6498914,
+    "ast_hash": "295ec0b0b18939b914342d65371af91a",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/journald.txt": {
+    "mtime": 1793276985.6962006,
+    "seen": 1793278945.6498914,
+    "ast_hash": "8d0d4921d3073cdff0006b19e9bcf7be",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/now.txt": {
+    "mtime": 1793276985.697268,
+    "seen": 1793278945.6498914,
+    "ast_hash": "08ce784cc8764546f0ced21e13662f1b",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/os_release.txt": {
+    "mtime": 1793276985.7623737,
+    "seen": 1793278945.6498914,
+    "ast_hash": "824b908127551186d4019c39eda71977",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/shadow.txt": {
+    "mtime": 1793276985.7014418,
+    "seen": 1793278945.6498914,
+    "ast_hash": "dffbafba08db4e7ae00eef78959a6145",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/special_files.txt": {
+    "mtime": 1793276985.7029562,
+    "seen": 1793278945.6498914,
+    "ast_hash": "c4d8dac96f7920ce760369233d6243aa",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/sshd.txt": {
+    "mtime": 1793276985.7050605,
+    "seen": 1793278945.6498914,
+    "ast_hash": "8711dbbfcae1b08a880862605e11077f",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/stat.txt": {
+    "mtime": 1793277040.3368988,
+    "seen": 1793278945.6498914,
+    "ast_hash": "876a74308cf3fd9448cd0efea2f1201c",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/sudoers.txt": {
+    "mtime": 1793276985.796391,
+    "seen": 1793278945.6498914,
+    "ast_hash": "4a3a4b63d1dbc7920bc48000fd58fd92",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/rocky-weak/units.txt": {
+    "mtime": 1793276986.1990795,
+    "seen": 1793278945.6498914,
+    "ast_hash": "df17ad7850287239996a0d2245605f04",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/apt_lists.txt": {
+    "mtime": 1793276966.8823724,
+    "seen": 1793278945.6498914,
+    "ast_hash": "e3a535056fb3af8aeab824be5a01a421",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/apt_unattended.txt": {
+    "mtime": 1793276966.8823724,
+    "seen": 1793278945.6498914,
+    "ast_hash": "06da6f5e2f794b61336a80ca038ef6b7",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/apt_upgrade.txt": {
+    "mtime": 1793276966.869957,
+    "seen": 1793278945.6498914,
+    "ast_hash": "e8524439ed2aa84124bdc7679b4405a5",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/auditctl.txt": {
+    "mtime": 1793276966.807512,
+    "seen": 1793278945.6498914,
+    "ast_hash": "ecbb61db8e598224d1cdbcf77b4bccf5",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/group.txt": {
+    "mtime": 1793276966.6317475,
+    "seen": 1793278945.6498914,
+    "ast_hash": "d2ff3975d448e0796f061765160f073f",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/hostname.txt": {
+    "mtime": 1793278263.413202,
+    "seen": 1793278945.6498914,
+    "ast_hash": "7dd46cf9b9e65669b499580f72ba13cc",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/identity.txt": {
+    "mtime": 1793276966.4988775,
+    "seen": 1793278945.6498914,
+    "ast_hash": "295ec0b0b18939b914342d65371af91a",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/journald.txt": {
+    "mtime": 1793276966.7765093,
+    "seen": 1793278945.6498914,
+    "ast_hash": "ee16aeec0d14f96e288696c5683012c6",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/now.txt": {
+    "mtime": 1793276966.5003486,
+    "seen": 1793278945.6498914,
+    "ast_hash": "08ce784cc8764546f0ced21e13662f1b",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/os_release.txt": {
+    "mtime": 1793276966.4948099,
+    "seen": 1793278945.6498914,
+    "ast_hash": "c16673e3554678ec150d4d998bca9826",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/shadow.txt": {
+    "mtime": 1793276966.5929532,
+    "seen": 1793278945.6498914,
+    "ast_hash": "f5ec7c67303bd1e87be12e8cac101769",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/special_files.txt": {
+    "mtime": 1793276966.7139072,
+    "seen": 1793278945.6498914,
+    "ast_hash": "e77a26c459b3558d98b751c7a8a6e5ab",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/sshd.txt": {
+    "mtime": 1793276966.532094,
+    "seen": 1793278945.6498914,
+    "ast_hash": "9005a3451ca3eede0d38cf1c2923f4aa",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/stat.txt": {
+    "mtime": 1793276966.6937475,
+    "seen": 1793278945.6498914,
+    "ast_hash": "b4593e548789e667471d1764912f8e25",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/sudoers.txt": {
+    "mtime": 1793276966.6638563,
+    "seen": 1793278945.6498914,
+    "ast_hash": "f2cb9c267daf9fcd614f0e60a6f18c12",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/ufw.txt": {
+    "mtime": 1793276966.837639,
+    "seen": 1793278945.6498914,
+    "ast_hash": "decf3b71d1778bbb0cd506ee940d3756",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-hardened/units.txt": {
+    "mtime": 1793276966.7472079,
+    "seen": 1793278945.6498914,
+    "ast_hash": "ca1f1a7224711b47a17f9d0fe9becb4b",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/apt_lists.txt": {
+    "mtime": 1793274479.6551864,
+    "seen": 1793278945.6498914,
+    "ast_hash": "ffcd88c84a5bc6b687278836a577654b",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/apt_unattended.txt": {
+    "mtime": 1793274479.656791,
+    "seen": 1793278945.6498914,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/apt_upgrade.txt": {
+    "mtime": 1793274479.644343,
+    "seen": 1793278945.6498914,
+    "ast_hash": "e28da4f70873e00839cb0283c806a57d",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/auditctl.txt": {
+    "mtime": 1793274479.595466,
+    "seen": 1793278945.6498914,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/group.txt": {
+    "mtime": 1793274479.4104774,
+    "seen": 1793278945.6498914,
+    "ast_hash": "f0b677b699bee100b679e6b8ff0b87d4",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/hostname.txt": {
+    "mtime": 1793278263.413202,
+    "seen": 1793278945.6498914,
+    "ast_hash": "7dd46cf9b9e65669b499580f72ba13cc",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/identity.txt": {
+    "mtime": 1793274479.2950969,
+    "seen": 1793278945.6498914,
+    "ast_hash": "295ec0b0b18939b914342d65371af91a",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/journald.txt": {
+    "mtime": 1793274479.5843656,
+    "seen": 1793278945.6498914,
+    "ast_hash": "8d0d4921d3073cdff0006b19e9bcf7be",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/now.txt": {
+    "mtime": 1793274479.2960787,
+    "seen": 1793278945.6498914,
+    "ast_hash": "08ce784cc8764546f0ced21e13662f1b",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/os_release.txt": {
+    "mtime": 1793274479.2830808,
+    "seen": 1793278945.6498914,
+    "ast_hash": "c16673e3554678ec150d4d998bca9826",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/shadow.txt": {
+    "mtime": 1793274479.380387,
+    "seen": 1793278945.6498914,
+    "ast_hash": "dffbafba08db4e7ae00eef78959a6145",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/special_files.txt": {
+    "mtime": 1793274479.5069175,
+    "seen": 1793278945.6498914,
+    "ast_hash": "c4d8dac96f7920ce760369233d6243aa",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/sshd.txt": {
+    "mtime": 1793276966.3075674,
+    "seen": 1793278945.6498914,
+    "ast_hash": "8711dbbfcae1b08a880862605e11077f",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/stat.txt": {
+    "mtime": 1793277040.3301072,
+    "seen": 1793278945.6498914,
+    "ast_hash": "876a74308cf3fd9448cd0efea2f1201c",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/sudoers.txt": {
+    "mtime": 1793274479.4439433,
+    "seen": 1793278945.6498914,
+    "ast_hash": "6c6f50e5978adcf9a91672e984d38b91",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/ufw.txt": {
+    "mtime": 1793274479.6140983,
+    "seen": 1793278945.6498914,
+    "ast_hash": "6f9420e54558b85f47246cf5fe065d63",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/ubuntu-weak/units.txt": {
+    "mtime": 1793274479.537263,
+    "seen": 1793278945.6498914,
+    "ast_hash": "f6c3cf91c77b2576e7c513260cbcbc47",
+    "semantic_hash": ""
+  }
+}

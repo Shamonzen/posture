@@ -15,3 +15,12 @@ CLAUDE.local.md
 lab/.ssh-config
 requirements.txt
 bandit.sarif
+# graphify: commit the graph outputs, not machine-local state
+graphify-out/*/
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+graphify-out/.graphify_labels.pending.json
+graphify-out/.graphify_labels.json.sig
+graphify-out/cost.json
+graphify-out/.rebuild.lock
+graphify-out/.pending_full
