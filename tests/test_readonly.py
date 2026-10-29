@@ -76,14 +76,14 @@ def test_ssh_runner_quotes_and_puts_host_after_double_dash(monkeypatch):
     monkeypatch.setattr(transport, "_run", lambda argv, timeout: argv)
     config = Path("lab/.ssh-config")
     remote = Command("x", ("/usr/bin/find", "/", "-printf", "%m %p\\n"))
-    sent = SshRunner("ubuntu", config).run(remote)
-    assert sent[:-1] == ["ssh", "-o", "BatchMode=yes", "-F", str(config), "--", "ubuntu"]
+    sent = SshRunner("posture-ubuntu", config).run(remote)
+    assert sent[:-1] == ["ssh", "-o", "BatchMode=yes", "-F", str(config), "--", "posture-ubuntu"]
     assert shlex.split(sent[-1]) == list(remote.argv)
 
 
 def test_ssh_runner_adds_sudo_non_interactive(monkeypatch):
     monkeypatch.setattr(transport, "_run", lambda argv, timeout: argv)
-    sent = SshRunner("ubuntu").run(Command("t", ("/usr/sbin/sshd", "-T"), sudo=True))
+    sent = SshRunner("posture-ubuntu").run(Command("t", ("/usr/sbin/sshd", "-T"), sudo=True))
     assert sent[-1] == "/usr/bin/sudo -n /usr/sbin/sshd -T"
 
 

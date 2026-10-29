@@ -10,6 +10,8 @@ out/
 # Unscrubbed recordings; only scrubbed ones under tests/fixtures/recordings/ are committed.
 /recordings/
 .vagrant/
+# Machine-specific notes for Claude Code (paths on this host).
+CLAUDE.local.md
 lab/.ssh-config
 requirements.txt
 bandit.sarif

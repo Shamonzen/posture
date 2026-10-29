@@ -13,7 +13,7 @@ def test_replay_ubuntu_weak():
     snap = linux.collect(ReplayRunner(UBUNTU_WEAK))
     facts = snap.facts
     assert snap.errors == []
-    assert (snap.target, snap.identity, facts["distro"]) == ("ubuntu", "posture", "ubuntu")
+    assert (snap.target, snap.identity, facts["distro"]) == ("posture-ubuntu", "posture", "ubuntu")
     assert facts["ssh"]["permitrootlogin"] == "yes"
     users = {u["name"]: u for u in facts["users"]}
     assert users["guest"]["shadow_state"] == "empty"
