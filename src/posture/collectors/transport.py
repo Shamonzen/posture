@@ -67,7 +67,9 @@ class SshRunner:
     def __init__(self, host: str, ssh_config: Path | None = None) -> None:
         if not host or host.startswith("-"):
             raise ValueError(f"bad ssh host {host!r}")
-        self.base = ["ssh", "-o", "BatchMode=yes"]
+        # LogLevel=ERROR: client warnings (e.g. OpenSSH 10's post-quantum notice) must not end
+        # up in the target's stderr; errors such as a changed host key still fail.
+        self.base = ["ssh", "-o", "BatchMode=yes", "-o", "LogLevel=ERROR"]
         if ssh_config:
             self.base += ["-F", str(ssh_config)]
         self.host = host

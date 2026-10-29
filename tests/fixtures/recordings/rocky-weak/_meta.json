@@ -1,7 +1,7 @@
 {
-  "auditctl": {
-    "exit_code": 1,
-    "stderr": "sudo: /usr/sbin/auditctl: command not found\n"
+  "dnf_security": {
+    "exit_code": 100,
+    "stderr": ""
   },
   "firewalld": {
     "exit_code": 252,
@@ -9,6 +9,6 @@
   },
   "stat": {
     "exit_code": 1,
-    "stderr": "stat: cannot statx '/var/log/journal': No such file or directory\n"
+    "stderr": "/usr/bin/stat: cannot statx '/var/log/journal': No such file or directory\n"
   }
 }

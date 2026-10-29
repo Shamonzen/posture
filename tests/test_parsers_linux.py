@@ -183,11 +183,15 @@ def test_firewalld():
 
 def test_dnf_security():
     out = (
-        "RLSA-2024:3339 Important/Sec. glibc-2.34-100.el9_4.2.x86_64\n"
-        "RLSA-2024:3344 Moderate/Sec.  openssl-1:3.0.7-27.el9_4.x86_64\n"
-        "RLBA-2024:3350 bugfix         tzdata-2024a-2.el9.noarch\n"
+        "\n"
+        "glibc.x86_64            2.34-168.el9_8.2           baseos\n"
+        "kernel.x86_64           5.14.0-687.61.1.el9_8      baseos\n"
+        "Obsoleting Packages\n"
+        "grub2-tools.x86_64      1:2.06-104.el9_8           baseos\n"
+        "    grub2-tools.x86_64  1:2.06-94.el9              @anaconda\n"
     )
-    assert p.dnf_security(Result(out))["updates"]["pending_security"] == 2
+    assert p.dnf_security(Result(out, exit_code=100))["updates"]["pending_security"] == 2
+    assert p.dnf_security(Result(""))["updates"]["pending_security"] == 0
 
 
 def test_apt_unattended():

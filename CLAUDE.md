@@ -29,8 +29,8 @@ Collection and evaluation are separate: `collect` writes a snapshot, `evaluate` 
 
 ## Commands
 - `uv sync --all-extras` · `uv run ruff check . && uv run ruff format --check .`
-- `uv run pytest` (unit, replays recordings) · `uv run pytest -m lab` (needs the Vagrant lab up)
+- `uv run pytest` (unit, replays recordings) · `bash lab/lab.sh test` (= `pytest -m lab`, needs the lab up)
 - `uv run posture audit linux --replay tests/fixtures/recordings/ubuntu-weak --html out/report.html`
-- `uv run posture audit linux --ssh posture-ubuntu --ssh-config lab/.ssh-config --sarif out/posture.sarif --fail-on high`
+- `uv run posture collect linux --ssh posture-ubuntu --ssh-config lab/ssh-config -o out/ubuntu.json`
 - `uv run posture diff out/before.json out/after.json`
-- `make lab-linux` (posture-ubuntu, posture-rocky) · `make lab-dc` (posture-dc) · `make weak` / `make hardened` · `make down` (all run vagrant from `lab/`)
+- Lab (Git Bash, no make on this host): `bash lab/lab.sh up | weak | hardened | record <profile> | test | status | halt | destroy`. It runs vagrant from `lab/` and names the posture-* VMs explicitly.

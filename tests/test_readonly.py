@@ -40,7 +40,7 @@ READ_ONLY = {
     "/usr/bin/apt-get": lambda a: a == ["-s", "upgrade"],
     "/usr/bin/apt-config": lambda a: a[0] == "dump",
     "/usr/bin/firewall-cmd": lambda a: a == ["--list-all"],
-    "/usr/bin/dnf": lambda a: "-C" in a and "updateinfo" in a,
+    "/usr/bin/dnf": lambda a: a == ["-C", "-q", "check-update", "--security"],
 }
 
 
@@ -74,10 +74,11 @@ def test_sudoers_has_no_wildcards_or_all():
 
 def test_ssh_runner_quotes_and_puts_host_after_double_dash(monkeypatch):
     monkeypatch.setattr(transport, "_run", lambda argv, timeout: argv)
-    config = Path("lab/.ssh-config")
+    config = Path("lab/ssh-config")
     remote = Command("x", ("/usr/bin/find", "/", "-printf", "%m %p\\n"))
     sent = SshRunner("posture-ubuntu", config).run(remote)
-    assert sent[:-1] == ["ssh", "-o", "BatchMode=yes", "-F", str(config), "--", "posture-ubuntu"]
+    options = ["-o", "BatchMode=yes", "-o", "LogLevel=ERROR", "-F", str(config)]
+    assert sent[:-1] == ["ssh", *options, "--", "posture-ubuntu"]
     assert shlex.split(sent[-1]) == list(remote.argv)
 
 

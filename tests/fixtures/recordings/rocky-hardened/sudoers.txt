@@ -1,11 +1,109 @@
-/etc/sudoers:Defaults	env_reset
-/etc/sudoers:Defaults	mail_badpass
-/etc/sudoers:Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
-/etc/sudoers:Defaults	use_pty
-/etc/sudoers:root	ALL=(ALL:ALL) ALL
-/etc/sudoers:%wheel	ALL=(ALL:ALL) ALL
-/etc/sudoers:@includedir /etc/sudoers.d
-/etc/sudoers.d/00-posture-defaults:Defaults logfile="/var/log/sudo.log"
+/etc/sudoers:## Sudoers allows particular users to run various commands as
+/etc/sudoers:## the root user, without needing the root password.
+/etc/sudoers:##
+/etc/sudoers:## Examples are provided at the bottom of the file for collections
+/etc/sudoers:## of related commands, which can then be delegated out to particular
+/etc/sudoers:## users or groups.
+/etc/sudoers:## 
+/etc/sudoers:## This file must be edited with the 'visudo' command.
+/etc/sudoers:## Host Aliases
+/etc/sudoers:## Groups of machines. You may prefer to use hostnames (perhaps using 
+/etc/sudoers:## wildcards for entire domains) or IP addresses instead.
+/etc/sudoers:# Host_Alias     FILESERVERS = fs1, fs2
+/etc/sudoers:# Host_Alias     MAILSERVERS = smtp, smtp2
+/etc/sudoers:## User Aliases
+/etc/sudoers:## These aren't often necessary, as you can use regular groups
+/etc/sudoers:## (ie, from files, LDAP, NIS, etc) in this file - just use %groupname 
+/etc/sudoers:## rather than USERALIAS
+/etc/sudoers:# User_Alias ADMINS = jsmith, mikem
+/etc/sudoers:## Command Aliases
+/etc/sudoers:## These are groups of related commands...
+/etc/sudoers:## Networking
+/etc/sudoers:# Cmnd_Alias NETWORKING = /sbin/route, /sbin/ifconfig, /bin/ping, /sbin/dhclient, /usr/bin/net, /sbin/iptables, /usr/bin/rfcomm, /usr/bin/wvdial, /sbin/iwconfig, /sbin/mii-tool
+/etc/sudoers:## Installation and management of software
+/etc/sudoers:# Cmnd_Alias SOFTWARE = /bin/rpm, /usr/bin/up2date, /usr/bin/yum
+/etc/sudoers:## Services
+/etc/sudoers:# Cmnd_Alias SERVICES = /sbin/service, /sbin/chkconfig, /usr/bin/systemctl start, /usr/bin/systemctl stop, /usr/bin/systemctl reload, /usr/bin/systemctl restart, /usr/bin/systemctl status, /usr/bin/systemctl enable, /usr/bin/systemctl disable
+/etc/sudoers:## Updating the locate database
+/etc/sudoers:# Cmnd_Alias LOCATE = /usr/bin/updatedb
+/etc/sudoers:## Storage
+/etc/sudoers:# Cmnd_Alias STORAGE = /sbin/fdisk, /sbin/sfdisk, /sbin/parted, /sbin/partprobe, /bin/mount, /bin/umount
+/etc/sudoers:## Delegating permissions
+/etc/sudoers:# Cmnd_Alias DELEGATING = /usr/sbin/visudo, /bin/chown, /bin/chmod, /bin/chgrp 
+/etc/sudoers:## Processes
+/etc/sudoers:# Cmnd_Alias PROCESSES = /bin/nice, /bin/kill, /usr/bin/kill, /usr/bin/killall
+/etc/sudoers:## Drivers
+/etc/sudoers:# Cmnd_Alias DRIVERS = /sbin/modprobe
+/etc/sudoers:# Defaults specification
+/etc/sudoers:#
+/etc/sudoers:# Refuse to run if unable to disable echo on the tty.
+/etc/sudoers:#
+/etc/sudoers:Defaults   !visiblepw
+/etc/sudoers:#
+/etc/sudoers:# Preserving HOME has security implications since many programs
+/etc/sudoers:# use it when searching for configuration files. Note that HOME
+/etc/sudoers:# is already set when the the env_reset option is enabled, so
+/etc/sudoers:# this option is only effective for configurations where either
+/etc/sudoers:# env_reset is disabled or HOME is present in the env_keep list.
+/etc/sudoers:#
+/etc/sudoers:Defaults    always_set_home
+/etc/sudoers:Defaults    match_group_by_gid
+/etc/sudoers:# Prior to version 1.8.15, groups listed in sudoers that were not
+/etc/sudoers:# found in the system group database were passed to the group
+/etc/sudoers:# plugin, if any. Starting with 1.8.15, only groups of the form
+/etc/sudoers:# %:group are resolved via the group plugin by default.
+/etc/sudoers:# We enable always_query_group_plugin to restore old behavior.
+/etc/sudoers:# Disable this option for new behavior.
+/etc/sudoers:Defaults    always_query_group_plugin
+/etc/sudoers:Defaults    env_reset
+/etc/sudoers:Defaults    env_keep =  "COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS"
+/etc/sudoers:Defaults    env_keep += "MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE"
+/etc/sudoers:Defaults    env_keep += "LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES"
+/etc/sudoers:Defaults    env_keep += "LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE"
+/etc/sudoers:Defaults    env_keep += "LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY"
+/etc/sudoers:#
+/etc/sudoers:# Adding HOME to env_keep may enable a user to run unrestricted
+/etc/sudoers:# commands via sudo.
+/etc/sudoers:#
+/etc/sudoers:# Defaults   env_keep += "HOME"
+/etc/sudoers:Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin
+/etc/sudoers:## Next comes the main part: which users can run what software on 
+/etc/sudoers:## which machines (the sudoers file can be shared between multiple
+/etc/sudoers:## systems).
+/etc/sudoers:## Syntax:
+/etc/sudoers:##
+/etc/sudoers:## 	user	MACHINE=COMMANDS
+/etc/sudoers:##
+/etc/sudoers:## The COMMANDS section may have other options added to it.
+/etc/sudoers:##
+/etc/sudoers:## Allow root to run any commands anywhere 
+/etc/sudoers:root	ALL=(ALL) 	ALL
+/etc/sudoers:## Allows members of the 'sys' group to run networking, software, 
+/etc/sudoers:## service management apps and more.
+/etc/sudoers:# %sys ALL = NETWORKING, SOFTWARE, SERVICES, STORAGE, DELEGATING, PROCESSES, LOCATE, DRIVERS
+/etc/sudoers:## Allows people in group wheel to run all commands
+/etc/sudoers:%wheel	ALL=(ALL)	ALL
+/etc/sudoers:## Same thing without a password
+/etc/sudoers:# %wheel	ALL=(ALL)	NOPASSWD: ALL
+/etc/sudoers:## Allows members of the users group to mount and unmount the 
+/etc/sudoers:## cdrom as root
+/etc/sudoers:# %users  ALL=/sbin/mount /mnt/cdrom, /sbin/umount /mnt/cdrom
+/etc/sudoers:## Allows members of the users group to shutdown this system
+/etc/sudoers:# %users  localhost=/sbin/shutdown -h now
+/etc/sudoers:## Read drop-in files from /etc/sudoers.d (the # here does not mean a comment)
+/etc/sudoers:#includedir /etc/sudoers.d
+/etc/sudoers.d/posture:# Posture audit account: exactly the read-only commands that need root, with exact arguments.
+/etc/sudoers.d/posture:# sudo matches arguments literally, so none of these can be turned into a shell or a write.
+/etc/sudoers.d/posture:# Must stay identical to the sudo=True commands in src/posture/collectors/linux.py
+/etc/sudoers.d/posture:# (tests/test_readonly.py checks it).
+/etc/sudoers.d/posture:#
+/etc/sudoers.d/posture:# Install: sudo visudo -cf sudoers.posture && sudo install -m 0440 sudoers.posture /etc/sudoers.d/posture
 /etc/sudoers.d/posture:posture ALL=(root) NOPASSWD: \
 /etc/sudoers.d/posture:    /usr/sbin/sshd -T, \
-/etc/sudoers.d/posture:    /usr/bin/getent shadow
+/etc/sudoers.d/posture:    /usr/bin/getent shadow, \
+/etc/sudoers.d/posture:    /usr/bin/grep -rH . /etc/sudoers /etc/sudoers.d, \
+/etc/sudoers.d/posture:    /usr/sbin/auditctl -l, \
+/etc/sudoers.d/posture:    /usr/sbin/ufw status verbose, \
+/etc/sudoers.d/posture:    /usr/bin/firewall-cmd --list-all
+/etc/sudoers.d/00-posture-defaults:Defaults use_pty
+/etc/sudoers.d/00-posture-defaults:Defaults logfile="/var/log/sudo.log"

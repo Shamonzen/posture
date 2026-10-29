@@ -1,12 +1,12 @@
 Id=ssh.service
 LoadState=loaded
 ActiveState=active
-UnitFileState=enabled
+UnitFileState=disabled
 
-Id=ssh.service
-LoadState=loaded
-ActiveState=active
-UnitFileState=enabled
+Id=sshd.service
+LoadState=not-found
+ActiveState=inactive
+UnitFileState=
 
 Id=ufw.service
 LoadState=loaded
@@ -40,8 +40,8 @@ UnitFileState=enabled
 
 Id=apt-daily-upgrade.timer
 LoadState=loaded
-ActiveState=active
-UnitFileState=enabled
+ActiveState=inactive
+UnitFileState=disabled
 
 Id=dnf-automatic.timer
 LoadState=not-found

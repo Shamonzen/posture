@@ -70,8 +70,11 @@ COMMANDS = (
         distros=ROCKY,
     ),  # fmt: skip
     Command(
+        # check-update, not `updateinfo list`: the latter also lists advisories for the older
+        # kernels dnf keeps installed (installonly_limit), so a patched host never reads clean.
         "dnf_security",
-        ("/usr/bin/dnf", "-C", "-q", "updateinfo", "list", "--security"),
+        ("/usr/bin/dnf", "-C", "-q", "check-update", "--security"),
+        ok_codes=(0, 100),
         distros=ROCKY,
     ),  # fmt: skip
     Command("dnf_cache", ("/usr/bin/stat", "-c", "%Y", "/var/cache/dnf"), distros=ROCKY),

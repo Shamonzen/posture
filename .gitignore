@@ -12,7 +12,8 @@ out/
 .vagrant/
 # Machine-specific notes for Claude Code (paths on this host).
 CLAUDE.local.md
-lab/.ssh-config
+# Lab-only SSH key and the host keys accepted on first connect.
+lab/keys/
 requirements.txt
 bandit.sarif
 # graphify: commit the graph outputs, not machine-local state

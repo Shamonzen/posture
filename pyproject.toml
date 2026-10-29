@@ -41,5 +41,5 @@ exclude_dirs = ["tests", ".venv"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["lab: needs the Vagrant lab running (make lab-linux / make lab-dc)"]
+markers = ["lab: needs the Vagrant lab running (bash lab/lab.sh up, then weak or hardened)"]
 addopts = "-m 'not lab'"

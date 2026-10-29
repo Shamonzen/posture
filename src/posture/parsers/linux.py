@@ -290,8 +290,14 @@ def apt_upgrade(r: Result) -> Facts:
 
 
 def dnf_security(r: Result) -> Facts:
-    advisories = [line for line in _lines(r.stdout) if re.search(r"\s\S+/Sec\.\s", line)]
-    return {"updates": {"pending_security": len(advisories)}}
+    """`dnf check-update --security`: one `name.arch version repo` line per package (exit 100)."""
+    packages = []
+    for line in _lines(r.stdout):
+        if line.startswith("Obsoleting"):
+            break  # what follows repeats packages already listed
+        if len(line.split()) == 3:
+            packages.append(line.split()[0])
+    return {"updates": {"pending_security": len(packages)}}
 
 
 def cache_mtime(r: Result) -> Facts:

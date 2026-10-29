@@ -1,11 +1,80 @@
+/etc/sudoers:#
+/etc/sudoers:# This file MUST be edited with the 'visudo' command as root.
+/etc/sudoers:#
+/etc/sudoers:# Please consider adding local content in /etc/sudoers.d/ instead of
+/etc/sudoers:# directly modifying this file.
+/etc/sudoers:#
+/etc/sudoers:# See the man page for details on how to write a sudoers file.
+/etc/sudoers:#
 /etc/sudoers:Defaults	env_reset
+/etc/sudoers:Defaults	exempt_group=sudo
 /etc/sudoers:Defaults	mail_badpass
 /etc/sudoers:Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+/etc/sudoers:# This fixes CVE-2005-4890 and possibly breaks some versions of kdesu
+/etc/sudoers:# (#1011624, https://bugs.kde.org/show_bug.cgi?id=452532)
+/etc/sudoers:#Defaults	use_pty
+/etc/sudoers:# This preserves proxy settings from user environments of root
+/etc/sudoers:# equivalent users (group sudo)
+/etc/sudoers:#Defaults:%sudo env_keep += "http_proxy https_proxy ftp_proxy all_proxy no_proxy"
+/etc/sudoers:# This allows running arbitrary commands, but so does ALL, and it means
+/etc/sudoers:# different sudoers have their choice of editor respected.
+/etc/sudoers:#Defaults:%sudo env_keep += "EDITOR"
+/etc/sudoers:# Completely harmless preservation of a user preference.
+/etc/sudoers:#Defaults:%sudo env_keep += "GREP_COLOR"
+/etc/sudoers:# While you shouldn't normally run git as root, you need to with etckeeper
+/etc/sudoers:#Defaults:%sudo env_keep += "GIT_AUTHOR_* GIT_COMMITTER_*"
+/etc/sudoers:# Per-user preferences; root won't have sensible values for them.
+/etc/sudoers:#Defaults:%sudo env_keep += "EMAIL DEBEMAIL DEBFULLNAME"
+/etc/sudoers:# "sudo scp" or "sudo rsync" should be able to use your SSH agent.
+/etc/sudoers:#Defaults:%sudo env_keep += "SSH_AGENT_PID SSH_AUTH_SOCK"
+/etc/sudoers:# Ditto for GPG agent
+/etc/sudoers:#Defaults:%sudo env_keep += "GPG_AGENT_INFO"
+/etc/sudoers:# Host alias specification
+/etc/sudoers:# User alias specification
+/etc/sudoers:# Cmnd alias specification
+/etc/sudoers:# User privilege specification
 /etc/sudoers:root	ALL=(ALL:ALL) ALL
+/etc/sudoers:# Members of the admin group may gain root privileges
+/etc/sudoers:%admin ALL=(ALL) ALL
+/etc/sudoers:# Allow members of group sudo to execute any command
 /etc/sudoers:%sudo	ALL=(ALL:ALL) ALL
+/etc/sudoers:# See sudoers(5) for more information on "@include" directives:
 /etc/sudoers:@includedir /etc/sudoers.d
-/etc/sudoers.d/vagrant:vagrant ALL=(ALL) NOPASSWD: ALL
+/etc/sudoers.d/posture:# Posture audit account: exactly the read-only commands that need root, with exact arguments.
+/etc/sudoers.d/posture:# sudo matches arguments literally, so none of these can be turned into a shell or a write.
+/etc/sudoers.d/posture:# Must stay identical to the sudo=True commands in src/posture/collectors/linux.py
+/etc/sudoers.d/posture:# (tests/test_readonly.py checks it).
+/etc/sudoers.d/posture:#
+/etc/sudoers.d/posture:# Install: sudo visudo -cf sudoers.posture && sudo install -m 0440 sudoers.posture /etc/sudoers.d/posture
 /etc/sudoers.d/posture:posture ALL=(root) NOPASSWD: \
 /etc/sudoers.d/posture:    /usr/sbin/sshd -T, \
-/etc/sudoers.d/posture:    /usr/bin/getent shadow
-/etc/sudoers.d/90-alice:alice ALL=(ALL) NOPASSWD: ALL
+/etc/sudoers.d/posture:    /usr/bin/getent shadow, \
+/etc/sudoers.d/posture:    /usr/bin/grep -rH . /etc/sudoers /etc/sudoers.d, \
+/etc/sudoers.d/posture:    /usr/sbin/auditctl -l, \
+/etc/sudoers.d/posture:    /usr/sbin/ufw status verbose, \
+/etc/sudoers.d/posture:    /usr/bin/firewall-cmd --list-all
+/etc/sudoers.d/90-posture-lab-alice:alice ALL=(ALL) NOPASSWD: ALL
+/etc/sudoers.d/99_vagrant:vagrant ALL=(ALL) NOPASSWD:ALL
+/etc/sudoers.d/vagrant:vagrant ALL=(ALL) NOPASSWD:ALL
+/etc/sudoers.d/README:#
+/etc/sudoers.d/README:# The default /etc/sudoers file created on installation of the
+/etc/sudoers.d/README:# sudo  package now includes the directive:
+/etc/sudoers.d/README:# 
+/etc/sudoers.d/README:# 	@includedir /etc/sudoers.d
+/etc/sudoers.d/README:# 
+/etc/sudoers.d/README:# This will cause sudo to read and parse any files in the /etc/sudoers.d 
+/etc/sudoers.d/README:# directory that do not end in '~' or contain a '.' character, if it
+/etc/sudoers.d/README:# exists. It is not an error if the directory does not exist.
+/etc/sudoers.d/README:# 
+/etc/sudoers.d/README:# Note also, that because sudoers contents can vary widely, no attempt is 
+/etc/sudoers.d/README:# made to add this directive to existing sudoers files on upgrade.  Feel free
+/etc/sudoers.d/README:# to add the above directive to the end of your /etc/sudoers file to enable 
+/etc/sudoers.d/README:# this functionality for existing installations if you wish!
+/etc/sudoers.d/README:# Sudo versions older than 1.9.1 will only support the old syntax
+/etc/sudoers.d/README:# #includedir. That means that the sudo versions in Debian bullseye (11)
+/etc/sudoers.d/README:# and later will happily accept both @includedir and #includedir.
+/etc/sudoers.d/README:#
+/etc/sudoers.d/README:# Finally, please note that using the visudo command is the recommended way
+/etc/sudoers.d/README:# to update sudoers content, since it protects against many failure modes.
+/etc/sudoers.d/README:# See the man page for visudo and sudoers for more information.
+/etc/sudoers.d/README:#

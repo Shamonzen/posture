@@ -5,4 +5,6 @@ New profiles: skip
 
 To                         Action      From
 --                         ------      ----
-22/tcp (OpenSSH)           ALLOW IN    Anywhere
+22/tcp (OpenSSH)           ALLOW IN    Anywhere                  
+22/tcp (OpenSSH (v6))      ALLOW IN    Anywhere (v6)             
+

@@ -1,4 +1,4 @@
-Id=sshd.service
+Id=ssh.service
 LoadState=not-found
 ActiveState=inactive
 UnitFileState=
@@ -19,9 +19,9 @@ ActiveState=inactive
 UnitFileState=disabled
 
 Id=auditd.service
-LoadState=not-found
+LoadState=loaded
 ActiveState=inactive
-UnitFileState=
+UnitFileState=disabled
 
 Id=rsyslog.service
 LoadState=loaded
@@ -44,11 +44,11 @@ ActiveState=inactive
 UnitFileState=
 
 Id=dnf-automatic.timer
-LoadState=loaded
+LoadState=not-found
 ActiveState=inactive
-UnitFileState=disabled
+UnitFileState=
 
 Id=dnf-automatic-install.timer
-LoadState=loaded
+LoadState=not-found
 ActiveState=inactive
-UnitFileState=disabled
+UnitFileState=
