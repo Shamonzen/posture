@@ -16,7 +16,7 @@ posture = "posture.cli:main"
 
 [dependency-groups]
 dev = [
-    "bandit[sarif]>=1.8",
+    "bandit[sarif]>=1.9.4",
     "jsonschema>=4",
     "pip-audit>=2.9",
     "pytest>=8",
