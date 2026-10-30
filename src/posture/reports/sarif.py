@@ -33,7 +33,6 @@ def _rule(check: Check) -> dict[str, Any]:
 def render_sarif(report: Report, checks: list[Check]) -> str:
     by_id = {c.id: c for c in checks}
     platforms = {s.platform for s in report.snapshots}
-    targets = sorted(s.target for s in report.snapshots)
     results = []
     # shortcut: `error` findings are not sent (code scanning has no "unknown" state); the CI
     # gate still fails on them. Add them as notifications if the Security tab should show them.
@@ -73,7 +72,6 @@ def render_sarif(report: Report, checks: list[Check]) -> str:
                         "rules": [_rule(c) for c in checks if c.platform in platforms],
                     }
                 },
-                "automationDetails": {"id": f"posture/{'+'.join(targets)}/"},
                 "results": results,
             }
         ],
