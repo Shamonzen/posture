@@ -84,8 +84,15 @@ def nsgs(r: Result) -> Facts:
             ranges = [props.get("destinationPortRange"), *props.get("destinationPortRanges", [])]
             for port, service in ADMIN_PORTS.items():
                 if any(pr and _covers(pr, port) for pr in ranges):
+                    name = f"{nsg['name']}/{rule['name']}"  # rule names repeat across NSGs
                     exposed.append(
-                        {"nsg": nsg["name"], "rule": rule["name"], "port": port, "service": service}
+                        {
+                            "name": name,
+                            "nsg": nsg["name"],
+                            "rule": rule["name"],
+                            "port": port,
+                            "service": service,
+                        }
                     )
     return {"network": {"nsg_count": len(groups), "exposed_admin_ports": exposed}}
 
@@ -154,7 +161,10 @@ def global_admins(r: Result) -> Facts:
         kind = principal.get("@odata.type", "").removeprefix("#microsoft.graph.")
         name = principal.get("userPrincipalName") or principal.get("displayName")
         admins.append({"name": name or assignment["principalId"], "type": kind or "unknown"})
-    return {"global_admins": sorted(admins, key=lambda a: a["name"].lower())}
+    return {
+        "global_admins": sorted(admins, key=lambda a: a["name"].lower()),
+        "global_admin_count": len(admins),  # service principals count: they hold the role too
+    }
 
 
 def admin_mfa_registration(r: Result) -> Facts:

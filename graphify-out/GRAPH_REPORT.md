@@ -1,7 +1,7 @@
 # Graph Report - posture  (2026-10-30)
 
 ## Corpus Check
-- 53 files · ~58,247 words
+- 53 files · ~60,531 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .example 1, .posture 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `48b4ec9b`
+- Built from commit: `0532c42a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

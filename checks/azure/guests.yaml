@@ -1,0 +1,41 @@
+# External collaboration settings (Graph authorizationPolicy).
+
+- id: AZ-GST-001
+  title: Only admins and Guest Inviters can invite guests
+  platform: azure
+  cis: {azure: "2.16", m365: "5.1.6.3"}
+  severity: medium
+  attack: [T1136.003]
+  rationale: >-
+    When anyone, including existing guests, can invite, one compromised account can add the
+    attacker's own outside accounts to the tenant: a quiet way back in that survives a password
+    reset of the account that was used.
+  check: {fact: guests.invites_from, op: in, value: [adminsAndGuestInviters, none]}
+  remediation:
+    text: >-
+      Set guest invite restrictions to "Only users assigned to specific admin roles can invite
+      guest users" (External Identities, External collaboration settings).
+    script: |
+      Update-MgPolicyAuthorizationPolicy -AllowInvitesFrom adminsAndGuestInviters
+  references:
+    - https://learn.microsoft.com/en-us/entra/external-id/external-collaboration-settings-configure
+
+- id: AZ-GST-002
+  title: Guests can read only their own directory objects
+  platform: azure
+  cis: {azure: "2.15", m365: "5.1.6.2"}
+  severity: low
+  attack: [T1087.004]
+  rationale: >-
+    With member-level or default directory access, a guest account (often a partner's, with
+    weaker controls) can list users, groups and their memberships: the target list for phishing
+    and the map of who is an admin.
+  check: {fact: guests.directory_access, op: eq, value: restricted}
+  remediation:
+    text: >-
+      Set guest user access to "Guest user access is restricted to properties and memberships of
+      their own directory objects".
+    script: |
+      Update-MgPolicyAuthorizationPolicy -GuestUserRoleId 2af84b1e-32c8-42b7-82bc-daa82404023b
+  references:
+    - https://learn.microsoft.com/en-us/entra/identity/users/users-restrict-guest-permissions

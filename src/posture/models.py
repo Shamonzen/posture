@@ -112,8 +112,12 @@ BENCHMARKS = {
     "rhel-9": "CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0",
     # Numbering as in ansible-lockdown Windows-2019-CIS; DC-only controls included.
     "windows-server-2019": "CIS Microsoft Windows Server 2019 Benchmark v4.0.0",
+    # Azure and Entra ID numbering as mapped in Prowler's compliance files (cis_3.0_azure,
+    # cis_4.0_m365); Entra items not in the Azure benchmark cite the Microsoft 365 one.
+    "azure": "CIS Microsoft Azure Foundations Benchmark v3.0.0",
+    "m365": "CIS Microsoft 365 Foundations Benchmark v4.0.0",
 }
-Benchmark = Literal["ubuntu-24.04", "rhel-9", "windows-server-2019"]
+Benchmark = Literal["ubuntu-24.04", "rhel-9", "windows-server-2019", "azure", "m365"]
 ControlId = Annotated[str, Field(pattern=r"^\d+(\.\d+)+$")]
 Cis = dict[Benchmark, ControlId]
 

@@ -1,0 +1,70 @@
+# NSG inbound rules that allow an admin port from anywhere ("*", Internet, 0.0.0.0/0), one
+# offender per NSG/rule. shortcut (parser): a higher-priority Deny is not subtracted.
+
+- id: AZ-NET-001
+  title: No NSG allows RDP from the Internet
+  platform: azure
+  cis: {azure: "7.1"}
+  severity: high
+  attack: [T1133, T1021.001]
+  rationale: >-
+    RDP open to the Internet is scanned within minutes and sprayed with passwords all day; with
+    one weak or reused password, or an unpatched RDP flaw, the attacker has a desktop inside the
+    network.
+  check:
+    for_each: network.exposed_admin_ports
+    key: name
+    where: {fact: port, op: eq, value: 3389}
+  remediation:
+    text: >-
+      Remove each listed rule, or limit its source to known addresses; reach VMs through Azure
+      Bastion or just-in-time VM access instead.
+    script: |
+      az network nsg rule delete --resource-group <resource-group> --nsg-name <nsg> --name <rule>
+  references:
+    - https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices
+
+- id: AZ-NET-002
+  title: No NSG allows SSH from the Internet
+  platform: azure
+  cis: {azure: "7.2"}
+  severity: high
+  attack: [T1133, T1021.004]
+  rationale: >-
+    SSH open to the Internet gets constant password guessing; one VM with password logins or a
+    leaked key gives the attacker a shell inside the virtual network.
+  check:
+    for_each: network.exposed_admin_ports
+    key: name
+    where: {fact: port, op: eq, value: 22}
+  remediation:
+    text: >-
+      Remove each listed rule, or limit its source to known addresses; reach VMs through Azure
+      Bastion or just-in-time VM access instead.
+    script: |
+      az network nsg rule delete --resource-group <resource-group> --nsg-name <nsg> --name <rule>
+  references:
+    - https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices
+
+- id: AZ-NET-003
+  title: No NSG allows database or WinRM ports from the Internet
+  platform: azure
+  cis: null
+  severity: high
+  attack: [T1133, T1190, T1021.006]
+  rationale: >-
+    SQL Server (1433), MySQL (3306) and WinRM (5985/5986) are management and data interfaces,
+    not public services: exposed, they invite password spraying against database and Windows
+    accounts and exploitation of the server itself.
+  check:
+    for_each: network.exposed_admin_ports
+    key: name
+    where: {fact: service, op: in, value: [mssql, mysql, winrm]}
+  remediation:
+    text: >-
+      Remove each listed rule; reach databases through private endpoints or service endpoints,
+      and manage Windows VMs through Bastion.
+    script: |
+      az network nsg rule delete --resource-group <resource-group> --nsg-name <nsg> --name <rule>
+  references:
+    - https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices

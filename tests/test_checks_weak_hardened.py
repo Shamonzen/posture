@@ -64,5 +64,6 @@ def test_fails_on_weak_and_passes_on_hardened(check):
 
 def test_check_ids_are_unique_and_cover_every_platform_recorded():
     assert len({c.id for c in CHECKS}) == len(CHECKS)
-    assert {c.platform for c in CHECKS} == {"linux", "ad"}
+    assert {c.platform for c in CHECKS} == {"linux", "ad", "azure"}
     assert sum(c.platform == "ad" for c in CHECKS) >= 15
+    assert sum(c.platform == "azure" for c in CHECKS) >= 12

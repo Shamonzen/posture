@@ -48,9 +48,9 @@
     "semantic_hash": ""
   },
   "src/posture/models.py": {
-    "mtime": 1793342454.124872,
-    "seen": 1793344500.8313582,
-    "ast_hash": "a4065805698692c3957b9e04093336cf",
+    "mtime": 1793344816.2815495,
+    "seen": 1793345018.014383,
+    "ast_hash": "65bbe468af4f7c76ff46362ce335cfef",
     "semantic_hash": ""
   },
   "src/posture/parsers/__init__.py": {
@@ -90,9 +90,9 @@
     "semantic_hash": ""
   },
   "tests/test_checks_weak_hardened.py": {
-    "mtime": 1793344465.3728826,
-    "seen": 1793344500.8313582,
-    "ast_hash": "eb6f4c36b6b14e0b1a3935a09ad01e50",
+    "mtime": 1793344926.987289,
+    "seen": 1793345018.014383,
+    "ast_hash": "bc83ab173997730d2c880e97dec769e4",
     "semantic_hash": ""
   },
   "tests/test_cli.py": {
@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/ci.yml": {
-    "mtime": 1793342633.2275496,
-    "seen": 1793344500.8313582,
-    "ast_hash": "7d5c6fe75ed2fd9e3d0bbb91eb89796a",
+    "mtime": 1793345002.6513515,
+    "seen": 1793345018.014383,
+    "ast_hash": "2e0df0071e7cddb3e18218591fc7ff28",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
@@ -186,9 +186,9 @@
     "semantic_hash": ""
   },
   "docs/PLAN.md": {
-    "mtime": 1793344494.85489,
-    "seen": 1793344500.8313582,
-    "ast_hash": "b7d20699e203053545608b63eb22f3d7",
+    "mtime": 1793345002.6513515,
+    "seen": 1793345018.014383,
+    "ast_hash": "79118de7845eb75f90ce7386c3429226",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/rocky-hardened/auditctl.txt": {
@@ -834,9 +834,9 @@
     "semantic_hash": ""
   },
   "src/posture/parsers/azure.py": {
-    "mtime": 1793344465.4908485,
-    "seen": 1793344500.8313582,
-    "ast_hash": "d3b7db80dd24801437937354ac2ca822",
+    "mtime": 1793344824.03603,
+    "seen": 1793345018.014383,
+    "ast_hash": "b3381082c2ae9930452a006a986c57b8",
     "semantic_hash": ""
   },
   "tests/test_collect_azure.py": {
@@ -870,9 +870,9 @@
     "semantic_hash": ""
   },
   "docs/permissions.md": {
-    "mtime": 1793342431.794518,
-    "seen": 1793344500.8313582,
-    "ast_hash": "47498cc2f723dd56ef1042cda3d26d79",
+    "mtime": 1793344987.4466603,
+    "seen": 1793345018.014383,
+    "ast_hash": "57c3ee9eaed4f8ae096b24bef6e41921",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/azure-hardened/admin_mfa_registration.txt": {
@@ -1029,6 +1029,36 @@
     "mtime": 1793342659.7445018,
     "seen": 1793344500.8313582,
     "ast_hash": "6978dc54c77b8275237fa94f86127e68",
+    "semantic_hash": ""
+  },
+  "checks/azure/guests.yaml": {
+    "mtime": 1793344926.4995658,
+    "seen": 1793345018.014383,
+    "ast_hash": "5e5f46d5f5462f7f96974768ff8e1460",
+    "semantic_hash": ""
+  },
+  "checks/azure/identity.yaml": {
+    "mtime": 1793344926.4434414,
+    "seen": 1793345018.014383,
+    "ast_hash": "ae1a5742363e158a02d91d61e197e284",
+    "semantic_hash": ""
+  },
+  "checks/azure/logging.yaml": {
+    "mtime": 1793344926.807753,
+    "seen": 1793345018.014383,
+    "ast_hash": "f72a411b56132839edecb81c5f7b872d",
+    "semantic_hash": ""
+  },
+  "checks/azure/network.yaml": {
+    "mtime": 1793344926.7630906,
+    "seen": 1793345018.014383,
+    "ast_hash": "0e59f67c35d64c2f094a256213350b7b",
+    "semantic_hash": ""
+  },
+  "checks/azure/storage.yaml": {
+    "mtime": 1793344926.5464375,
+    "seen": 1793345018.014383,
+    "ast_hash": "408adbf02aac2bb52d4b4c9a1d01f26c",
     "semantic_hash": ""
   }
 }

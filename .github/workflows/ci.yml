@@ -54,7 +54,7 @@ jobs:
       - run: uv sync --locked
       - name: Gate (hardened passes, weak fails)
         run: |
-          for os in ubuntu:linux rocky:linux dc:ad; do
+          for os in ubuntu:linux rocky:linux dc:ad azure:azure; do
             platform="${os#*:}" os="${os%:*}"
             uv run posture audit "$platform" --replay "tests/fixtures/recordings/$os-hardened" --fail-on high
             code=0
@@ -77,6 +77,11 @@ jobs:
         with:
           sarif_file: out/dc-weak.sarif
           category: posture-dc
+      - if: always() && github.event.repository.visibility == 'public'
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4
+        with:
+          sarif_file: out/azure-weak.sarif
+          category: posture-azure
 
   dependencies:
     runs-on: ubuntu-latest

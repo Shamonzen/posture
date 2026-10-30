@@ -1,0 +1,86 @@
+# Entra ID sign-in protection and admin roles (Graph, read with the permissions in docs/permissions.md).
+
+- id: AZ-IAM-001
+  title: MFA is enforced for administrators
+  platform: azure
+  cis: {azure: "2.2.4", m365: "5.2.2.1"}
+  severity: high
+  attack: [T1078.004, T1110.003]
+  rationale: >-
+    Without MFA, a Global Administrator's password is the only thing between a password-spraying
+    or phishing attacker and the whole tenant and every subscription under it. Counted as enforced:
+    Security Defaults on, or an enabled Conditional Access policy over all apps that requires MFA
+    of all users or of the Global Administrator role (report-only policies enforce nothing).
+  check: {fact: identity.admin_mfa_enforced, op: eq, value: true}
+  remediation:
+    text: >-
+      Create a Conditional Access policy that targets the admin roles (or all users), all cloud
+      apps, and grants access only with MFA. Exclude one or two monitored break-glass accounts,
+      run it in report-only mode first, then switch it on. Without Entra ID P1, turn on Security
+      Defaults instead.
+  references:
+    - https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-admin-mfa
+
+- id: AZ-IAM-002
+  title: Legacy authentication is blocked
+  platform: azure
+  cis: {m365: "5.2.2.3"}
+  severity: high
+  attack: [T1110.003, T1078.004]
+  rationale: >-
+    Legacy protocols (IMAP, POP, SMTP AUTH, older Office clients) can't do MFA, so they let a
+    sprayed or leaked password straight in even where MFA is required elsewhere. Counted as
+    blocked: Security Defaults on, or an enabled Conditional Access policy for all users and all
+    apps that blocks the Exchange ActiveSync and "other" client types.
+  check: {fact: identity.legacy_auth_blocked, op: eq, value: true}
+  remediation:
+    text: >-
+      Check the sign-in logs for legacy clients still in use, then create a Conditional Access
+      policy for all users and all apps, with client apps "Exchange ActiveSync" and "Other
+      clients", that blocks access. Start in report-only mode.
+  references:
+    - https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-block-legacy-authentication
+
+- id: AZ-IAM-003
+  title: Every administrator has registered MFA
+  platform: azure
+  cis: {azure: "2.1.2", m365: "5.2.3.4"}
+  severity: medium
+  attack: [T1078.004, T1098.005]
+  rationale: >-
+    An admin who has not registered a second factor yet can be enrolled by whoever signs in with
+    their password first: an attacker with a phished password registers their own authenticator
+    and keeps it, even after MFA is enforced.
+  check:
+    for_each: admin_mfa_registration
+    key: name
+    where: {fact: mfa_registered, op: eq, value: false}
+  remediation:
+    text: >-
+      Have each listed admin register a strong method (FIDO2 key, Authenticator) now, or give
+      them a Temporary Access Pass to do it; remove the role from accounts that no longer need it.
+  references:
+    - https://learn.microsoft.com/en-us/entra/identity/authentication/howto-registration-mfa-sso-combined
+
+- id: AZ-IAM-004
+  title: Between 2 and 4 principals hold Global Administrator
+  platform: azure
+  cis: {azure: "2.26", m365: "1.1.3"}
+  severity: medium
+  attack: [T1078.004]
+  rationale: >-
+    Each Global Administrator can take over the tenant and, by elevating access, every
+    subscription in it, so each one is a target worth phishing. One alone is a lockout risk; more
+    than four is usually standing access nobody reviews. Service principals count: an app with
+    the role is a Global Administrator whose secret can leak.
+  check:
+    all:
+      - {fact: global_admin_count, op: ge, value: 2}
+      - {fact: global_admin_count, op: le, value: 4}
+  remediation:
+    text: >-
+      Keep two cloud-only break-glass accounts plus the few admins who need the role; move the
+      others to narrower roles (User, Exchange, Security Administrator...), make the role
+      eligible through PIM where licensed, and take it away from service principals.
+  references:
+    - https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/best-practices

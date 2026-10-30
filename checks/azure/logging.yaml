@@ -1,0 +1,43 @@
+# Subscription logging and threat detection.
+
+- id: AZ-LOG-001
+  title: The subscription Activity Log is exported
+  platform: azure
+  cis: {azure: "6.1.1"}
+  severity: medium
+  attack: [T1562.008]
+  rationale: >-
+    The Activity Log records who changed what in the subscription, but Azure keeps it for 90
+    days only and nothing alerts on it. Without a diagnostic setting sending it to a workspace or
+    storage, an intrusion found later has no control-plane trail.
+  check: {fact: activity_log.exported, op: eq, value: true}
+  remediation:
+    text: >-
+      Add a subscription diagnostic setting that sends at least the Administrative, Security,
+      Policy and Alert categories to a Log Analytics workspace (or a storage account with a
+      retention policy).
+  references:
+    - https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/activity-log
+
+- id: AZ-LOG-002
+  title: Microsoft Defender for Cloud plans are on
+  platform: azure
+  cis: null
+  severity: medium
+  attack: [T1562.001]
+  rationale: >-
+    On the Free tier, Defender for Cloud only scores configuration: there is no threat detection
+    for VMs, SQL, storage, Key Vault or Resource Manager, so credential misuse or data theft on
+    those resources raises no alert. CIS Azure 3.0.0 section 3.1 has one control per plan.
+  check:
+    for_each: defender_plans
+    key: name
+    where: {fact: tier, op: ne, value: Standard}
+  remediation:
+    text: >-
+      Turn on the listed plans for the resource types the subscription uses (each plan is billed
+      per resource).
+    script: |
+      az security pricing create --name <name> --tier Standard
+  references:
+    - https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction

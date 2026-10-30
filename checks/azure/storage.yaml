@@ -1,0 +1,66 @@
+# Storage account settings (ARM), one offender per account.
+
+- id: AZ-STG-001
+  title: Storage accounts don't allow anonymous blob access
+  platform: azure
+  cis: {azure: "4.17"}
+  severity: high
+  attack: [T1530]
+  rationale: >-
+    With anonymous access allowed on the account, one container set to public by mistake
+    publishes its blobs to anyone who guesses the URL, and storage account names are easy to
+    enumerate. An account that predates the setting allows it until it is turned off.
+  check:
+    for_each: storage_accounts
+    key: name
+    where: {fact: public_blob_access, op: eq, value: true}
+  remediation:
+    text: >-
+      Check which containers are public and who depends on them, then disallow anonymous access
+      on each listed account (Azure Policy can enforce it for new ones).
+    script: |
+      az storage account update --name <name> --resource-group <resource-group> --allow-blob-public-access false
+  references:
+    - https://learn.microsoft.com/en-us/azure/storage/blobs/anonymous-read-access-prevent
+
+- id: AZ-STG-002
+  title: Storage accounts require secure transfer (HTTPS)
+  platform: azure
+  cis: {azure: "4.1"}
+  severity: medium
+  attack: [T1557, T1530]
+  rationale: >-
+    Over plain HTTP, the data and the shared access signatures in request URLs cross the network
+    in clear, where anyone on the path can read them and reuse the signature.
+  check:
+    for_each: storage_accounts
+    key: name
+    where: {fact: https_only, op: eq, value: false}
+  remediation:
+    text: Enable "Secure transfer required" on each listed account.
+    script: |
+      az storage account update --name <name> --resource-group <resource-group> --https-only true
+  references:
+    - https://learn.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer
+
+- id: AZ-STG-003
+  title: Storage accounts require TLS 1.2 or later
+  platform: azure
+  cis: {azure: "4.15"}
+  severity: medium
+  attack: [T1557]
+  rationale: >-
+    TLS 1.0 and 1.1 have known weaknesses and are kept only for old clients; accepting them lets
+    an attacker on the path force a weaker connection. An absent setting means TLS 1.0.
+  check:
+    for_each: storage_accounts
+    key: name
+    where: {fact: min_tls_version, op: in, value: [TLS1_0, TLS1_1]}
+  remediation:
+    text: >-
+      Check the account's logs for clients still on TLS 1.0 / 1.1, then set the minimum to TLS
+      1.2 on each listed account.
+    script: |
+      az storage account update --name <name> --resource-group <resource-group> --min-tls-version TLS1_2
+  references:
+    - https://learn.microsoft.com/en-us/azure/storage/common/transport-layer-security-configure-minimum-version
