@@ -1,0 +1,101 @@
+# User accounts and privileged groups (members expanded through nesting by the parser).
+
+- id: AD-ACC-001
+  title: No enabled account is allowed an empty password
+  platform: ad
+  cis: null
+  severity: high
+  attack: [T1078.002]
+  rationale: >-
+    PASSWD_NOTREQD lets the account's password be set to nothing regardless of the domain
+    policy. Such an account may already have an empty password, which anyone can log on with.
+  check:
+    for_each: users
+    key: name
+    where:
+      all:
+        - {fact: enabled, op: eq, value: true}
+        - {fact: password_not_required, op: eq, value: true}
+  remediation:
+    text: >-
+      Clear the flag on each listed account, then set a password that meets the policy.
+    script: |
+      Set-ADAccountControl -Identity <name> -PasswordNotRequired $false
+  references:
+    - https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/useraccountcontrol-manipulate-account-properties
+
+- id: AD-ACC-002
+  title: Privileged accounts' passwords expire
+  platform: ad
+  cis: null
+  # Medium, not high: the lab's `vagrant` account keeps this flag on purpose (Vagrant logs on
+  # with it), so the hardened DC reports it honestly without failing the CI gate on high.
+  severity: medium
+  attack: [T1078.002]
+  rationale: >-
+    An admin password that never expires is often years old, shared, or written down. Any one
+    leak of it stays valid indefinitely, and with it full control of the domain.
+  check:
+    for_each: users
+    key: name
+    where:
+      all:
+        - {fact: enabled, op: eq, value: true}
+        - {fact: privileged, op: eq, value: true}
+        - {fact: password_never_expires, op: eq, value: true}
+  remediation:
+    text: >-
+      Clear "Password never expires" on each listed admin account and rotate its password, or
+      move service-style admin accounts to gMSAs.
+    script: |
+      Set-ADUser <name> -PasswordNeverExpires $false
+  references:
+    - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/implementing-least-privilege-administrative-models
+
+- id: AD-ACC-003
+  title: Privileged groups have at most 3 members
+  platform: ad
+  cis: null
+  severity: medium
+  attack: [T1078.002]
+  rationale: >-
+    Every member of Domain Admins, Administrators and the other groups that control the domain
+    is one phished account away from losing it. Day-to-day admin work rarely needs them; a short
+    list is also one that someone actually reviews.
+  check:
+    for_each: privileged_groups
+    key: name
+    where: {fact: member_count, op: gt, value: 3}
+  remediation:
+    text: >-
+      Remove members who don't need standing domain-wide rights (nested groups count: members are
+      expanded) and delegate narrower rights on OUs instead. Adjust the threshold to your domain.
+  references:
+    - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/implementing-least-privilege-administrative-models
+
+- id: AD-ACC-004
+  title: No enabled account keeps adminCount outside a privileged group
+  platform: ad
+  cis: null
+  severity: low
+  attack: [T1078.002]
+  rationale: >-
+    adminCount=1 marks an account protected by AdminSDHolder. Left behind on an account that is
+    no longer an admin, it keeps the old protected ACL and hints at past privilege, and is a
+    common sign of a forgotten or hidden admin account.
+  check:
+    for_each: users
+    key: name
+    where:
+      all:
+        - {fact: enabled, op: eq, value: true}
+        - {fact: admin_count, op: eq, value: true}
+        - {fact: privileged, op: eq, value: false}
+  remediation:
+    text: >-
+      Confirm each listed account is no longer meant to be an admin, then clear adminCount and
+      re-enable inheritance on its ACL.
+    script: |
+      Set-ADUser <name> -Clear adminCount
+  references:
+    - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/appendix-c--protected-accounts-and-groups-in-active-directory

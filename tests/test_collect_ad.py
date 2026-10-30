@@ -10,8 +10,15 @@ from posture.collectors.transport import ReplayRunner, Result
 from posture.parsers import ad as p
 
 RECORDINGS = Path(__file__).parent / "fixtures" / "recordings"
-WEAK = ad.collect(ReplayRunner(RECORDINGS / "dc-weak"))
-HARDENED = ad.collect(ReplayRunner(RECORDINGS / "dc-hardened"))
+
+
+def _replay(name):
+    runner = ReplayRunner(RECORDINGS / name)
+    return ad.collect(runner, runner)
+
+
+WEAK = _replay("dc-weak")
+HARDENED = _replay("dc-hardened")
 
 
 def _by_name(snapshot, key):
@@ -49,6 +56,11 @@ def test_replay_dc_weak():
     # Domain Admins is nested in BUILTIN\Administrators.
     assert set(groups["Domain Admins"]["members"]) <= set(groups["Administrators"]["members"])
     assert "groups" not in WEAK.facts and "now" in WEAK.facts
+    assert WEAK.facts["dc"] == {
+        "smb_signing_required": False,
+        "ldap_server_integrity": 1,
+        "lm_compatibility_level": 1,
+    }
 
 
 def test_replay_dc_hardened():
@@ -62,11 +74,17 @@ def test_replay_dc_hardened():
     assert (computers["ws01$"]["laps"], computers["ws02$"]["laps"]) == ("windows", "windows")
     groups = _by_name(HARDENED, "privileged_groups")
     assert groups["Domain Admins"]["members"] == ["Administrator", "adm.ops"]
+    assert HARDENED.facts["dc"] == {
+        "smb_signing_required": True,
+        "ldap_server_integrity": 2,
+        "lm_compatibility_level": 5,
+    }
 
 
 def test_record_then_replay_round_trip(tmp_path):
-    first = ad.collect(ReplayRunner(RECORDINGS / "dc-weak"), record_dir=tmp_path)
-    second = ad.collect(ReplayRunner(tmp_path))
+    runner = ReplayRunner(RECORDINGS / "dc-weak")
+    first = ad.collect(runner, runner, record_dir=tmp_path)
+    second = ad.collect(ReplayRunner(tmp_path), ReplayRunner(tmp_path))
     assert first.facts == second.facts
 
 
@@ -120,6 +138,31 @@ def test_failures_and_bad_output_become_errors():
     assert snap.target == "unknown"
 
 
+def test_without_winrm_the_dc_host_reads_are_errors():
+    snap = ad.collect(ReplayRunner(RECORDINGS / "dc-weak"))
+    assert {e.source for e in snap.errors} == {r.name for r in ad.REGISTRY_READS}
+    assert "dc" not in snap.facts
+
+
+@pytest.mark.parametrize(
+    ("parser", "stdout", "expected"),
+    [
+        (p.smb_server, '{"RequireSecuritySignature":null}', {"smb_signing_required": False}),
+        (p.ldap_server, '{"LDAPServerIntegrity":null}', {"ldap_server_integrity": 1}),
+        (p.ldap_server, '{"LDAPServerIntegrity":0}', {"ldap_server_integrity": 0}),
+        (p.lsa, '{"LmCompatibilityLevel":null}', {"lm_compatibility_level": 3}),
+    ],
+)
+def test_absent_registry_values_take_the_os_default(parser, stdout, expected):
+    assert parser(Result(stdout)) == {"dc": expected}
+
+
+@pytest.mark.parametrize("stdout", ["", "[]", '{"Other":1}'])
+def test_registry_output_without_the_value_is_a_parse_error(stdout):
+    with pytest.raises(ValueError):
+        p.lsa(Result(stdout))
+
+
 def test_certificate_must_name_the_ip():
     cert = {"subjectAltName": (("DNS", "dc.example.test"), ("IP Address", "192.0.2.10"))}
     assert ad._names_ip(cert, ipaddress.ip_address("192.0.2.10"))
@@ -135,3 +178,5 @@ def test_cli_collect_ad_replay(tmp_path):
 def test_cli_rejects_mismatched_source(capsys):
     assert main(["collect", "linux", "--ldap", "dc.example.test", "--user", "u"]) == 2
     assert "--ldap audits ad" in capsys.readouterr().err
+    assert main(["collect", "ad", "--replay", str(RECORDINGS / "dc-weak"), "--winrm"]) == 2
+    assert "--winrm goes with --ldap" in capsys.readouterr().err

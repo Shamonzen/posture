@@ -1,0 +1,79 @@
+# Kerberos weaknesses on accounts: roastable users and unconstrained delegation.
+
+- id: AD-KRB-001
+  title: No enabled user account has a service principal name
+  platform: ad
+  cis: null
+  severity: high
+  attack: [T1558.003]
+  rationale: >-
+    Any domain user can ask for a service ticket for any SPN, and part of that ticket is
+    encrypted with the service account's password hash. On a user account that password was
+    chosen by a person, so it can be cracked offline at leisure (Kerberoasting).
+  check:
+    for_each: users
+    key: name
+    where:
+      all:
+        - {fact: enabled, op: eq, value: true}
+        - {fact: spns, op: not_empty}
+  remediation:
+    text: >-
+      Move each listed service to a group managed service account (gMSA), whose 120-character
+      password AD rotates itself. Until then, give the account a long random password and allow
+      only AES (`Set-ADUser <name> -KerberosEncryptionType AES128,AES256`).
+  references:
+    - https://attack.mitre.org/techniques/T1558/003/
+    - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-managed-service-accounts/group-managed-service-accounts/group-managed-service-accounts-overview
+
+- id: AD-KRB-002
+  title: Kerberos pre-authentication is required for every enabled user
+  platform: ad
+  cis: null
+  severity: high
+  attack: [T1558.004]
+  rationale: >-
+    Without pre-authentication the DC hands an encrypted reply to anyone who asks for that
+    account, without any proof of identity, and the reply can be cracked offline for the
+    account's password (AS-REP roasting).
+  check:
+    for_each: users
+    key: name
+    where:
+      all:
+        - {fact: enabled, op: eq, value: true}
+        - {fact: no_preauth, op: eq, value: true}
+  remediation:
+    text: Clear "Do not require Kerberos preauthentication" on each listed account.
+    script: |
+      Set-ADAccountControl -Identity <name> -DoesNotRequirePreAuth $false
+  references:
+    - https://attack.mitre.org/techniques/T1558/004/
+
+- id: AD-KRB-003
+  title: No computer other than a DC is trusted for unconstrained delegation
+  platform: ad
+  cis: null
+  severity: critical
+  attack: [T1558, T1550.003]
+  rationale: >-
+    A host trusted for unconstrained delegation receives the TGT of everyone who authenticates
+    to it. Whoever controls that host can reuse those tickets as the users, and can coerce a
+    DC into authenticating to it, which yields the DC's own ticket and with it the domain.
+  check:
+    for_each: computers
+    key: name
+    where:
+      all:
+        - {fact: enabled, op: eq, value: true}
+        - {fact: dc, op: eq, value: false}
+        - {fact: unconstrained_delegation, op: eq, value: true}
+  remediation:
+    text: >-
+      Remove "Trust this computer for delegation to any service" from each listed computer; if a
+      service really needs delegation, use constrained or resource-based constrained delegation
+      to the named services only.
+    script: |
+      Set-ADAccountControl -Identity '<name>' -TrustedForDelegation $false
+  references:
+    - https://learn.microsoft.com/en-us/defender-for-identity/security-assessment-unconstrained-kerberos

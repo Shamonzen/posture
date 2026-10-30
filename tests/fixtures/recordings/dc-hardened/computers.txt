@@ -35,11 +35,11 @@
    "msds-allowedtodelegateto": [],
    "msds-supportedencryptiontypes": [],
    "mslaps-passwordexpirationtime": [
-    "134403813529463401"
+    "134404083383409564"
    ],
    "operatingsystem": [],
    "pwdlastset": [
-    "134377893530880886"
+    "134378163384042149"
    ],
    "samaccountname": [
     "ws01$"
@@ -48,7 +48,7 @@
     "4096"
    ],
    "whencreated": [
-    "20261029231553.0Z"
+    "20261030064538.0Z"
    ]
   },
   "dn": "CN=ws01,CN=Computers,DC=posture,DC=test"
@@ -60,11 +60,11 @@
    "msds-allowedtodelegateto": [],
    "msds-supportedencryptiontypes": [],
    "mslaps-passwordexpirationtime": [
-    "134403813532275208"
+    "134404083384816704"
    ],
    "operatingsystem": [],
    "pwdlastset": [
-    "134377893533209906"
+    "134378163386086478"
    ],
    "samaccountname": [
     "ws02$"
@@ -73,7 +73,7 @@
     "4096"
    ],
    "whencreated": [
-    "20261029231553.0Z"
+    "20261030064538.0Z"
    ]
   },
   "dn": "CN=ws02,CN=Computers,DC=posture,DC=test"

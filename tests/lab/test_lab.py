@@ -54,22 +54,19 @@ def _shape(snapshot):
     computers = sorted(
         (c["name"], c["unconstrained_delegation"], c["laps"]) for c in facts["computers"]
     )
-    return facts["domain"], users, computers, facts["privileged_groups"]
+    return facts["domain"], users, computers, facts["privileged_groups"], facts["dc"]
 
 
-def test_live_ldaps_audit_matches_a_recording():
+def test_live_ldaps_and_winrm_audit_matches_a_recording():
     env = dict(
         line.split("=", 1) for line in (ROOT / ".env").read_text().splitlines() if "=" in line
     )
-    runner = ad.LdapRunner(
-        "192.168.57.10",
-        r"POSTURE\posture",
-        env["POSTURE_AUDIT_PASSWORD"],
-        Path("lab/keys/posture-dc.pem"),
-    )
-    live = ad.collect(runner)
+    user, password = r"POSTURE\posture", env["POSTURE_AUDIT_PASSWORD"]
+    runner = ad.LdapRunner("192.168.57.10", user, password, Path("lab/keys/posture-dc.pem"))
+    live = ad.collect(runner, ad.WinrmRunner("192.168.57.10", user, password))
     runner.close()
     assert live.errors == [] and live.identity == r"POSTURE\posture"
     recordings = ROOT / "tests" / "fixtures" / "recordings"
-    recorded = [ad.collect(ReplayRunner(recordings / f"dc-{p}")) for p in ("weak", "hardened")]
+    replays = [ReplayRunner(recordings / f"dc-{p}") for p in ("weak", "hardened")]
+    recorded = [ad.collect(r, r) for r in replays]
     assert _shape(live) in [_shape(r) for r in recorded]

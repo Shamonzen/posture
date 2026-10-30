@@ -37,7 +37,7 @@
    "mslaps-passwordexpirationtime": [],
    "operatingsystem": [],
    "pwdlastset": [
-    "134377897734432982"
+    "134378162170742368"
    ],
    "samaccountname": [
     "ws01$"
@@ -46,7 +46,7 @@
     "528384"
    ],
    "whencreated": [
-    "20261029232253.0Z"
+    "20261030064337.0Z"
    ]
   },
   "dn": "CN=ws01,CN=Computers,DC=posture,DC=test"
@@ -60,7 +60,7 @@
    "mslaps-passwordexpirationtime": [],
    "operatingsystem": [],
    "pwdlastset": [
-    "134377897736767181"
+    "134378162171680949"
    ],
    "samaccountname": [
     "ws02$"
@@ -69,7 +69,7 @@
     "4096"
    ],
    "whencreated": [
-    "20261029232253.0Z"
+    "20261030064337.0Z"
    ]
   },
   "dn": "CN=ws02,CN=Computers,DC=posture,DC=test"

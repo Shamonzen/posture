@@ -1,0 +1,50 @@
+# The DC's own security options (registry, read over WinRM: posture collect ad --winrm).
+
+- id: DC-SMB-001
+  title: The DC requires SMB signing
+  platform: ad
+  cis: {windows-server-2019: "2.3.9.2"}
+  severity: high
+  attack: [T1557.001]
+  rationale: >-
+    Without required signing, an attacker who catches an authentication (by poisoning name
+    resolution, or coercing a host to connect) can relay it to the DC's SMB server and act as
+    that account there.
+  check: {fact: dc.smb_signing_required, op: eq, value: true}
+  remediation:
+    text: >-
+      Enable "Microsoft network server: Digitally sign communications (always)" in the Default
+      Domain Controllers Policy (Security Options).
+
+- id: DC-LDAP-001
+  title: The DC requires LDAP signing
+  platform: ad
+  cis: {windows-server-2019: "2.3.5.4"}
+  severity: high
+  attack: [T1557]
+  rationale: >-
+    If unsigned LDAP binds are accepted, a relayed NTLM authentication can be replayed against
+    LDAP to change the directory as the victim, for example adding an account to a group or
+    granting delegation rights.
+  check: {fact: dc.ldap_server_integrity, op: eq, value: 2}
+  remediation:
+    text: >-
+      Set "Domain controller: LDAP server signing requirements" to "Require signing" in the
+      Default Domain Controllers Policy, after checking the DC's Directory Service log (event 2889)
+      for clients that still bind unsigned.
+
+- id: DC-NTLM-001
+  title: The DC accepts NTLMv2 only
+  platform: ad
+  cis: {windows-server-2019: "2.3.11.7"}
+  severity: high
+  attack: [T1557.001, T1110.002]
+  rationale: >-
+    LM and NTLMv1 responses can be cracked or reduced to the account's NT hash in hours, from
+    one captured logon. Level 5 makes the DC refuse them, so a downgrade gets nothing usable.
+  check: {fact: dc.lm_compatibility_level, op: ge, value: 5}
+  remediation:
+    text: >-
+      Set "Network security: LAN Manager authentication level" to "Send NTLMv2 response only.
+      Refuse LM & NTLM" in the Default Domain Controllers Policy, after auditing NTLMv1 use
+      (event 4624 with "Package Name (NTLM only): NTLM V1").

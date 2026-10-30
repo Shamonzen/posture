@@ -70,7 +70,6 @@ case "${1:-}" in
         for vm in "${targets[@]}"; do
             dir="tests/fixtures/recordings/${vm#posture-}-$profile"
             if [ "$vm" = posture-dc ]; then
-                # LDAP part (milestone 8); the DC host settings over WinRM follow in milestone 9.
                 vagrant winrm "$vm" -c '(Get-ItemProperty HKLM:\SOFTWARE\PostureLab).profile' | tr -d '\r' \
                     | grep -qx "$profile" || { echo "$vm is not on the $profile profile (run: lab.sh $profile $vm)" >&2; exit 1; }
                 (
@@ -78,7 +77,7 @@ case "${1:-}" in
                     POSTURE_LDAP_PASSWORD="$(grep '^POSTURE_AUDIT_PASSWORD=' .env | cut -d= -f2-)"
                     export POSTURE_LDAP_PASSWORD
                     rm -rf "$dir"
-                    uv run posture collect ad --ldap 192.168.57.10 --user 'POSTURE\posture' \
+                    uv run posture collect ad --ldap 192.168.57.10 --winrm --user 'POSTURE\posture' \
                         --ca-file lab/keys/posture-dc.pem --record "$dir" -o "out/dc-$profile.json"
                 )
                 continue

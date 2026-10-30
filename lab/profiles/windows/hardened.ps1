@@ -29,7 +29,9 @@ foreach ($name in 'ws01', 'ws02') {
 # Applied after the users exist, so the lab password needn't meet the new 14-character minimum.
 Set-LabPolicy -Password @{
     MinimumPasswordLength = 14; LockoutBadCount = 5; LockoutDuration = 15; ResetLockoutCount = 15
-    ClearTextPassword = 0
+    PasswordComplexity = 1; ClearTextPassword = 0
 } -Security @{ RequireSecuritySignature = 1; LDAPServerIntegrity = 2; LmCompatibilityLevel = 5 }
+# Ordinary users may no longer join computers to the domain (the default quota is 10).
+Set-ADObject $DomainDN -Replace @{ 'ms-DS-MachineAccountQuota' = 0 } -Credential (Get-LabAdmin)
 
 Set-ItemProperty 'HKLM:\SOFTWARE\PostureLab' -Name profile -Value hardened

@@ -27,7 +27,8 @@ New-ADComputer ws01 -PassThru | Set-ADAccountControl -TrustedForDelegation $true
 New-ADComputer ws02
 
 # Password policy and DC host settings (SMB signing, LDAP signing, NTLM level).
-Set-LabPolicy -Password @{ MinimumPasswordLength = 7; LockoutBadCount = 0; ClearTextPassword = 1 } `
-    -Security @{ RequireSecuritySignature = 0; LDAPServerIntegrity = 1; LmCompatibilityLevel = 1 }
+Set-LabPolicy -Password @{
+    MinimumPasswordLength = 7; PasswordComplexity = 0; LockoutBadCount = 0; ClearTextPassword = 1
+} -Security @{ RequireSecuritySignature = 0; LDAPServerIntegrity = 1; LmCompatibilityLevel = 1 }
 
 Set-ItemProperty 'HKLM:\SOFTWARE\PostureLab' -Name profile -Value weak

@@ -100,7 +100,20 @@ def test_ad_collector_only_reads():
     """Searches and "Who am I?" only: no LDAP write operation appears in the AD collector."""
     source = Path(ad.__file__).read_text(encoding="utf-8")
     assert not re.search(r"\.(add|modify|modify_dn|delete|password_modify)\(", source)
-    assert {s.name for s in ad.SEARCHES} == set(ad.PARSERS)
+    names = [s.name for s in ad.SEARCHES] + [r.name for r in ad.REGISTRY_READS]
+    assert sorted(names) == sorted(ad.PARSERS)
+
+
+@pytest.mark.parametrize("read", ad.REGISTRY_READS, ids=lambda r: r.name)
+def test_registry_script_only_reads_named_values(read):
+    """Get-Item on one HKLM key, then GetValue: no cmdlet that could change anything."""
+    assert re.fullmatch(r"HKLM:\\[A-Za-z\\]+", read.key)
+    assert all(re.fullmatch(r"[A-Za-z]+", v) for v in read.values)
+    script = ad.registry_script(read)
+    cmdlets = set(re.findall(r"\b[A-Z][A-Za-z]+-[A-Z][A-Za-z]+\b", script))
+    assert cmdlets == {"Get-Item", "ConvertTo-Json"}
+    methods = set(re.findall(r"\.([A-Za-z]+)\(", script))
+    assert methods == {"GetValue"}
 
 
 def test_connection_is_ldaps_read_only_and_never_follows_referrals(monkeypatch):

@@ -2,7 +2,7 @@
  {
   "attributes": {
    "currenttime": [
-    "20261029232341.0Z"
+    "20261030064401.0Z"
    ],
    "defaultnamingcontext": [
     "DC=posture,DC=test"

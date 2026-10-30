@@ -33,6 +33,11 @@ def _add_source(parser: argparse.ArgumentParser) -> None:
         help=r"LDAP account (DOMAIN\user); password from $POSTURE_LDAP_PASSWORD or a prompt",
     )
     parser.add_argument("--ca-file", type=Path, help="CA (or pinned) certificate for LDAPS")
+    parser.add_argument(
+        "--winrm",
+        action="store_true",
+        help="with --ldap: also read the DC's registry settings over WinRM, same account",
+    )
     parser.add_argument("--record", type=Path, metavar="DIR", help="also save the raw output")
     parser.add_argument("--target", help="name for the target (default: its hostname)")
 
@@ -91,19 +96,26 @@ def _collect(args: argparse.Namespace) -> Snapshot:
         raise ValueError("--local and --ssh audit linux hosts")
     if args.ldap and args.platform != "ad":
         raise ValueError("--ldap audits ad")
+    if args.winrm and not args.ldap:
+        raise ValueError("--winrm goes with --ldap")
+    host_runner = None
     if args.ldap:
         if not args.user:
             raise ValueError("--ldap needs --user")
         password = os.environ.get("POSTURE_LDAP_PASSWORD") or getpass.getpass()
         runner = ad.LdapRunner(args.ldap, args.user, password, args.ca_file)
+        if args.winrm:
+            host_runner = ad.WinrmRunner(args.ldap, args.user, password)
     elif args.local:
         runner = LocalRunner()
     elif args.ssh:
         runner = SshRunner(args.ssh, args.ssh_config)
     else:
-        runner = ReplayRunner(args.replay)
-    collector = ad if args.platform == "ad" else linux
-    snapshot = collector.collect(runner, target=args.target or args.ssh, record_dir=args.record)
+        runner = host_runner = ReplayRunner(args.replay)
+    if args.platform == "ad":
+        snapshot = ad.collect(runner, host_runner, target=args.target, record_dir=args.record)
+    else:
+        snapshot = linux.collect(runner, target=args.target or args.ssh, record_dir=args.record)
     for error in snapshot.errors:
         print(clean(f"warning: {error.source}: {error.message}"), file=sys.stderr)
     return snapshot

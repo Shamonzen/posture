@@ -10,6 +10,12 @@ if (-not (Get-ADUser -Filter "sAMAccountName -eq 'posture'")) {
 }
 Set-ADUser posture -AccountNotDelegated $true
 Add-ADGroupMember 'Remote Management Users' -Members posture
+# The one registry key posture reads that ordinary users can't (LDAP signing lives there):
+# read access to this key only, not inherited, instead of making the account an admin.
+$ntds = 'HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters'
+$acl = Get-Acl $ntds
+$acl.AddAccessRule([Security.AccessControl.RegistryAccessRule]::new('POSTURE\posture', 'ReadKey', 'Allow'))
+Set-Acl $ntds $acl
 
 # LDAPS: AD DS serves TLS on 636 once LocalMachine\My holds a Server Authentication certificate
 # for the DC's name that it can use and trust. Otherwise it logs event 1220 (8009030e) and 636

@@ -72,6 +72,7 @@ function Set-LabPolicy([hashtable]$Password, [hashtable]$Security) {
     $policy = Get-ADDefaultDomainPasswordPolicy
     $effective = @{
         MinimumPasswordLength = $policy.MinPasswordLength
+        PasswordComplexity = [int]$policy.ComplexityEnabled
         LockoutBadCount = $policy.LockoutThreshold
         ClearTextPassword = [int]$policy.ReversibleEncryptionEnabled
     }

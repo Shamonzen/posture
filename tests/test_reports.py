@@ -81,7 +81,8 @@ def test_sarif_is_valid(name):
     [run] = sarif["runs"]
     failed = [f for f in report.findings if f.status == Status.FAIL]
     assert len(run["results"]) == len(failed)
-    assert {r["id"] for r in run["tool"]["driver"]["rules"]} == {c.id for c in CHECKS}
+    rules = {r["id"] for r in run["tool"]["driver"]["rules"]}
+    assert rules == {c.id for c in CHECKS if c.platform == report.snapshot.platform}
 
 
 def test_sarif_points_at_the_check_yaml():

@@ -1,5 +1,6 @@
-"""Turn the recorded LDAP searches into facts. Every parser takes a Result whose stdout is the
-JSON the LDAP runner wrote: a list of {"dn", "attributes": {lowercase name: [string, ...]}}."""
+"""Turn the recorded LDAP searches into facts. Every LDAP parser takes a Result whose stdout is
+the JSON the LDAP runner wrote: a list of {"dn", "attributes": {lowercase name: [string, ...]}}.
+The registry parsers take the JSON object the WinRM script wrote: value name -> value or null."""
 
 import json
 from datetime import UTC, datetime
@@ -204,5 +205,35 @@ def privileged_groups(groups: list[Facts], accounts: list[Facts]) -> list[Facts]
                     todo.append(key)
                 elif key in names:
                     members.add(names[key])
-        result.append({"name": group["name"], "sid": group["sid"], "members": sorted(members)})
+        result.append(
+            {
+                "name": group["name"],
+                "sid": group["sid"],
+                "members": sorted(members),
+                "member_count": len(members),
+            }
+        )
     return result
+
+
+def _registry(r: Result, name: str, default: int) -> int:
+    values = json.loads(r.stdout)
+    if not isinstance(values, dict) or name not in values:
+        raise ValueError(f"expected a JSON object with {name}")
+    value = values[name]
+    return default if value is None else int(value)
+
+
+# An absent value means the Windows Server 2019 default, which is what the DC then enforces.
+def smb_server(r: Result) -> Facts:
+    return {"dc": {"smb_signing_required": _registry(r, "RequireSecuritySignature", 0) == 1}}
+
+
+def ldap_server(r: Result) -> Facts:
+    # 0 none, 1 negotiate signing (the default), 2 require signing.
+    return {"dc": {"ldap_server_integrity": _registry(r, "LDAPServerIntegrity", 1)}}
+
+
+def lsa(r: Result) -> Facts:
+    # 0-5; 5 = send NTLMv2 only, refuse LM and NTLM. The default is 3.
+    return {"dc": {"lm_compatibility_level": _registry(r, "LmCompatibilityLevel", 3)}}

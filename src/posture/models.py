@@ -110,8 +110,10 @@ BENCHMARKS = {
     "ubuntu-24.04": "CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0",
     # Rocky Linux 9 is audited with RHEL 9 numbering (ansible-lockdown RHEL9-CIS supports Rocky).
     "rhel-9": "CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0",
+    # Numbering as in ansible-lockdown Windows-2019-CIS; DC-only controls included.
+    "windows-server-2019": "CIS Microsoft Windows Server 2019 Benchmark v4.0.0",
 }
-Benchmark = Literal["ubuntu-24.04", "rhel-9"]
+Benchmark = Literal["ubuntu-24.04", "rhel-9", "windows-server-2019"]
 ControlId = Annotated[str, Field(pattern=r"^\d+(\.\d+)+$")]
 Cis = dict[Benchmark, ControlId]
 

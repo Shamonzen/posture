@@ -1,4 +1,5 @@
-"""Active Directory over LDAP: a fixed list of searches, nothing else.
+"""Active Directory over LDAP: a fixed list of searches, nothing else. Optionally the DC's own
+security settings over WinRM: a fixed list of registry values, read with `Get-Item` only.
 
 LDAPS only, the certificate verified: a simple bind inside TLS meets "LDAP signing required"
 (released ldap3 can't sign or seal an NTLM / Kerberos bind). The connection is `read_only`
@@ -17,7 +18,7 @@ from typing import Any, Protocol
 
 from posture import __version__
 from posture.collectors.linux import _merge
-from posture.collectors.transport import NotRecorded, Result, write_recording
+from posture.collectors.transport import MAX_OUTPUT, NotRecorded, Result, write_recording
 from posture.models import CollectError, Snapshot
 from posture.parsers import ad as p
 
@@ -85,6 +86,43 @@ SEARCHES = (
     Search("groups", "(objectClass=group)", ("sAMAccountName", "objectSid", "member")),
 )
 
+
+@dataclass(frozen=True)
+class RegistryRead:
+    """Fixed values under one fixed HKLM key on the DC: key and names are constants."""
+
+    name: str
+    key: str
+    values: tuple[str, ...]
+
+
+# The whole read-only surface on the DC host (tests/test_readonly.py).
+REGISTRY_READS = (
+    RegistryRead(
+        "smb_server",
+        r"HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters",
+        ("RequireSecuritySignature",),
+    ),
+    RegistryRead(
+        "ldap_server",
+        r"HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters",
+        ("LDAPServerIntegrity",),
+    ),
+    RegistryRead("lsa", r"HKLM:\SYSTEM\CurrentControlSet\Control\Lsa", ("LmCompatibilityLevel",)),
+)
+
+
+def registry_script(read: RegistryRead) -> str:
+    """An unreadable key stops the script (an error, never a silent default); a missing value
+    comes back as null, so the parser can apply the OS default."""
+    names = ", ".join(f"'{v}'" for v in read.values)
+    return (
+        f"$k = Get-Item -LiteralPath '{read.key}' -ErrorAction Stop\n"
+        f"$o = [ordered]@{{}}; foreach ($n in {names}) {{ $o[$n] = $k.GetValue($n) }}\n"
+        "$o | ConvertTo-Json -Compress"
+    )
+
+
 PARSERS: dict[str, Callable[[Result], dict[str, Any]]] = {
     "rootdse": p.rootdse,
     "whoami": p.whoami,
@@ -92,11 +130,18 @@ PARSERS: dict[str, Callable[[Result], dict[str, Any]]] = {
     "users": p.users,
     "computers": p.computers,
     "groups": p.groups,
+    "smb_server": p.smb_server,
+    "ldap_server": p.ldap_server,
+    "lsa": p.lsa,
 }
 
 
 class Runner(Protocol):
     def run(self, search: Search) -> Result: ...
+
+
+class HostRunner(Protocol):
+    def run(self, read: RegistryRead) -> Result: ...
 
 
 def _value(attr: str, raw: bytes) -> str:
@@ -192,6 +237,44 @@ class LdapRunner:
         self.conn.unbind()
 
 
+class WinrmRunner:
+    """WinRM on 5985 with NTLM: the password never crosses the wire (NTLMv2 challenge/response)
+    and every message is sealed (`encryption="always"`), so plain HTTP carries nothing readable.
+
+    shortcut: on HTTP the DC is authenticated by NTLM only, with no certificate; move to HTTPS
+    (5986) or Kerberos if a real domain needs the server pinned as LDAPS is.
+    """
+
+    def __init__(self, host: str, user: str, password: str, timeout: int = 60) -> None:
+        from pypsrp.client import Client
+
+        if not host or host.startswith("-"):
+            raise ValueError(f"bad WinRM host {host!r}")
+        self.host = host
+        self.client = Client(
+            host,
+            username=user,
+            password=password,
+            ssl=False,
+            auth="ntlm",
+            encryption="always",
+            connection_timeout=10,
+            read_timeout=timeout,
+        )
+
+    def run(self, read: RegistryRead) -> Result:
+        from pypsrp.exceptions import WinRMError
+        from spnego.exceptions import SpnegoError
+
+        try:
+            output, streams, had_errors = self.client.execute_ps(registry_script(read))
+        except (WinRMError, SpnegoError) as exc:
+            raise ConnectionError(f"WinRM to {self.host}: {exc}") from exc
+        if had_errors:
+            return Result("", "\n".join(str(e) for e in streams.error)[:MAX_OUTPUT], 1)
+        return Result(output[:MAX_OUTPUT].strip() + "\n")
+
+
 def _days(now: int, then: int | None) -> float | None:
     return None if then is None else round((now - then) / 86400, 1)
 
@@ -212,25 +295,38 @@ def _derive(facts: dict[str, Any]) -> None:
             user["privileged"] = user["name"] in admins
 
 
-def collect(runner: Runner, target: str | None = None, record_dir: Path | None = None) -> Snapshot:
+def collect(
+    runner: Runner,
+    host_runner: HostRunner | None = None,
+    target: str | None = None,
+    record_dir: Path | None = None,
+) -> Snapshot:
+    """`host_runner` reads the DC's registry; without one, those facts are errors, not passes."""
     facts: dict[str, Any] = {}
     errors: list[CollectError] = []
     results: dict[str, Result] = {}
-    for search in SEARCHES:
+    jobs: list[tuple[Any, Search | RegistryRead]] = [(runner, s) for s in SEARCHES]
+    jobs += [(host_runner, r) for r in REGISTRY_READS]
+    for source, item in jobs:
+        if source is None:
+            message = "DC host settings not collected (they need WinRM: --winrm)"
+            errors.append(CollectError(source=item.name, message=message))
+            continue
         try:
-            result = runner.run(search)
+            result = source.run(item)
         except (NotRecorded, OSError, ValueError) as exc:
-            errors.append(CollectError(source=search.name, message=str(exc)))
+            errors.append(CollectError(source=item.name, message=str(exc)))
             continue
-        results[search.name] = result
+        results[item.name] = result
         if result.exit_code:
-            message = f"LDAP {result.exit_code}: {result.stderr.strip()[:500]}"
-            errors.append(CollectError(source=search.name, message=message))
+            kind = "LDAP" if isinstance(item, Search) else "WinRM"
+            message = f"{kind} {result.exit_code}: {result.stderr.strip()[:500]}"
+            errors.append(CollectError(source=item.name, message=message))
             continue
         try:
-            _merge(facts, PARSERS[search.name](result))
+            _merge(facts, PARSERS[item.name](result))
         except (ValueError, KeyError, TypeError) as exc:
-            errors.append(CollectError(source=search.name, message=f"parse error: {exc}"))
+            errors.append(CollectError(source=item.name, message=f"parse error: {exc}"))
     if record_dir is not None:
         write_recording(record_dir, results)
     _derive(facts)

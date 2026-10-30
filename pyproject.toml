@@ -12,7 +12,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-ad = ["ldap3>=2.9"]
+ad = [
+    "ldap3>=2.9",
+    "pypsrp>=0.8",
+]
 
 [project.scripts]
 posture = "posture.cli:main"

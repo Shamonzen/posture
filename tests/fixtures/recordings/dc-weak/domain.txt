@@ -17,7 +17,7 @@
     "posture"
    ],
    "pwdproperties": [
-    "17"
+    "16"
    ]
   },
   "dn": "DC=posture,DC=test"

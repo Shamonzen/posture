@@ -1,0 +1,47 @@
+# Computer accounts: local admin passwords (LAPS) and who may create computers.
+
+- id: AD-LAPS-001
+  title: Every enabled non-DC computer has its admin password managed by LAPS
+  platform: ad
+  cis: null
+  severity: high
+  attack: [T1078.003, T1550.002]
+  rationale: >-
+    Without LAPS, local Administrator passwords are usually the same on every machine (set once
+    in the image). One hash from one workstation then logs on to all of them (pass-the-hash).
+    The check looks only at LAPS's password expiry attributes, never at the passwords.
+  check:
+    for_each: computers
+    key: name
+    where:
+      all:
+        - {fact: enabled, op: eq, value: true}
+        - {fact: dc, op: eq, value: false}
+        - {fact: laps, op: eq, value: null}
+  remediation:
+    text: >-
+      Deploy Windows LAPS (built into Windows Server 2019 and Windows 10/11 since the April 2023
+      update): run `Update-LapsADSchema` once, then enable "Configure password backup directory"
+      for these computers by GPO.
+  references:
+    - https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview
+
+- id: AD-ACC-005
+  title: Ordinary users can't add computers to the domain
+  platform: ad
+  cis: null
+  severity: medium
+  attack: [T1136.002]
+  rationale: >-
+    By default any user can create 10 computer accounts. An attacker with one user account gets
+    accounts with SPNs and passwords they choose, the starting point of resource-based delegation
+    and several privilege-escalation chains.
+  check: {fact: domain.machine_account_quota, op: eq, value: 0}
+  remediation:
+    text: >-
+      Set ms-DS-MachineAccountQuota to 0 and delegate "Create computer objects" on the target OU
+      to the group that actually joins machines.
+    script: |
+      Set-ADDomain (Get-ADDomain) -Replace @{ 'ms-DS-MachineAccountQuota' = 0 }
+  references:
+    - https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/default-workstation-numbers-join-domain
