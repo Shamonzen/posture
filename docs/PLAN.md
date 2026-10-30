@@ -190,6 +190,8 @@ Status: ✅ done · ⏭️ next. Update this list when a milestone is committed.
     - Fail closed: one target that can't be reached aborts the run (exit 2, naming the inventory entry), and a target with no facts exits 2, so a report never silently misses a host. Two snapshots with the same target name are refused (they would share fingerprints).
     - Targets are collected one after another, not in parallel.
 13. ✅ **README + v1.0:** problem, Mermaid diagram, before/after screenshots (`docs/img/`, headless Edge over `docs/reports/*.html`, regenerated at 1.0.0), the 56-check table (generated from `checks/`), how to run it, permissions, threat model, limitations, comparison with Lynis / PingCastle / Prowler / ScoutSuite, design decisions; `CHANGELOG.md`, version 1.0.0, tag `v1.0.0`, repo public.
+    - Before going public: gitleaks over the full history (15 commits) found nothing; the only working-tree hits were the git-ignored lab and Vagrant SSH keys and `.venv`.
+    - **Bug found after going public (fixed after v1.0.0):** the first code scanning upload landed under `posture/<every target name>/`, not `posture-lab`. `render_sarif` wrote `runs[].automationDetails.id` from the target names, and `upload-sarif` only applies its `category` input when the file has none, so the category would change with the set of lab targets and old alerts would never close. The SARIF no longer sets it: whoever uploads chooses the category. The stray analysis was deleted from code scanning.
 
 After each milestone I stop, summarize, and suggest a commit message (Conventional Commits).
 
