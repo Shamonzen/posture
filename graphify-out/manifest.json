@@ -1,14 +1,14 @@
 {
   "pyproject.toml": {
-    "mtime": 1793344236.036019,
-    "seen": 1793344500.8313582,
-    "ast_hash": "0d935d1b3d799b9ad77b135e20a0b9b0",
+    "mtime": 1793346974.0638554,
+    "seen": 1793347110.7351596,
+    "ast_hash": "6ff14de64b5a4dfa0d7e177dcf1ffeb9",
     "semantic_hash": ""
   },
   "src/posture/__init__.py": {
-    "mtime": 1793272971.374542,
-    "seen": 1793278945.6498914,
-    "ast_hash": "4867131295172353fe6c2295851defc7",
+    "mtime": 1793346974.1031556,
+    "seen": 1793347110.7351596,
+    "ast_hash": "6fae6ed1bbb299df209793045e59fd27",
     "semantic_hash": ""
   },
   "src/posture/checks.py": {
@@ -144,9 +144,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1793272988.3053856,
-    "seen": 1793278945.6498914,
-    "ast_hash": "8cc9c2a186c833f88d5ed0203d4dd9b6",
+    "mtime": 1793347083.8532307,
+    "seen": 1793347110.7351596,
+    "ast_hash": "c98be9a33b7dc7bc0399872a2d265061",
     "semantic_hash": ""
   },
   "checks/linux/accounts.yaml": {
@@ -186,9 +186,9 @@
     "semantic_hash": ""
   },
   "docs/PLAN.md": {
-    "mtime": 1793346344.3002434,
-    "seen": 1793346346.6814327,
-    "ast_hash": "195b64e44eabf2dfd3ac16d231ba2919",
+    "mtime": 1793347097.3391273,
+    "seen": 1793347110.7351596,
+    "ast_hash": "0ca6eda97dfa5a1d7bf4df887221f392",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/rocky-hardened/auditctl.txt": {
@@ -684,15 +684,15 @@
     "semantic_hash": ""
   },
   "docs/reports/after.html": {
-    "mtime": 1793346331.3852394,
-    "seen": 1793346346.6814327,
-    "ast_hash": "c8b12a180c440e9012d12691d955dd15",
+    "mtime": 1793346993.1520102,
+    "seen": 1793347110.7351596,
+    "ast_hash": "9279518a074629fa61fcdf9c27354b89",
     "semantic_hash": ""
   },
   "docs/reports/before.html": {
-    "mtime": 1793346330.902323,
-    "seen": 1793346346.6814327,
-    "ast_hash": "5145efdfe604d19f95d29e39965c211b",
+    "mtime": 1793346992.6722405,
+    "seen": 1793347110.7351596,
+    "ast_hash": "4f06a35b79c8b5261874206054627257",
     "semantic_hash": ""
   },
   "src/posture/reports/templates/report.html": {
@@ -1083,6 +1083,24 @@
     "mtime": 1793346220.046872,
     "seen": 1793346346.6814327,
     "ast_hash": "600e47da5b15e56ee9a8a9a5a9955beb",
+    "semantic_hash": ""
+  },
+  "CHANGELOG.md": {
+    "mtime": 1793347091.1360857,
+    "seen": 1793347110.7351596,
+    "ast_hash": "a53b44a1cf527575a1588e154cf44a7c",
+    "semantic_hash": ""
+  },
+  "docs/img/after.png": {
+    "mtime": 1793346994.935324,
+    "seen": 1793347110.7351596,
+    "ast_hash": "494ad65158ebbd5e8ff55b0f743a6a01",
+    "semantic_hash": ""
+  },
+  "docs/img/before.png": {
+    "mtime": 1793346993.9935048,
+    "seen": 1793347110.7351596,
+    "ast_hash": "fb11055eb19e11a1e444cf2cc269876e",
     "semantic_hash": ""
   }
 }

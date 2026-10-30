@@ -189,7 +189,7 @@ Status: ✅ done · ⏭️ next. Update this list when a milestone is committed.
     - The JSON report (and baseline) holds `snapshots: [...]`, `schema_version` 2; a single-target audit is a list of one. Diff, baseline and fingerprints needed no change: findings already carry their target.
     - Fail closed: one target that can't be reached aborts the run (exit 2, naming the inventory entry), and a target with no facts exits 2, so a report never silently misses a host. Two snapshots with the same target name are refused (they would share fingerprints).
     - Targets are collected one after another, not in parallel.
-13. ⏭️ **README + v1.0:** problem, Mermaid diagram, before/after screenshots, check table, how to run it, permissions, threat model, limitations, comparison with Lynis / PingCastle / Prowler / ScoutSuite, interview notes; `CHANGELOG.md`, tag `v1.0.0`, repo public.
+13. ✅ **README + v1.0:** problem, Mermaid diagram, before/after screenshots (`docs/img/`, headless Edge over `docs/reports/*.html`, regenerated at 1.0.0), the 56-check table (generated from `checks/`), how to run it, permissions, threat model, limitations, comparison with Lynis / PingCastle / Prowler / ScoutSuite, design decisions; `CHANGELOG.md`, version 1.0.0, tag `v1.0.0`, repo public.
 
 After each milestone I stop, summarize, and suggest a commit message (Conventional Commits).
 
