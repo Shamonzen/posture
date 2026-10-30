@@ -1,0 +1,19 @@
+[
+ {
+  "attributes": {
+   "currenttime": [
+    "20261029231936.0Z"
+   ],
+   "defaultnamingcontext": [
+    "DC=posture,DC=test"
+   ],
+   "dnshostname": [
+    "posture-dc.posture.test"
+   ],
+   "domainfunctionality": [
+    "7"
+   ]
+  },
+  "dn": ""
+ }
+]

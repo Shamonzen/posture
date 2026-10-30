@@ -7,8 +7,8 @@ from pathlib import Path
 import pytest
 
 from posture.checks import load_checks
-from posture.collectors import linux
-from posture.collectors.transport import SshRunner
+from posture.collectors import ad, linux
+from posture.collectors.transport import ReplayRunner, SshRunner
 from posture.engine import evaluate_all
 from posture.models import Status
 
@@ -43,3 +43,33 @@ def test_live_audit_is_read_only_and_matches_profile(vm):
     expected = {"weak": Status.FAIL, "hardened": Status.PASS}[profile]
     wrong = {f.check_id: f.status for f in findings if f.status not in (expected, Status.SKIP)}
     assert not wrong, f"{vm} ({profile}): {wrong}"
+
+
+def _shape(snapshot):
+    """What a profile decides, without the ages that move with every run."""
+    facts = snapshot.facts
+    users = sorted(
+        (u["name"], u["enabled"], tuple(u["spns"]), u["no_preauth"]) for u in facts["users"]
+    )
+    computers = sorted(
+        (c["name"], c["unconstrained_delegation"], c["laps"]) for c in facts["computers"]
+    )
+    return facts["domain"], users, computers, facts["privileged_groups"]
+
+
+def test_live_ldaps_audit_matches_a_recording():
+    env = dict(
+        line.split("=", 1) for line in (ROOT / ".env").read_text().splitlines() if "=" in line
+    )
+    runner = ad.LdapRunner(
+        "192.168.57.10",
+        r"POSTURE\posture",
+        env["POSTURE_AUDIT_PASSWORD"],
+        Path("lab/keys/posture-dc.pem"),
+    )
+    live = ad.collect(runner)
+    runner.close()
+    assert live.errors == [] and live.identity == r"POSTURE\posture"
+    recordings = ROOT / "tests" / "fixtures" / "recordings"
+    recorded = [ad.collect(ReplayRunner(recordings / f"dc-{p}")) for p in ("weak", "hardened")]
+    assert _shape(live) in [_shape(r) for r in recorded]

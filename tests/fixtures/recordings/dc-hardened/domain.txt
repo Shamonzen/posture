@@ -1,0 +1,25 @@
+[
+ {
+  "attributes": {
+   "lockoutthreshold": [
+    "5"
+   ],
+   "maxpwdage": [
+    "-36288000000000"
+   ],
+   "minpwdlength": [
+    "14"
+   ],
+   "ms-ds-machineaccountquota": [
+    "10"
+   ],
+   "name": [
+    "posture"
+   ],
+   "pwdproperties": [
+    "1"
+   ]
+  },
+  "dn": "DC=posture,DC=test"
+ }
+]

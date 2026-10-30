@@ -2,11 +2,13 @@
 
 import re
 import shlex
+import ssl
 from pathlib import Path
 
+import ldap3
 import pytest
 
-from posture.collectors import linux, transport
+from posture.collectors import ad, linux, transport
 from posture.collectors.transport import Command, SshRunner
 
 SUDOERS = Path(__file__).parent.parent / "deploy" / "sudoers.posture"
@@ -92,3 +94,32 @@ def test_ssh_runner_adds_sudo_non_interactive(monkeypatch):
 def test_ssh_runner_rejects_option_like_hosts(host):
     with pytest.raises(ValueError):
         SshRunner(host)
+
+
+def test_ad_collector_only_reads():
+    """Searches and "Who am I?" only: no LDAP write operation appears in the AD collector."""
+    source = Path(ad.__file__).read_text(encoding="utf-8")
+    assert not re.search(r"\.(add|modify|modify_dn|delete|password_modify)\(", source)
+    assert {s.name for s in ad.SEARCHES} == set(ad.PARSERS)
+
+
+def test_connection_is_ldaps_read_only_and_never_follows_referrals(monkeypatch):
+    seen = {}
+
+    class FakeConnection:
+        def __init__(self, server, **kwargs):
+            seen.update(kwargs, server=server)
+
+        def open(self):
+            pass
+
+        def bind(self):
+            return True
+
+    monkeypatch.setattr(ldap3, "Connection", FakeConnection)
+    ad.LdapRunner("dc.example.test", "EXAMPLE\\audit", "pw")
+    server = seen["server"]
+    assert (server.port, server.ssl) == (636, True)
+    assert server.tls.validate == ssl.CERT_REQUIRED
+    assert seen["read_only"] is True and seen["auto_referrals"] is False
+    assert seen["authentication"] == ldap3.SIMPLE

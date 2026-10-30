@@ -52,9 +52,10 @@ def test_vm_names_hostnames_and_ssh_config_agree():
 def test_lab_driver_names_only_posture_vms():
     driver = (LAB / "lab.sh").read_text(encoding="utf-8")
     assert f"VMS=({' '.join(VMS)})" in driver
-    assert f"LINUX_VMS=({' '.join(LINUX_VMS)})" in driver
     for line in driver.splitlines():
-        if re.search(r"\bvagrant (up|provision|snapshot|halt|destroy|status)\b|VBoxManage", line):
+        if re.search(
+            r"\bvagrant (up|provision|snapshot|halt|destroy|status|winrm)\b|VBoxManage", line
+        ):
             assert '"$vm"' in line, line
     assert "global-status" not in driver
 

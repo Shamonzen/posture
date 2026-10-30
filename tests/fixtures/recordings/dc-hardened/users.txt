@@ -1,0 +1,308 @@
+[
+ {
+  "attributes": {
+   "admincount": [],
+   "lastlogontimestamp": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "pwdlastset": [
+    "134377893501816917"
+   ],
+   "samaccountname": [
+    "adm.backup"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "512"
+   ],
+   "whencreated": [
+    "20261029231550.0Z"
+   ]
+  },
+  "dn": "CN=adm.backup,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [],
+   "lastlogontimestamp": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "pwdlastset": [
+    "134377893500404457"
+   ],
+   "samaccountname": [
+    "adm.helpdesk"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "512"
+   ],
+   "whencreated": [
+    "20261029231550.0Z"
+   ]
+  },
+  "dn": "CN=adm.helpdesk,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [
+    "1"
+   ],
+   "lastlogontimestamp": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "pwdlastset": [
+    "134377893498691480"
+   ],
+   "samaccountname": [
+    "adm.ops"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "1049088"
+   ],
+   "whencreated": [
+    "20261029231549.0Z"
+   ]
+  },
+  "dn": "CN=adm.ops,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [
+    "1"
+   ],
+   "lastlogontimestamp": [
+    "134377893511533491"
+   ],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "pwdlastset": [
+    "134377595808143648"
+   ],
+   "samaccountname": [
+    "Administrator"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "512"
+   ],
+   "whencreated": [
+    "20261029150207.0Z"
+   ]
+  },
+  "dn": "CN=Administrator,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [],
+   "lastlogontimestamp": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "pwdlastset": [
+    "0"
+   ],
+   "samaccountname": [
+    "Guest"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "66082"
+   ],
+   "whencreated": [
+    "20261029150207.0Z"
+   ]
+  },
+  "dn": "CN=Guest,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [
+    "1"
+   ],
+   "lastlogontimestamp": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [
+    "0"
+   ],
+   "pwdlastset": [
+    "134377687599371719"
+   ],
+   "samaccountname": [
+    "krbtgt"
+   ],
+   "serviceprincipalname": [
+    "kadmin/changepw"
+   ],
+   "useraccountcontrol": [
+    "514"
+   ],
+   "whencreated": [
+    "20261029173239.0Z"
+   ]
+  },
+  "dn": "CN=krbtgt,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [],
+   "lastlogontimestamp": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "pwdlastset": [
+    "134377893495397168"
+   ],
+   "samaccountname": [
+    "legacy.app"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "512"
+   ],
+   "whencreated": [
+    "20261029231549.0Z"
+   ]
+  },
+  "dn": "CN=legacy.app,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [],
+   "lastlogontimestamp": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "pwdlastset": [
+    "134377893504927855"
+   ],
+   "samaccountname": [
+    "old.admin"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "512"
+   ],
+   "whencreated": [
+    "20261029231550.0Z"
+   ]
+  },
+  "dn": "CN=old.admin,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [],
+   "lastlogontimestamp": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "pwdlastset": [
+    "134377893506339890"
+   ],
+   "samaccountname": [
+    "old.contractor"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "514"
+   ],
+   "whencreated": [
+    "20261029231550.0Z"
+   ]
+  },
+  "dn": "CN=old.contractor,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [],
+   "lastlogontimestamp": [
+    "134377894297624775"
+   ],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "pwdlastset": [
+    "134377691201876806"
+   ],
+   "samaccountname": [
+    "posture"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "1049088"
+   ],
+   "whencreated": [
+    "20261029173840.0Z"
+   ]
+  },
+  "dn": "CN=posture,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [],
+   "lastlogontimestamp": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [
+    "24"
+   ],
+   "pwdlastset": [
+    "134377893492741181"
+   ],
+   "samaccountname": [
+    "svc-sql"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "512"
+   ],
+   "whencreated": [
+    "20261029231549.0Z"
+   ]
+  },
+  "dn": "CN=svc-sql,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [],
+   "lastlogontimestamp": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "pwdlastset": [
+    "134377893496964668"
+   ],
+   "samaccountname": [
+    "temp.user"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "512"
+   ],
+   "whencreated": [
+    "20261029231549.0Z"
+   ]
+  },
+  "dn": "CN=temp.user,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "admincount": [
+    "1"
+   ],
+   "lastlogontimestamp": [
+    "134377688053702052"
+   ],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "pwdlastset": [
+    "134377594062354905"
+   ],
+   "samaccountname": [
+    "vagrant"
+   ],
+   "serviceprincipalname": [],
+   "useraccountcontrol": [
+    "66048"
+   ],
+   "whencreated": [
+    "20261029150207.0Z"
+   ]
+  },
+  "dn": "CN=vagrant,CN=Users,DC=posture,DC=test"
+ }
+]

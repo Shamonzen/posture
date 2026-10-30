@@ -1,0 +1,619 @@
+[
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-579"
+   ],
+   "samaccountname": [
+    "Access Control Assistance Operators"
+   ]
+  },
+  "dn": "CN=Access Control Assistance Operators,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-548"
+   ],
+   "samaccountname": [
+    "Account Operators"
+   ]
+  },
+  "dn": "CN=Account Operators,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=Domain Admins,CN=Users,DC=posture,DC=test",
+    "CN=Enterprise Admins,CN=Users,DC=posture,DC=test",
+    "CN=vagrant,CN=Users,DC=posture,DC=test",
+    "CN=Administrator,CN=Users,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-32-544"
+   ],
+   "samaccountname": [
+    "Administrators"
+   ]
+  },
+  "dn": "CN=Administrators,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-571"
+   ],
+   "samaccountname": [
+    "Allowed RODC Password Replication Group"
+   ]
+  },
+  "dn": "CN=Allowed RODC Password Replication Group,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-551"
+   ],
+   "samaccountname": [
+    "Backup Operators"
+   ]
+  },
+  "dn": "CN=Backup Operators,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-517"
+   ],
+   "samaccountname": [
+    "Cert Publishers"
+   ]
+  },
+  "dn": "CN=Cert Publishers,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-574"
+   ],
+   "samaccountname": [
+    "Certificate Service DCOM Access"
+   ]
+  },
+  "dn": "CN=Certificate Service DCOM Access,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-522"
+   ],
+   "samaccountname": [
+    "Cloneable Domain Controllers"
+   ]
+  },
+  "dn": "CN=Cloneable Domain Controllers,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-569"
+   ],
+   "samaccountname": [
+    "Cryptographic Operators"
+   ]
+  },
+  "dn": "CN=Cryptographic Operators,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=Read-only Domain Controllers,CN=Users,DC=posture,DC=test",
+    "CN=Group Policy Creator Owners,CN=Users,DC=posture,DC=test",
+    "CN=Domain Admins,CN=Users,DC=posture,DC=test",
+    "CN=Cert Publishers,CN=Users,DC=posture,DC=test",
+    "CN=Enterprise Admins,CN=Users,DC=posture,DC=test",
+    "CN=Schema Admins,CN=Users,DC=posture,DC=test",
+    "CN=Domain Controllers,CN=Users,DC=posture,DC=test",
+    "CN=krbtgt,CN=Users,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-572"
+   ],
+   "samaccountname": [
+    "Denied RODC Password Replication Group"
+   ]
+  },
+  "dn": "CN=Denied RODC Password Replication Group,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-562"
+   ],
+   "samaccountname": [
+    "Distributed COM Users"
+   ]
+  },
+  "dn": "CN=Distributed COM Users,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-1102"
+   ],
+   "samaccountname": [
+    "DnsAdmins"
+   ]
+  },
+  "dn": "CN=DnsAdmins,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-1103"
+   ],
+   "samaccountname": [
+    "DnsUpdateProxy"
+   ]
+  },
+  "dn": "CN=DnsUpdateProxy,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=adm.backup,CN=Users,DC=posture,DC=test",
+    "CN=adm.helpdesk,CN=Users,DC=posture,DC=test",
+    "CN=adm.ops,CN=Users,DC=posture,DC=test",
+    "CN=Administrator,CN=Users,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-512"
+   ],
+   "samaccountname": [
+    "Domain Admins"
+   ]
+  },
+  "dn": "CN=Domain Admins,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-515"
+   ],
+   "samaccountname": [
+    "Domain Computers"
+   ]
+  },
+  "dn": "CN=Domain Computers,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-516"
+   ],
+   "samaccountname": [
+    "Domain Controllers"
+   ]
+  },
+  "dn": "CN=Domain Controllers,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-514"
+   ],
+   "samaccountname": [
+    "Domain Guests"
+   ]
+  },
+  "dn": "CN=Domain Guests,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-513"
+   ],
+   "samaccountname": [
+    "Domain Users"
+   ]
+  },
+  "dn": "CN=Domain Users,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=Administrator,CN=Users,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-519"
+   ],
+   "samaccountname": [
+    "Enterprise Admins"
+   ]
+  },
+  "dn": "CN=Enterprise Admins,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-527"
+   ],
+   "samaccountname": [
+    "Enterprise Key Admins"
+   ]
+  },
+  "dn": "CN=Enterprise Key Admins,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-498"
+   ],
+   "samaccountname": [
+    "Enterprise Read-only Domain Controllers"
+   ]
+  },
+  "dn": "CN=Enterprise Read-only Domain Controllers,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-573"
+   ],
+   "samaccountname": [
+    "Event Log Readers"
+   ]
+  },
+  "dn": "CN=Event Log Readers,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=Administrator,CN=Users,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-520"
+   ],
+   "samaccountname": [
+    "Group Policy Creator Owners"
+   ]
+  },
+  "dn": "CN=Group Policy Creator Owners,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=Domain Guests,CN=Users,DC=posture,DC=test",
+    "CN=Guest,CN=Users,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-32-546"
+   ],
+   "samaccountname": [
+    "Guests"
+   ]
+  },
+  "dn": "CN=Guests,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-578"
+   ],
+   "samaccountname": [
+    "Hyper-V Administrators"
+   ]
+  },
+  "dn": "CN=Hyper-V Administrators,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=S-1-5-17,CN=ForeignSecurityPrincipals,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-32-568"
+   ],
+   "samaccountname": [
+    "IIS_IUSRS"
+   ]
+  },
+  "dn": "CN=IIS_IUSRS,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-557"
+   ],
+   "samaccountname": [
+    "Incoming Forest Trust Builders"
+   ]
+  },
+  "dn": "CN=Incoming Forest Trust Builders,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-526"
+   ],
+   "samaccountname": [
+    "Key Admins"
+   ]
+  },
+  "dn": "CN=Key Admins,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-556"
+   ],
+   "samaccountname": [
+    "Network Configuration Operators"
+   ]
+  },
+  "dn": "CN=Network Configuration Operators,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-559"
+   ],
+   "samaccountname": [
+    "Performance Log Users"
+   ]
+  },
+  "dn": "CN=Performance Log Users,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-558"
+   ],
+   "samaccountname": [
+    "Performance Monitor Users"
+   ]
+  },
+  "dn": "CN=Performance Monitor Users,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=S-1-5-11,CN=ForeignSecurityPrincipals,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-32-554"
+   ],
+   "samaccountname": [
+    "Pre-Windows 2000 Compatible Access"
+   ]
+  },
+  "dn": "CN=Pre-Windows 2000 Compatible Access,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-550"
+   ],
+   "samaccountname": [
+    "Print Operators"
+   ]
+  },
+  "dn": "CN=Print Operators,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-525"
+   ],
+   "samaccountname": [
+    "Protected Users"
+   ]
+  },
+  "dn": "CN=Protected Users,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-553"
+   ],
+   "samaccountname": [
+    "RAS and IAS Servers"
+   ]
+  },
+  "dn": "CN=RAS and IAS Servers,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-576"
+   ],
+   "samaccountname": [
+    "RDS Endpoint Servers"
+   ]
+  },
+  "dn": "CN=RDS Endpoint Servers,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-577"
+   ],
+   "samaccountname": [
+    "RDS Management Servers"
+   ]
+  },
+  "dn": "CN=RDS Management Servers,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-575"
+   ],
+   "samaccountname": [
+    "RDS Remote Access Servers"
+   ]
+  },
+  "dn": "CN=RDS Remote Access Servers,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-521"
+   ],
+   "samaccountname": [
+    "Read-only Domain Controllers"
+   ]
+  },
+  "dn": "CN=Read-only Domain Controllers,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-555"
+   ],
+   "samaccountname": [
+    "Remote Desktop Users"
+   ]
+  },
+  "dn": "CN=Remote Desktop Users,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=posture,CN=Users,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-32-580"
+   ],
+   "samaccountname": [
+    "Remote Management Users"
+   ]
+  },
+  "dn": "CN=Remote Management Users,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-552"
+   ],
+   "samaccountname": [
+    "Replicator"
+   ]
+  },
+  "dn": "CN=Replicator,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=Administrator,CN=Users,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-21-1745758447-545816093-269096790-518"
+   ],
+   "samaccountname": [
+    "Schema Admins"
+   ]
+  },
+  "dn": "CN=Schema Admins,CN=Users,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-549"
+   ],
+   "samaccountname": [
+    "Server Operators"
+   ]
+  },
+  "dn": "CN=Server Operators,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-582"
+   ],
+   "samaccountname": [
+    "Storage Replica Administrators"
+   ]
+  },
+  "dn": "CN=Storage Replica Administrators,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [],
+   "objectsid": [
+    "S-1-5-32-561"
+   ],
+   "samaccountname": [
+    "Terminal Server License Servers"
+   ]
+  },
+  "dn": "CN=Terminal Server License Servers,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=Domain Users,CN=Users,DC=posture,DC=test",
+    "CN=S-1-5-11,CN=ForeignSecurityPrincipals,DC=posture,DC=test",
+    "CN=S-1-5-4,CN=ForeignSecurityPrincipals,DC=posture,DC=test",
+    "CN=vagrant,CN=Users,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-32-545"
+   ],
+   "samaccountname": [
+    "Users"
+   ]
+  },
+  "dn": "CN=Users,CN=Builtin,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "member": [
+    "CN=S-1-5-9,CN=ForeignSecurityPrincipals,DC=posture,DC=test"
+   ],
+   "objectsid": [
+    "S-1-5-32-560"
+   ],
+   "samaccountname": [
+    "Windows Authorization Access Group"
+   ]
+  },
+  "dn": "CN=Windows Authorization Access Group,CN=Builtin,DC=posture,DC=test"
+ }
+]

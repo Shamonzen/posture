@@ -1,0 +1,77 @@
+[
+ {
+  "attributes": {
+   "lastlogontimestamp": [
+    "134377688034549550"
+   ],
+   "ms-mcs-admpwdexpirationtime": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [
+    "28"
+   ],
+   "mslaps-passwordexpirationtime": [],
+   "operatingsystem": [
+    "Windows Server 2019 Standard Evaluation"
+   ],
+   "pwdlastset": [
+    "134377687853932299"
+   ],
+   "samaccountname": [
+    "POSTURE-DC$"
+   ],
+   "useraccountcontrol": [
+    "532480"
+   ],
+   "whencreated": [
+    "20261029173239.0Z"
+   ]
+  },
+  "dn": "CN=POSTURE-DC,OU=Domain Controllers,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "lastlogontimestamp": [],
+   "ms-mcs-admpwdexpirationtime": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "mslaps-passwordexpirationtime": [],
+   "operatingsystem": [],
+   "pwdlastset": [
+    "134377897734432982"
+   ],
+   "samaccountname": [
+    "ws01$"
+   ],
+   "useraccountcontrol": [
+    "528384"
+   ],
+   "whencreated": [
+    "20261029232253.0Z"
+   ]
+  },
+  "dn": "CN=ws01,CN=Computers,DC=posture,DC=test"
+ },
+ {
+  "attributes": {
+   "lastlogontimestamp": [],
+   "ms-mcs-admpwdexpirationtime": [],
+   "msds-allowedtodelegateto": [],
+   "msds-supportedencryptiontypes": [],
+   "mslaps-passwordexpirationtime": [],
+   "operatingsystem": [],
+   "pwdlastset": [
+    "134377897736767181"
+   ],
+   "samaccountname": [
+    "ws02$"
+   ],
+   "useraccountcontrol": [
+    "4096"
+   ],
+   "whencreated": [
+    "20261029232253.0Z"
+   ]
+  },
+  "dn": "CN=ws02,CN=Computers,DC=posture,DC=test"
+ }
+]

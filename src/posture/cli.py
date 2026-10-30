@@ -1,11 +1,13 @@
 import argparse
+import getpass
+import os
 import sys
 from pathlib import Path
 
 from posture import __version__
 from posture.baseline import apply_baseline, diff, gate, load_report
 from posture.checks import CheckError, load_checks
-from posture.collectors import linux
+from posture.collectors import ad, linux
 from posture.collectors.transport import LocalRunner, ReplayRunner, SshRunner
 from posture.engine import evaluate_all
 from posture.models import Severity, Snapshot
@@ -19,12 +21,18 @@ EXIT_GATE, EXIT_USAGE = 1, 2
 
 
 def _add_source(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("platform", choices=["linux"])
+    parser.add_argument("platform", choices=["linux", "ad"])
     source = parser.add_mutually_exclusive_group(required=True)
-    source.add_argument("--local", action="store_true", help="audit this host")
+    source.add_argument("--local", action="store_true", help="audit this host (linux)")
     source.add_argument("--ssh", metavar="HOST", help="audit HOST through the system ssh client")
+    source.add_argument("--ldap", metavar="DC", help="audit DC's domain over LDAPS (ad)")
     source.add_argument("--replay", type=Path, metavar="DIR", help="replay a recording")
     parser.add_argument("--ssh-config", type=Path, help="ssh config file (e.g. lab/ssh-config)")
+    parser.add_argument(
+        "--user",
+        help=r"LDAP account (DOMAIN\user); password from $POSTURE_LDAP_PASSWORD or a prompt",
+    )
+    parser.add_argument("--ca-file", type=Path, help="CA (or pinned) certificate for LDAPS")
     parser.add_argument("--record", type=Path, metavar="DIR", help="also save the raw output")
     parser.add_argument("--target", help="name for the target (default: its hostname)")
 
@@ -79,13 +87,23 @@ def _write(path: Path, text: str) -> None:
 
 
 def _collect(args: argparse.Namespace) -> Snapshot:
-    if args.local:
+    if (args.local or args.ssh) and args.platform != "linux":
+        raise ValueError("--local and --ssh audit linux hosts")
+    if args.ldap and args.platform != "ad":
+        raise ValueError("--ldap audits ad")
+    if args.ldap:
+        if not args.user:
+            raise ValueError("--ldap needs --user")
+        password = os.environ.get("POSTURE_LDAP_PASSWORD") or getpass.getpass()
+        runner = ad.LdapRunner(args.ldap, args.user, password, args.ca_file)
+    elif args.local:
         runner = LocalRunner()
     elif args.ssh:
         runner = SshRunner(args.ssh, args.ssh_config)
     else:
         runner = ReplayRunner(args.replay)
-    snapshot = linux.collect(runner, target=args.target or args.ssh, record_dir=args.record)
+    collector = ad if args.platform == "ad" else linux
+    snapshot = collector.collect(runner, target=args.target or args.ssh, record_dir=args.record)
     for error in snapshot.errors:
         print(clean(f"warning: {error.source}: {error.message}"), file=sys.stderr)
     return snapshot

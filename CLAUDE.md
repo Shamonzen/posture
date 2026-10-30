@@ -32,8 +32,9 @@ Collection and evaluation are separate: `collect` writes a snapshot, `evaluate` 
 - `uv run pytest` (unit, replays recordings) · `bash lab/lab.sh test` (= `pytest -m lab`, needs the lab up)
 - `uv run posture audit linux --replay tests/fixtures/recordings/ubuntu-weak --html out/report.html`
 - `uv run posture collect linux --ssh posture-ubuntu --ssh-config lab/ssh-config -o out/ubuntu.json`
+- `uv run posture collect ad --ldap 192.168.57.10 --user 'POSTURE\posture' --ca-file lab/keys/posture-dc.pem -o out/dc.json` (password: `POSTURE_LDAP_PASSWORD`)
 - `uv run posture diff out/before.json out/after.json`
-- Lab (Git Bash, no make on this host): `bash lab/lab.sh up | weak | hardened | record <profile> | test | status | halt | destroy`. It runs vagrant from `lab/` and names the posture-* VMs explicitly.
+- Lab (Git Bash, no make on this host): `bash lab/lab.sh up | weak | hardened | record <profile> [vm…] | test | status | halt | destroy`. It runs vagrant from `lab/` and names the posture-* VMs explicitly.
 
 ## graphify
 
