@@ -186,9 +186,9 @@
     "semantic_hash": ""
   },
   "docs/PLAN.md": {
-    "mtime": 1793347097.3391273,
-    "seen": 1793347110.7351596,
-    "ast_hash": "0ca6eda97dfa5a1d7bf4df887221f392",
+    "mtime": 1793348302.5472138,
+    "seen": 1793348358.6015055,
+    "ast_hash": "0712159304b7607a5b0be6ec2e16e6a5",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/rocky-hardened/auditctl.txt": {
@@ -660,9 +660,9 @@
     "semantic_hash": ""
   },
   "src/posture/reports/sarif.py": {
-    "mtime": 1793346179.596671,
-    "seen": 1793346346.6814327,
-    "ast_hash": "68b671b88d2a3863b5f091ef9474ec55",
+    "mtime": 1793348210.2722714,
+    "seen": 1793348358.6015055,
+    "ast_hash": "dc439b809d061306d242deccfd93fbb5",
     "semantic_hash": ""
   },
   "tests/fixtures/sarif-schema-2.1.0.json": {
@@ -1086,9 +1086,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1793347091.1360857,
-    "seen": 1793347110.7351596,
-    "ast_hash": "a53b44a1cf527575a1588e154cf44a7c",
+    "mtime": 1793348327.3248792,
+    "seen": 1793348358.6015055,
+    "ast_hash": "a9f7104fcc823610db5f575813178261",
     "semantic_hash": ""
   },
   "docs/img/after.png": {
