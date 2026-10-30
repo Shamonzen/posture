@@ -3,6 +3,13 @@
 All notable changes to this project. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+- **SARIF**: the report no longer sets `automationDetails.id` from the target names, so the
+  uploader's code scanning category applies (CI files the lab under `posture-lab`). Before,
+  the category changed whenever the set of targets did, and old alerts never closed.
+
 ## [1.0.0] - 2026-10-30
 
 First public release.
@@ -30,4 +37,5 @@ First public release.
 - Documentation: README, least-privilege permissions (`docs/permissions.md`), threat model,
   plan and milestone notes (`docs/PLAN.md`).
 
+[Unreleased]: https://github.com/Shamonzen/posture/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/Shamonzen/posture/releases/tag/v1.0.0
