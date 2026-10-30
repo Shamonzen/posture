@@ -1,0 +1,19 @@
+[
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Storage/storageAccounts/posturelabharddata",
+  "kind": "StorageV2",
+  "location": "canadacentral",
+  "name": "posturelabharddata",
+  "properties": {
+   "allowBlobPublicAccess": false,
+   "minimumTlsVersion": "TLS1_2",
+   "provisioningState": "Succeeded",
+   "supportsHttpsTrafficOnly": true
+  },
+  "sku": {
+   "name": "Standard_LRS",
+   "tier": "Standard"
+  },
+  "type": "Microsoft.Storage/storageAccounts"
+ }
+]

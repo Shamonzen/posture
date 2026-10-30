@@ -7,7 +7,7 @@ from pathlib import Path
 from posture import __version__
 from posture.baseline import apply_baseline, diff, gate, load_report
 from posture.checks import CheckError, load_checks
-from posture.collectors import ad, linux
+from posture.collectors import ad, azure, linux
 from posture.collectors.transport import LocalRunner, ReplayRunner, SshRunner
 from posture.engine import evaluate_all
 from posture.models import Severity, Snapshot
@@ -21,11 +21,16 @@ EXIT_GATE, EXIT_USAGE = 1, 2
 
 
 def _add_source(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("platform", choices=["linux", "ad"])
+    parser.add_argument("platform", choices=["linux", "ad", "azure"])
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--local", action="store_true", help="audit this host (linux)")
     source.add_argument("--ssh", metavar="HOST", help="audit HOST through the system ssh client")
     source.add_argument("--ldap", metavar="DC", help="audit DC's domain over LDAPS (ad)")
+    source.add_argument(
+        "--subscription",
+        metavar="ID",
+        help="audit this Azure subscription and its Entra tenant (azure; az login or environment)",
+    )
     source.add_argument("--replay", type=Path, metavar="DIR", help="replay a recording")
     parser.add_argument("--ssh-config", type=Path, help="ssh config file (e.g. lab/ssh-config)")
     parser.add_argument(
@@ -96,6 +101,8 @@ def _collect(args: argparse.Namespace) -> Snapshot:
         raise ValueError("--local and --ssh audit linux hosts")
     if args.ldap and args.platform != "ad":
         raise ValueError("--ldap audits ad")
+    if args.subscription and args.platform != "azure":
+        raise ValueError("--subscription audits azure")
     if args.winrm and not args.ldap:
         raise ValueError("--winrm goes with --ldap")
     host_runner = None
@@ -106,13 +113,17 @@ def _collect(args: argparse.Namespace) -> Snapshot:
         runner = ad.LdapRunner(args.ldap, args.user, password, args.ca_file)
         if args.winrm:
             host_runner = ad.WinrmRunner(args.ldap, args.user, password)
+    elif args.subscription:
+        runner = azure.AzureRunner(args.subscription)
     elif args.local:
         runner = LocalRunner()
     elif args.ssh:
         runner = SshRunner(args.ssh, args.ssh_config)
     else:
         runner = host_runner = ReplayRunner(args.replay)
-    if args.platform == "ad":
+    if args.platform == "azure":
+        snapshot = azure.collect(runner, target=args.target, record_dir=args.record)
+    elif args.platform == "ad":
         snapshot = ad.collect(runner, host_runner, target=args.target, record_dir=args.record)
     else:
         snapshot = linux.collect(runner, target=args.target or args.ssh, record_dir=args.record)

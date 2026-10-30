@@ -1,0 +1,23 @@
+[
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/providers/microsoft.insights/diagnosticSettings/activity-to-law",
+  "name": "activity-to-law",
+  "properties": {
+   "logs": [
+    {
+     "category": "Administrative",
+     "enabled": true
+    },
+    {
+     "category": "Security",
+     "enabled": true
+    },
+    {
+     "category": "Policy",
+     "enabled": true
+    }
+   ],
+   "workspaceId": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.OperationalInsights/workspaces/posture-lab-law"
+  }
+ }
+]

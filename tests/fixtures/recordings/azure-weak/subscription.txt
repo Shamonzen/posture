@@ -1,0 +1,11 @@
+{
+ "displayName": "posture-lab-weak",
+ "id": "/subscriptions/00000000-0000-0000-0000-000000000001",
+ "state": "Enabled",
+ "subscriptionId": "00000000-0000-0000-0000-000000000001",
+ "subscriptionPolicies": {
+  "quotaId": "PayAsYouGo_2014-09-01",
+  "spendingLimit": "Off"
+ },
+ "tenantId": "00000000-0000-0000-0000-000000000000"
+}

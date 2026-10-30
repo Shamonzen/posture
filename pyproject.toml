@@ -16,6 +16,10 @@ ad = [
     "ldap3>=2.9",
     "pypsrp>=0.8",
 ]
+azure = [
+    "azure-identity>=1.19",
+    "httpx>=0.28",
+]
 
 [project.scripts]
 posture = "posture.cli:main"

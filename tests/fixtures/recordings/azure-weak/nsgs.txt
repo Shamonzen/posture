@@ -1,0 +1,102 @@
+[
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Network/networkSecurityGroups/posture-lab-vm-nsg",
+  "location": "canadacentral",
+  "name": "posture-lab-vm-nsg",
+  "properties": {
+   "provisioningState": "Succeeded",
+   "securityRules": [
+    {
+     "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Network/networkSecurityGroups/x/securityRules/allow-ssh",
+     "name": "allow-ssh",
+     "properties": {
+      "access": "Allow",
+      "destinationAddressPrefix": "*",
+      "destinationPortRange": "22",
+      "direction": "Inbound",
+      "priority": 100,
+      "protocol": "Tcp",
+      "provisioningState": "Succeeded",
+      "sourceAddressPrefix": "Internet",
+      "sourcePortRange": "*"
+     }
+    },
+    {
+     "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Network/networkSecurityGroups/x/securityRules/allow-rdp",
+     "name": "allow-rdp",
+     "properties": {
+      "access": "Allow",
+      "destinationAddressPrefix": "*",
+      "destinationPortRange": "3389",
+      "direction": "Inbound",
+      "priority": 110,
+      "protocol": "Tcp",
+      "provisioningState": "Succeeded",
+      "sourceAddressPrefix": "*",
+      "sourcePortRange": "*"
+     }
+    },
+    {
+     "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Network/networkSecurityGroups/x/securityRules/allow-mgmt",
+     "name": "allow-mgmt",
+     "properties": {
+      "access": "Allow",
+      "destinationAddressPrefix": "*",
+      "destinationPortRanges": [
+       "1433",
+       "5985-5986"
+      ],
+      "direction": "Inbound",
+      "priority": 120,
+      "protocol": "Tcp",
+      "provisioningState": "Succeeded",
+      "sourceAddressPrefix": "0.0.0.0/0",
+      "sourcePortRange": "*"
+     }
+    },
+    {
+     "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Network/networkSecurityGroups/x/securityRules/allow-https",
+     "name": "allow-https",
+     "properties": {
+      "access": "Allow",
+      "destinationAddressPrefix": "*",
+      "destinationPortRange": "443",
+      "direction": "Inbound",
+      "priority": 130,
+      "protocol": "Tcp",
+      "provisioningState": "Succeeded",
+      "sourceAddressPrefix": "*",
+      "sourcePortRange": "*"
+     }
+    }
+   ]
+  },
+  "type": "Microsoft.Network/networkSecurityGroups"
+ },
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Network/networkSecurityGroups/posture-lab-db-nsg",
+  "location": "canadacentral",
+  "name": "posture-lab-db-nsg",
+  "properties": {
+   "provisioningState": "Succeeded",
+   "securityRules": [
+    {
+     "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Network/networkSecurityGroups/x/securityRules/allow-all",
+     "name": "allow-all",
+     "properties": {
+      "access": "Allow",
+      "destinationAddressPrefix": "*",
+      "destinationPortRange": "*",
+      "direction": "Inbound",
+      "priority": 100,
+      "protocol": "Tcp",
+      "provisioningState": "Succeeded",
+      "sourceAddressPrefix": "Any",
+      "sourcePortRange": "*"
+     }
+    }
+   ]
+  },
+  "type": "Microsoft.Network/networkSecurityGroups"
+ }
+]

@@ -1,0 +1,71 @@
+[
+ {
+  "conditions": {
+   "applications": {
+    "excludeApplications": [],
+    "includeApplications": [
+     "All"
+    ]
+   },
+   "clientAppTypes": [
+    "all"
+   ],
+   "users": {
+    "excludeGroups": [],
+    "excludeRoles": [],
+    "excludeUsers": [],
+    "includeGroups": [],
+    "includeRoles": [
+     "62e90394-69f5-4237-9190-012177145e10"
+    ],
+    "includeUsers": []
+   }
+  },
+  "displayName": "Require MFA for admins",
+  "grantControls": {
+   "authenticationStrength": null,
+   "builtInControls": [
+    "mfa"
+   ],
+   "operator": "OR"
+  },
+  "id": "00000000-0000-0000-0003-000000000001",
+  "state": "enabled"
+ },
+ {
+  "conditions": {
+   "applications": {
+    "excludeApplications": [],
+    "includeApplications": [
+     "All"
+    ]
+   },
+   "clientAppTypes": [
+    "exchangeActiveSync",
+    "other"
+   ],
+   "users": {
+    "excludeGroups": [],
+    "excludeRoles": [],
+    "excludeUsers": [
+     "00000000-0000-0000-0001-000000000002"
+    ],
+    "includeGroups": [],
+    "includeRoles": [],
+    "includeUsers": [
+     "All"
+    ]
+   }
+  },
+  "displayName": "Block legacy authentication",
+  "grantControls": {
+   "authenticationStrength": null,
+   "builtInControls": [
+    "block"
+   ],
+   "operator": "OR"
+  },
+  "id": "00000000-0000-0000-0003-000000000002",
+  "state": "enabled"
+ }
+]

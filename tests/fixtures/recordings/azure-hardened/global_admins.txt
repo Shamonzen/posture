@@ -1,0 +1,26 @@
+[
+ {
+  "directoryScopeId": "/",
+  "id": "assignment-1",
+  "principal": {
+   "@odata.type": "#microsoft.graph.user",
+   "displayName": "adm.ops",
+   "id": "00000000-0000-0000-0001-000000000001",
+   "userPrincipalName": "adm.ops@posture.test"
+  },
+  "principalId": "00000000-0000-0000-0001-000000000001",
+  "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10"
+ },
+ {
+  "directoryScopeId": "/",
+  "id": "assignment-2",
+  "principal": {
+   "@odata.type": "#microsoft.graph.user",
+   "displayName": "breakglass",
+   "id": "00000000-0000-0000-0001-000000000002",
+   "userPrincipalName": "breakglass@posture.test"
+  },
+  "principalId": "00000000-0000-0000-0001-000000000002",
+  "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10"
+ }
+]

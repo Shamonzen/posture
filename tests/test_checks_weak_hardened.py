@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from posture.checks import load_checks
-from posture.collectors import ad, linux
+from posture.collectors import ad, azure, linux
 from posture.collectors.transport import ReplayRunner
 from posture.engine import evaluate
 from posture.models import Status
@@ -21,11 +21,16 @@ CHECKS = load_checks(ROOT / "checks")
 
 def _collect(name):
     runner = ReplayRunner(RECORDINGS / name)
+    if name.startswith("azure-"):
+        return azure.collect(runner)
     return ad.collect(runner, runner) if name.startswith("dc-") else linux.collect(runner)
 
 
-WEAK = {name: _collect(name) for name in ("ubuntu-weak", "rocky-weak", "dc-weak")}
-HARDENED = {name: _collect(name) for name in ("ubuntu-hardened", "rocky-hardened", "dc-hardened")}
+WEAK = {name: _collect(name) for name in ("ubuntu-weak", "rocky-weak", "dc-weak", "azure-weak")}
+HARDENED = {
+    name: _collect(name)
+    for name in ("ubuntu-hardened", "rocky-hardened", "dc-hardened", "azure-hardened")
+}
 # Offenders the hardened lab keeps on purpose, reported honestly by the check: Vagrant logs on
 # to the DC as `vagrant`, a builtin admin whose password must not expire under it.
 LAB_KEEPS = {"AD-ACC-002": ["vagrant"]}

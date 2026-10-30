@@ -1,0 +1,13 @@
+{
+ "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#policies/authorizationPolicy/$entity",
+ "allowInvitesFrom": "everyone",
+ "blockMsolPowerShell": false,
+ "defaultUserRolePermissions": {
+  "allowedToCreateApps": true,
+  "allowedToCreateSecurityGroups": true,
+  "allowedToReadOtherUsers": true
+ },
+ "displayName": "Authorization Policy",
+ "guestUserRoleId": "a0b1b346-4d3e-4e8b-98f8-753987be4970",
+ "id": "authorizationPolicy"
+}

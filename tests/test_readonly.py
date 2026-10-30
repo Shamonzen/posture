@@ -5,10 +5,11 @@ import shlex
 import ssl
 from pathlib import Path
 
+import httpx
 import ldap3
 import pytest
 
-from posture.collectors import ad, linux, transport
+from posture.collectors import ad, azure, linux, transport
 from posture.collectors.transport import Command, SshRunner
 
 SUDOERS = Path(__file__).parent.parent / "deploy" / "sudoers.posture"
@@ -136,3 +137,27 @@ def test_connection_is_ldaps_read_only_and_never_follows_referrals(monkeypatch):
     assert server.tls.validate == ssl.CERT_REQUIRED
     assert seen["read_only"] is True and seen["auto_referrals"] is False
     assert seen["authentication"] == ldap3.SIMPLE
+
+
+@pytest.mark.parametrize("method", ["POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"])
+def test_azure_client_refuses_anything_but_get(method):
+    sent = []
+    client = azure.read_only_client(
+        httpx.MockTransport(lambda r: sent.append(r) or httpx.Response(200))
+    )
+    with pytest.raises(azure.ReadOnlyViolation):
+        client.request(method, "https://management.azure.com/subscriptions")
+    assert sent == []
+    assert client.get("https://management.azure.com/subscriptions").status_code == 200
+
+
+@pytest.mark.parametrize("request_", azure.REQUESTS, ids=lambda r: r.name)
+def test_azure_requests_are_fixed_gets_on_arm_or_graph(request_):
+    """Constant paths: the validated subscription id is the only thing ever put into a URL."""
+    assert request_.base in (azure.ARM, azure.GRAPH)
+    assert request_.path.startswith("/")
+    assert re.findall(r"{(\w*)}", request_.path) in ([], ["subscription"])
+
+
+def test_every_azure_request_has_a_parser():
+    assert sorted(r.name for r in azure.REQUESTS) == sorted(azure.PARSERS)

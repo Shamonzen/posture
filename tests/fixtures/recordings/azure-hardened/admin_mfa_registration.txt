@@ -1,0 +1,24 @@
+[
+ {
+  "id": "adm.ops@posture.test",
+  "isAdmin": true,
+  "isMfaCapable": true,
+  "isMfaRegistered": true,
+  "methodsRegistered": [
+   "microsoftAuthenticatorPush"
+  ],
+  "userDisplayName": "adm.ops",
+  "userPrincipalName": "adm.ops@posture.test"
+ },
+ {
+  "id": "breakglass@posture.test",
+  "isAdmin": true,
+  "isMfaCapable": true,
+  "isMfaRegistered": true,
+  "methodsRegistered": [
+   "microsoftAuthenticatorPush"
+  ],
+  "userDisplayName": "breakglass",
+  "userPrincipalName": "breakglass@posture.test"
+ }
+]

@@ -1,0 +1,61 @@
+[
+ {
+  "directoryScopeId": "/",
+  "id": "assignment-1",
+  "principal": {
+   "@odata.type": "#microsoft.graph.user",
+   "displayName": "adm.ops",
+   "id": "00000000-0000-0000-0001-000000000001",
+   "userPrincipalName": "adm.ops@posture.test"
+  },
+  "principalId": "00000000-0000-0000-0001-000000000001",
+  "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10"
+ },
+ {
+  "directoryScopeId": "/",
+  "id": "assignment-2",
+  "principal": {
+   "@odata.type": "#microsoft.graph.user",
+   "displayName": "adm.helpdesk",
+   "id": "00000000-0000-0000-0001-000000000002",
+   "userPrincipalName": "adm.helpdesk@posture.test"
+  },
+  "principalId": "00000000-0000-0000-0001-000000000002",
+  "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10"
+ },
+ {
+  "directoryScopeId": "/",
+  "id": "assignment-3",
+  "principal": {
+   "@odata.type": "#microsoft.graph.user",
+   "displayName": "adm.backup",
+   "id": "00000000-0000-0000-0001-000000000003",
+   "userPrincipalName": "adm.backup@posture.test"
+  },
+  "principalId": "00000000-0000-0000-0001-000000000003",
+  "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10"
+ },
+ {
+  "directoryScopeId": "/",
+  "id": "assignment-4",
+  "principal": {
+   "@odata.type": "#microsoft.graph.user",
+   "displayName": "old.admin",
+   "id": "00000000-0000-0000-0001-000000000004",
+   "userPrincipalName": "old.admin@posture.test"
+  },
+  "principalId": "00000000-0000-0000-0001-000000000004",
+  "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10"
+ },
+ {
+  "directoryScopeId": "/",
+  "id": "assignment-5",
+  "principal": {
+   "@odata.type": "#microsoft.graph.servicePrincipal",
+   "displayName": "posture-lab-automation",
+   "id": "00000000-0000-0000-0001-000000000005"
+  },
+  "principalId": "00000000-0000-0000-0001-000000000005",
+  "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10"
+ }
+]

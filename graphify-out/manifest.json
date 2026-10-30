@@ -1,8 +1,8 @@
 {
   "pyproject.toml": {
-    "mtime": 1793316449.9140651,
-    "seen": 1793341983.0852156,
-    "ast_hash": "2d42f9e68efde5acd1525737e0fdec29",
+    "mtime": 1793344236.036019,
+    "seen": 1793344500.8313582,
+    "ast_hash": "0d935d1b3d799b9ad77b135e20a0b9b0",
     "semantic_hash": ""
   },
   "src/posture/__init__.py": {
@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "src/posture/cli.py": {
-    "mtime": 1793316449.9155488,
-    "seen": 1793341983.0852156,
-    "ast_hash": "8c1308c966aae263e5e8fcb628e78ea9",
+    "mtime": 1793344425.7481406,
+    "seen": 1793344500.8313582,
+    "ast_hash": "2f5b19059554c3be07c8eac4f5e4c68e",
     "semantic_hash": ""
   },
   "src/posture/collectors/__init__.py": {
@@ -48,9 +48,9 @@
     "semantic_hash": ""
   },
   "src/posture/models.py": {
-    "mtime": 1793282762.641503,
-    "seen": 1793283022.5228589,
-    "ast_hash": "fa95e69f26a98eaa13100bf61a62c96d",
+    "mtime": 1793342454.124872,
+    "seen": 1793344500.8313582,
+    "ast_hash": "a4065805698692c3957b9e04093336cf",
     "semantic_hash": ""
   },
   "src/posture/parsers/__init__.py": {
@@ -90,9 +90,9 @@
     "semantic_hash": ""
   },
   "tests/test_checks_weak_hardened.py": {
-    "mtime": 1793277034.685179,
-    "seen": 1793278945.6498914,
-    "ast_hash": "f92924ad73b298b26ed2f75c7223e2fe",
+    "mtime": 1793344465.3728826,
+    "seen": 1793344500.8313582,
+    "ast_hash": "eb6f4c36b6b14e0b1a3935a09ad01e50",
     "semantic_hash": ""
   },
   "tests/test_cli.py": {
@@ -120,9 +120,9 @@
     "semantic_hash": ""
   },
   "tests/test_readonly.py": {
-    "mtime": 1793316449.9204164,
-    "seen": 1793341983.0852156,
-    "ast_hash": "abaccf672050301f2f959b394d44780f",
+    "mtime": 1793344465.3748305,
+    "seen": 1793344500.8313582,
+    "ast_hash": "ee117df1384bfe2e6a215e3665b3a7cb",
     "semantic_hash": ""
   },
   ".github/dependabot.yml": {
@@ -132,15 +132,15 @@
     "semantic_hash": ""
   },
   ".github/workflows/ci.yml": {
-    "mtime": 1793316449.88688,
-    "seen": 1793341983.0852156,
-    "ast_hash": "206aa26ac7fd423df3790f9a10e8765f",
+    "mtime": 1793342633.2275496,
+    "seen": 1793344500.8313582,
+    "ast_hash": "7d5c6fe75ed2fd9e3d0bbb91eb89796a",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1793316449.8898368,
-    "seen": 1793341983.0852156,
-    "ast_hash": "5d2af49881dfe52c53cf152720c8f3c7",
+    "mtime": 1793344494.85489,
+    "seen": 1793344500.8313582,
+    "ast_hash": "181e9f160aa25d4ff4ddb3184fe3dc3c",
     "semantic_hash": ""
   },
   "README.md": {
@@ -186,9 +186,9 @@
     "semantic_hash": ""
   },
   "docs/PLAN.md": {
-    "mtime": 1793316449.891647,
-    "seen": 1793341983.0852156,
-    "ast_hash": "9be650edf77ea33ff51faaf221e27e81",
+    "mtime": 1793344494.85489,
+    "seen": 1793344500.8313582,
+    "ast_hash": "b7d20699e203053545608b63eb22f3d7",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/rocky-hardened/auditctl.txt": {
@@ -594,9 +594,9 @@
     "semantic_hash": ""
   },
   "lab/lab.sh": {
-    "mtime": 1793316449.908593,
-    "seen": 1793341983.0852156,
-    "ast_hash": "275028b8c87915904ca72b3868ec39ff",
+    "mtime": 1793342344.6958084,
+    "seen": 1793344500.8313582,
+    "ast_hash": "0bbeea3d5e032c987cfd43cc99f247f1",
     "semantic_hash": ""
   },
   "lab/profiles/linux/base.sh": {
@@ -630,9 +630,9 @@
     "semantic_hash": ""
   },
   "tests/lab/test_lab.py": {
-    "mtime": 1793316449.9174953,
-    "seen": 1793341983.0852156,
-    "ast_hash": "b3e5152b4de845fc58b1b2e976a3a16f",
+    "mtime": 1793342614.228135,
+    "seen": 1793344500.8313582,
+    "ast_hash": "c3916433a3b087edaa4589fa89c0b9c4",
     "semantic_hash": ""
   },
   "tests/test_lab_files.py": {
@@ -678,9 +678,9 @@
     "semantic_hash": ""
   },
   "tests/test_reports.py": {
-    "mtime": 1793282957.7459197,
-    "seen": 1793283022.5228589,
-    "ast_hash": "0020663b93623963346bc57ead4c4fdd",
+    "mtime": 1793342837.6030717,
+    "seen": 1793344500.8313582,
+    "ast_hash": "f941c00de6e52bf34d7e24cd625231b5",
     "semantic_hash": ""
   },
   "docs/reports/after.html": {
@@ -708,21 +708,21 @@
     "semantic_hash": ""
   },
   "lab/profiles/windows/base.ps1": {
-    "mtime": 1793316449.9111092,
-    "seen": 1793341983.0852156,
-    "ast_hash": "10c7addbb59bc474a89fc6c6b5bad076",
+    "mtime": 1793342431.676096,
+    "seen": 1793344500.8313582,
+    "ast_hash": "bb15549e90b7c9b40f86456fd7832206",
     "semantic_hash": ""
   },
   "lab/profiles/windows/common.ps1": {
-    "mtime": 1793296153.7640362,
-    "seen": 1793296507.0493665,
-    "ast_hash": "d419a0176463f08f69a0bafc1a0db55f",
+    "mtime": 1793342344.18014,
+    "seen": 1793344500.8313582,
+    "ast_hash": "359341b92ad55a03e9212abb20ab9e58",
     "semantic_hash": ""
   },
   "lab/profiles/windows/hardened.ps1": {
-    "mtime": 1793296153.8155012,
-    "seen": 1793296507.0493665,
-    "ast_hash": "d3c67f677f2fd6d09771afd1d1514202",
+    "mtime": 1793342343.758642,
+    "seen": 1793344500.8313582,
+    "ast_hash": "829a9cdea83fd949406abec5779d472d",
     "semantic_hash": ""
   },
   "lab/profiles/windows/promote-dc.ps1": {
@@ -732,99 +732,303 @@
     "semantic_hash": ""
   },
   "lab/profiles/windows/weak.ps1": {
-    "mtime": 1793285048.6952174,
-    "seen": 1793296507.0493665,
-    "ast_hash": "4bdffd57dd063538a65243976db6c505",
+    "mtime": 1793342343.6300135,
+    "seen": 1793344500.8313582,
+    "ast_hash": "b74a88b111443bb227644677a5fbde25",
     "semantic_hash": ""
   },
   "src/posture/collectors/ad.py": {
-    "mtime": 1793315827.4643488,
-    "seen": 1793316437.891523,
-    "ast_hash": "29534438333fdba69c68da0a0b1df905",
+    "mtime": 1793342638.632328,
+    "seen": 1793344500.8313582,
+    "ast_hash": "024f7eb570380b128501135e33db9c31",
     "semantic_hash": ""
   },
   "src/posture/parsers/ad.py": {
-    "mtime": 1793316460.1139436,
-    "seen": 1793341983.0852156,
-    "ast_hash": "6a5c811395e63136506267e87d9a6629",
+    "mtime": 1793342296.6974018,
+    "seen": 1793344500.8313582,
+    "ast_hash": "7f5795d49238fde92384a3cda45ee2a4",
     "semantic_hash": ""
   },
   "tests/test_collect_ad.py": {
-    "mtime": 1793316328.0709941,
-    "seen": 1793316437.891523,
-    "ast_hash": "52de1eab6b543e144f8c5dc07e5240d1",
+    "mtime": 1793342580.711748,
+    "seen": 1793344500.8313582,
+    "ast_hash": "c09a84e820518df5aa582f3c89d2f8dc",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-hardened/computers.txt": {
-    "mtime": 1793315976.311641,
-    "seen": 1793316437.891523,
-    "ast_hash": "d112174109d0af55264d1e272e08fe2b",
+    "mtime": 1793342783.8386743,
+    "seen": 1793344500.8313582,
+    "ast_hash": "5ce6bb7144e7cbcdbf5bda1eb715383d",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-hardened/domain.txt": {
-    "mtime": 1793315976.3090618,
-    "seen": 1793316437.891523,
-    "ast_hash": "9f288e858ee0a1c6f655cb13159b362c",
+    "mtime": 1793342783.8359392,
+    "seen": 1793344500.8313582,
+    "ast_hash": "736b99a0fd6fd2c7236ad1fc9d065781",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-hardened/groups.txt": {
-    "mtime": 1793315976.3126552,
-    "seen": 1793316437.891523,
+    "mtime": 1793342783.8396497,
+    "seen": 1793344500.8313582,
     "ast_hash": "323890619c3bb7a9755c3269b06fbf25",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-hardened/rootdse.txt": {
-    "mtime": 1793315976.3068707,
-    "seen": 1793316437.891523,
-    "ast_hash": "11b962a84b494b707be18cda1daf9413",
+    "mtime": 1793342783.8347912,
+    "seen": 1793344500.8313582,
+    "ast_hash": "510b3b582f9f5bc78da86e4630eecf56",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-hardened/users.txt": {
-    "mtime": 1793315976.3100736,
-    "seen": 1793316437.891523,
-    "ast_hash": "c93229465dd918e439821cfc2448ecd6",
+    "mtime": 1793342783.83719,
+    "seen": 1793344500.8313582,
+    "ast_hash": "670eef9e633a0fdfb76d5209b84f24af",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-hardened/whoami.txt": {
-    "mtime": 1793315976.3078957,
-    "seen": 1793316437.891523,
+    "mtime": 1793342783.8359392,
+    "seen": 1793344500.8313582,
     "ast_hash": "3215626732d31fb10a1c2ce1c11032e7",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-weak/computers.txt": {
-    "mtime": 1793316221.5310385,
-    "seen": 1793316437.891523,
-    "ast_hash": "89e4e3cf5bb4a3c5702cc6e357217a58",
+    "mtime": 1793342659.7388375,
+    "seen": 1793344500.8313582,
+    "ast_hash": "d8577c9a7a3e55b5915bf79eccce75b6",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-weak/domain.txt": {
-    "mtime": 1793316221.528431,
-    "seen": 1793316437.891523,
-    "ast_hash": "c96e770c9ae1c888e31ecc60439c44ae",
+    "mtime": 1793342659.7388375,
+    "seen": 1793344500.8313582,
+    "ast_hash": "2fd23017db67174edf43f4b15682837a",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-weak/groups.txt": {
-    "mtime": 1793316221.5328262,
-    "seen": 1793316437.891523,
+    "mtime": 1793342659.7435348,
+    "seen": 1793344500.8313582,
     "ast_hash": "f96e1cdf3ae2b1b0fddd33c1c293b071",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-weak/rootdse.txt": {
-    "mtime": 1793316221.5269213,
-    "seen": 1793316437.891523,
-    "ast_hash": "bd2d58b812d97ca37294a7712b7722f5",
+    "mtime": 1793342659.737692,
+    "seen": 1793344500.8313582,
+    "ast_hash": "b7f61309f953d6149180cd0d0b27a871",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-weak/users.txt": {
-    "mtime": 1793316221.5300267,
-    "seen": 1793316437.891523,
-    "ast_hash": "9e131ce17b094a839a1530c6a1e0c833",
+    "mtime": 1793342659.7388375,
+    "seen": 1793344500.8313582,
+    "ast_hash": "3563b9aba05a50445943dff76c705cfe",
     "semantic_hash": ""
   },
   "tests/fixtures/recordings/dc-weak/whoami.txt": {
-    "mtime": 1793316221.5269213,
-    "seen": 1793316437.891523,
+    "mtime": 1793342659.7388375,
+    "seen": 1793344500.8313582,
     "ast_hash": "3215626732d31fb10a1c2ce1c11032e7",
+    "semantic_hash": ""
+  },
+  "src/posture/collectors/azure.py": {
+    "mtime": 1793344465.3669658,
+    "seen": 1793344500.8313582,
+    "ast_hash": "40c238856ceb94f45e8184d572b0945f",
+    "semantic_hash": ""
+  },
+  "src/posture/parsers/azure.py": {
+    "mtime": 1793344465.4908485,
+    "seen": 1793344500.8313582,
+    "ast_hash": "d3b7db80dd24801437937354ac2ca822",
+    "semantic_hash": ""
+  },
+  "tests/test_collect_azure.py": {
+    "mtime": 1793344453.764987,
+    "seen": 1793344500.8313582,
+    "ast_hash": "1920ab2e28e0df821dd087d8e440ed06",
+    "semantic_hash": ""
+  },
+  "checks/ad/accounts.yaml": {
+    "mtime": 1793342523.0678756,
+    "seen": 1793344500.8313582,
+    "ast_hash": "b9769f88eea287574cb747e13117c3e3",
+    "semantic_hash": ""
+  },
+  "checks/ad/computers.yaml": {
+    "mtime": 1793342523.384104,
+    "seen": 1793344500.8313582,
+    "ast_hash": "8bb90e7ec5dbf4d055abd8f652813f62",
+    "semantic_hash": ""
+  },
+  "checks/ad/dc-host.yaml": {
+    "mtime": 1793342523.5029113,
+    "seen": 1793344500.8313582,
+    "ast_hash": "0257984527c481714660fb11c5de84a3",
+    "semantic_hash": ""
+  },
+  "checks/ad/kerberos.yaml": {
+    "mtime": 1793342522.943452,
+    "seen": 1793344500.8313582,
+    "ast_hash": "96e158b83b1ebf35af4bb30fbafb90f9",
+    "semantic_hash": ""
+  },
+  "docs/permissions.md": {
+    "mtime": 1793342431.794518,
+    "seen": 1793344500.8313582,
+    "ast_hash": "47498cc2f723dd56ef1042cda3d26d79",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-hardened/admin_mfa_registration.txt": {
+    "mtime": 1793344419.0825827,
+    "seen": 1793344500.8313582,
+    "ast_hash": "1f0c6dfafabbc9ee42351b4928103f66",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-hardened/authorization_policy.txt": {
+    "mtime": 1793344419.0811944,
+    "seen": 1793344500.8313582,
+    "ast_hash": "968ad98e59395b6a62e3b2f75b999147",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-hardened/conditional_access.txt": {
+    "mtime": 1793344419.0801394,
+    "seen": 1793344500.8313582,
+    "ast_hash": "07b1d4a3a5f369dd9b1bd9f819b98f51",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-hardened/defender_plans.txt": {
+    "mtime": 1793344419.0790858,
+    "seen": 1793344500.8313582,
+    "ast_hash": "3a7af17eabbb28d32d55dde94326278d",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-hardened/diagnostic_settings.txt": {
+    "mtime": 1793344419.0790858,
+    "seen": 1793344500.8313582,
+    "ast_hash": "a8983addc584bb60e460c204c81bb850",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-hardened/global_admins.txt": {
+    "mtime": 1793344419.0811944,
+    "seen": 1793344500.8313582,
+    "ast_hash": "093915e6757bf6e4f3e43c4390abada7",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-hardened/nsgs.txt": {
+    "mtime": 1793344419.0781138,
+    "seen": 1793344500.8313582,
+    "ast_hash": "fa2f8ded1be53bb5d00d760eefc40d9e",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-hardened/security_defaults.txt": {
+    "mtime": 1793344419.0801394,
+    "seen": 1793344500.8313582,
+    "ast_hash": "341fc7b07a31374c14cbaab29e6fda6c",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-hardened/storage_accounts.txt": {
+    "mtime": 1793344419.077062,
+    "seen": 1793344500.8313582,
+    "ast_hash": "65b60b6c892af998d5b4b590d1ceb6ba",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-hardened/subscription.txt": {
+    "mtime": 1793344419.0754974,
+    "seen": 1793344500.8313582,
+    "ast_hash": "ce683c89f4fc1554ef9684429ed34b03",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-weak/admin_mfa_registration.txt": {
+    "mtime": 1793344419.0754974,
+    "seen": 1793344500.8313582,
+    "ast_hash": "7a475e6c6b2488c29c629549a581f7c1",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-weak/authorization_policy.txt": {
+    "mtime": 1793344419.0744913,
+    "seen": 1793344500.8313582,
+    "ast_hash": "3bc042846e46dcde4ba71e80feb80f6a",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-weak/conditional_access.txt": {
+    "mtime": 1793344419.0744913,
+    "seen": 1793344500.8313582,
+    "ast_hash": "4607b420da287b8e075f4765561e9fc3",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-weak/defender_plans.txt": {
+    "mtime": 1793344419.0734415,
+    "seen": 1793344500.8313582,
+    "ast_hash": "63fab8fb003613525c812095554e2950",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-weak/diagnostic_settings.txt": {
+    "mtime": 1793344419.072468,
+    "seen": 1793344500.8313582,
+    "ast_hash": "58e0494c51d30eb3494f7c9198986bb9",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-weak/global_admins.txt": {
+    "mtime": 1793344419.0754974,
+    "seen": 1793344500.8313582,
+    "ast_hash": "23e29d0925ec06b89ef303c64138363e",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-weak/nsgs.txt": {
+    "mtime": 1793344419.072468,
+    "seen": 1793344500.8313582,
+    "ast_hash": "a3e317221a43b49472535bbc13d3b34e",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-weak/security_defaults.txt": {
+    "mtime": 1793344419.0734415,
+    "seen": 1793344500.8313582,
+    "ast_hash": "341fc7b07a31374c14cbaab29e6fda6c",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-weak/storage_accounts.txt": {
+    "mtime": 1793344419.0713997,
+    "seen": 1793344500.8313582,
+    "ast_hash": "54b09a159f57551c16a638ab1655bdf5",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/azure-weak/subscription.txt": {
+    "mtime": 1793344419.0703325,
+    "seen": 1793344500.8313582,
+    "ast_hash": "8cbc5ccc10ed2bbf469aee30438db0d8",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/dc-hardened/ldap_server.txt": {
+    "mtime": 1793342783.8396497,
+    "seen": 1793344500.8313582,
+    "ast_hash": "0497b47af6368e82186a29472971f103",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/dc-hardened/lsa.txt": {
+    "mtime": 1793342783.8396497,
+    "seen": 1793344500.8313582,
+    "ast_hash": "f418e24c8493895627f28d72fdaa255b",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/dc-hardened/smb_server.txt": {
+    "mtime": 1793342783.8396497,
+    "seen": 1793344500.8313582,
+    "ast_hash": "2b5099987fad8df3b04f997c2a3e8192",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/dc-weak/ldap_server.txt": {
+    "mtime": 1793342659.7457027,
+    "seen": 1793344500.8313582,
+    "ast_hash": "7dd1dc88f4c9251ae47a260f7954e97a",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/dc-weak/lsa.txt": {
+    "mtime": 1793342659.7467148,
+    "seen": 1793344500.8313582,
+    "ast_hash": "2116fff498633ac82ee29316748723c9",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/recordings/dc-weak/smb_server.txt": {
+    "mtime": 1793342659.7445018,
+    "seen": 1793344500.8313582,
+    "ast_hash": "6978dc54c77b8275237fa94f86127e68",
     "semantic_hash": ""
   }
 }

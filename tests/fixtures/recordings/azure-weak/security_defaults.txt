@@ -1,0 +1,6 @@
+{
+ "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#policies/identitySecurityDefaultsEnforcementPolicy/$entity",
+ "displayName": "Security Defaults",
+ "id": "00000000-0000-0000-0000-000000000005",
+ "isEnabled": false
+}

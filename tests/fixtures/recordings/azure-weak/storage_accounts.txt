@@ -1,0 +1,34 @@
+[
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Storage/storageAccounts/posturelabweakdata",
+  "kind": "StorageV2",
+  "location": "canadacentral",
+  "name": "posturelabweakdata",
+  "properties": {
+   "allowBlobPublicAccess": true,
+   "minimumTlsVersion": "TLS1_0",
+   "provisioningState": "Succeeded",
+   "supportsHttpsTrafficOnly": false
+  },
+  "sku": {
+   "name": "Standard_LRS",
+   "tier": "Standard"
+  },
+  "type": "Microsoft.Storage/storageAccounts"
+ },
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Storage/storageAccounts/posturelabweaklegacy",
+  "kind": "StorageV2",
+  "location": "canadacentral",
+  "name": "posturelabweaklegacy",
+  "properties": {
+   "provisioningState": "Succeeded",
+   "supportsHttpsTrafficOnly": true
+  },
+  "sku": {
+   "name": "Standard_LRS",
+   "tier": "Standard"
+  },
+  "type": "Microsoft.Storage/storageAccounts"
+ }
+]

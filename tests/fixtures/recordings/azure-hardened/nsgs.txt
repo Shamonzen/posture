@@ -1,0 +1,58 @@
+[
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Network/networkSecurityGroups/posture-lab-vm-nsg",
+  "location": "canadacentral",
+  "name": "posture-lab-vm-nsg",
+  "properties": {
+   "provisioningState": "Succeeded",
+   "securityRules": [
+    {
+     "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Network/networkSecurityGroups/x/securityRules/allow-ssh-admin-net",
+     "name": "allow-ssh-admin-net",
+     "properties": {
+      "access": "Allow",
+      "destinationAddressPrefix": "*",
+      "destinationPortRange": "22",
+      "direction": "Inbound",
+      "priority": 100,
+      "protocol": "Tcp",
+      "provisioningState": "Succeeded",
+      "sourceAddressPrefix": "192.0.2.0/24",
+      "sourcePortRange": "*"
+     }
+    },
+    {
+     "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Network/networkSecurityGroups/x/securityRules/allow-https",
+     "name": "allow-https",
+     "properties": {
+      "access": "Allow",
+      "destinationAddressPrefix": "*",
+      "destinationPortRange": "443",
+      "direction": "Inbound",
+      "priority": 110,
+      "protocol": "Tcp",
+      "provisioningState": "Succeeded",
+      "sourceAddressPrefix": "Internet",
+      "sourcePortRange": "*"
+     }
+    },
+    {
+     "id": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/posture-lab/providers/Microsoft.Network/networkSecurityGroups/x/securityRules/deny-all-inbound",
+     "name": "deny-all-inbound",
+     "properties": {
+      "access": "Deny",
+      "destinationAddressPrefix": "*",
+      "destinationPortRange": "*",
+      "direction": "Inbound",
+      "priority": 4000,
+      "protocol": "Tcp",
+      "provisioningState": "Succeeded",
+      "sourceAddressPrefix": "*",
+      "sourcePortRange": "*"
+     }
+    }
+   ]
+  },
+  "type": "Microsoft.Network/networkSecurityGroups"
+ }
+]

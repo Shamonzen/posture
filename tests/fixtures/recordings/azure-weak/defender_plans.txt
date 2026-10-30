@@ -1,0 +1,66 @@
+[
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/providers/Microsoft.Security/pricings/VirtualMachines",
+  "name": "VirtualMachines",
+  "properties": {
+   "pricingTier": "Free"
+  },
+  "type": "Microsoft.Security/pricings"
+ },
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/providers/Microsoft.Security/pricings/SqlServers",
+  "name": "SqlServers",
+  "properties": {
+   "pricingTier": "Free"
+  },
+  "type": "Microsoft.Security/pricings"
+ },
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/providers/Microsoft.Security/pricings/AppServices",
+  "name": "AppServices",
+  "properties": {
+   "pricingTier": "Free"
+  },
+  "type": "Microsoft.Security/pricings"
+ },
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/providers/Microsoft.Security/pricings/StorageAccounts",
+  "name": "StorageAccounts",
+  "properties": {
+   "pricingTier": "Free"
+  },
+  "type": "Microsoft.Security/pricings"
+ },
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/providers/Microsoft.Security/pricings/KeyVaults",
+  "name": "KeyVaults",
+  "properties": {
+   "pricingTier": "Free"
+  },
+  "type": "Microsoft.Security/pricings"
+ },
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/providers/Microsoft.Security/pricings/Arm",
+  "name": "Arm",
+  "properties": {
+   "pricingTier": "Free"
+  },
+  "type": "Microsoft.Security/pricings"
+ },
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/providers/Microsoft.Security/pricings/Containers",
+  "name": "Containers",
+  "properties": {
+   "pricingTier": "Free"
+  },
+  "type": "Microsoft.Security/pricings"
+ },
+ {
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000001/providers/Microsoft.Security/pricings/CloudPosture",
+  "name": "CloudPosture",
+  "properties": {
+   "pricingTier": "Free"
+  },
+  "type": "Microsoft.Security/pricings"
+ }
+]

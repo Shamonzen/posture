@@ -1,0 +1,42 @@
+[
+ {
+  "id": "adm.ops@posture.test",
+  "isAdmin": true,
+  "isMfaCapable": true,
+  "isMfaRegistered": true,
+  "methodsRegistered": [
+   "microsoftAuthenticatorPush"
+  ],
+  "userDisplayName": "adm.ops",
+  "userPrincipalName": "adm.ops@posture.test"
+ },
+ {
+  "id": "adm.helpdesk@posture.test",
+  "isAdmin": true,
+  "isMfaCapable": false,
+  "isMfaRegistered": false,
+  "methodsRegistered": [],
+  "userDisplayName": "adm.helpdesk",
+  "userPrincipalName": "adm.helpdesk@posture.test"
+ },
+ {
+  "id": "adm.backup@posture.test",
+  "isAdmin": true,
+  "isMfaCapable": true,
+  "isMfaRegistered": true,
+  "methodsRegistered": [
+   "microsoftAuthenticatorPush"
+  ],
+  "userDisplayName": "adm.backup",
+  "userPrincipalName": "adm.backup@posture.test"
+ },
+ {
+  "id": "old.admin@posture.test",
+  "isAdmin": true,
+  "isMfaCapable": false,
+  "isMfaRegistered": false,
+  "methodsRegistered": [],
+  "userDisplayName": "old.admin",
+  "userPrincipalName": "old.admin@posture.test"
+ }
+]
