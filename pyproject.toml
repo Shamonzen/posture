@@ -1,6 +1,6 @@
 [project]
 name = "posture"
-version = "1.0.0"
+version = "1.0.1"
 description = "Read-only security posture auditor for Linux, Active Directory and Azure, mapped to CIS and MITRE ATT&CK"
 readme = "README.md"
 license = "MIT"

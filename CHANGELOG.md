@@ -5,6 +5,8 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-30
+
 ### Fixed
 - **SARIF**: the report no longer sets `automationDetails.id` from the target names, so the
   uploader's code scanning category applies (CI files the lab under `posture-lab`). Before,
@@ -37,5 +39,6 @@ First public release.
 - Documentation: README, least-privilege permissions (`docs/permissions.md`), threat model,
   plan and milestone notes (`docs/PLAN.md`).
 
-[Unreleased]: https://github.com/Shamonzen/posture/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/Shamonzen/posture/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/Shamonzen/posture/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Shamonzen/posture/releases/tag/v1.0.0
