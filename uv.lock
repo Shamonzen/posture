@@ -854,7 +854,7 @@ provides-extras = ["ad"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "bandit", extras = ["sarif"], specifier = ">=1.8" },
+    { name = "bandit", extras = ["sarif"], specifier = ">=1.9.4" },
     { name = "jsonschema", specifier = ">=4" },
     { name = "pip-audit", specifier = ">=2.9" },
     { name = "pytest", specifier = ">=8" },
