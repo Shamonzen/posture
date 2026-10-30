@@ -185,8 +185,11 @@ Status: ✅ done · ⏭️ next. Update this list when a milestone is committed.
     - Guest directory access must be `restricted` (CIS), so the default `limited` fails too, at `low`.
     - Defender plans: one check over every plan returned (`null` CIS, since 3.1.x has one control per plan); a subscription that doesn't use a resource type still sees that plan listed.
     - No live run yet: needs a subscription and app registration from you, never in CI.
-12. ⏭️ **Multi-target audits:** `posture audit --inventory lab/inventory.yaml` (all lab hosts in one run, one report), combined before/after HTML and SARIF.
-13. **README + v1.0:** problem, Mermaid diagram, before/after screenshots, check table, how to run it, permissions, threat model, limitations, comparison with Lynis / PingCastle / Prowler / ScoutSuite, interview notes; `CHANGELOG.md`, tag `v1.0.0`, repo public.
+12. ✅ **Multi-target audits:** `posture audit --inventory FILE` audits every target in a YAML file into one report (JSON, HTML, SARIF, terminal summary per target); `posture evaluate` takes several snapshots. An inventory entry has exactly the fields of `posture audit PLATFORM …` (`platform`, one of `local` / `ssh` / `ldap` / `subscription` / `replay`, plus `ssh_config`, `user`, `ca_file`, `winrm`, `target`), validated strictly, paths relative to the file. `lab/inventory.yaml` names the three VMs (Azure left out: only a subscription you name); `tests/fixtures/inventories/lab-weak.yaml` / `lab-hardened.yaml` replay all four recordings. `docs/reports/before.html` / `after.html` are now the combined lab (80 failing findings → 1, the `vagrant` account). CI gates both inventories and uploads one combined weak SARIF (`posture-lab`) instead of four. Live check: the hardened DC audited through an inventory matches its recording. Decisions:
+    - The JSON report (and baseline) holds `snapshots: [...]`, `schema_version` 2; a single-target audit is a list of one. Diff, baseline and fingerprints needed no change: findings already carry their target.
+    - Fail closed: one target that can't be reached aborts the run (exit 2, naming the inventory entry), and a target with no facts exits 2, so a report never silently misses a host. Two snapshots with the same target name are refused (they would share fingerprints).
+    - Targets are collected one after another, not in parallel.
+13. ⏭️ **README + v1.0:** problem, Mermaid diagram, before/after screenshots, check table, how to run it, permissions, threat model, limitations, comparison with Lynis / PingCastle / Prowler / ScoutSuite, interview notes; `CHANGELOG.md`, tag `v1.0.0`, repo public.
 
 After each milestone I stop, summarize, and suggest a commit message (Conventional Commits).
 

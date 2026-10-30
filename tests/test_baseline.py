@@ -24,7 +24,7 @@ def _report(root_login="yes", uid0=("toor",), pending=3):
         "updates": {"pending": pending},
     }
     snapshot = make_snapshot(facts)
-    return build_report(snapshot, evaluate_all([ROOT_LOGIN, UID0, PENDING], snapshot))
+    return build_report([snapshot], evaluate_all([ROOT_LOGIN, UID0, PENDING], snapshot))
 
 
 def _ids(findings):

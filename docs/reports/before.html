@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; style-src &#39;sha256-KUwlgByUQdyMlLQWeH2o9y/XgHGrO3vz/oKpOSC38lc=&#39;">
+<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; style-src &#39;sha256-5V4ebg6k/A0vyQ7DXCX5c+1VnCW2IEg5ePl97Y8adYI=&#39;">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Posture report: posture-ubuntu</title>
+<title>Posture report: posture-ubuntu, posture-rocky, posture-dc.posture.test, posture-lab-weak</title>
 <style>:root {
   --bg: #fafafa; --fg: #1d1f21; --muted: #5f6368; --card: #fff; --line: #dadce0;
   --critical: #a50e0e; --high: #d93025; --medium: #e37400; --low: #1a73e8;
@@ -25,7 +25,8 @@ header, main, footer { max-width: 960px; margin: 0 auto; padding: 16px; }
 h1 { font-size: 1.5rem; margin: 0 0 4px; overflow-wrap: anywhere; }
 h2 { font-size: 1.15rem; border-bottom: 2px solid currentColor; padding-bottom: 4px; }
 h3 { font-size: .95rem; margin: 12px 0 4px; }
-.meta, footer, .message { color: var(--muted); }
+.meta, footer, .message, .target { color: var(--muted); }
+ul.meta { list-style: none; padding: 0; margin: 0 0 4px; overflow-wrap: anywhere; }
 .counts { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
 .counts li { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; }
 .counts b { font-size: 1.2rem; }
@@ -46,21 +47,26 @@ a { color: var(--low); overflow-wrap: anywhere; }
 </head>
 <body>
 <header>
-  <h1>Posture report: posture-ubuntu</h1>
-  <p class="meta">linux · collected 2026-10-29 14:09 UTC
- as posture · posture 0.1.0</p>
+  <h1>Posture report: posture-ubuntu, posture-rocky, posture-dc.posture.test, posture-lab-weak</h1>
+  <ul class="meta">
+    <li><b>posture-ubuntu</b>: linux · collected 2026-10-30 07:45 UTC as posture</li>
+    <li><b>posture-rocky</b>: linux · collected 2026-10-30 07:45 UTC as posture</li>
+    <li><b>posture-dc.posture.test</b>: ad · collected 2026-10-30 07:45 UTC as POSTURE\posture</li>
+    <li><b>posture-lab-weak</b>: azure · collected 2026-10-30 07:45 UTC</li>
+  </ul>
+  <p class="meta">posture 0.1.0</p>
   <ul class="counts">
-    <li class="fail"><b>25</b> fail</li>
+    <li class="fail"><b>80</b> fail</li>
     <li class="error"><b>0</b> error</li>
     <li class="pass"><b>0</b> pass</li>
-    <li class="skip"><b>1</b> skip</li>
+    <li class="skip"><b>2</b> skip</li>
   </ul>
 </header>
 <main>
 <section>
-  <h2 class="sev-critical">Critical (3)</h2>
+  <h2 class="sev-critical">Critical (8)</h2>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-ACC-001</code> root is the only account with UID 0</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-ACC-001</code> root is the only account with UID 0 <span class="target">posture-ubuntu</span></summary>
     <p>Any account with UID 0 is root under another name: a classic backdoor that survives a root password change and hides in the user list.</p>
     <dl>
       <dt>CIS</dt>
@@ -74,7 +80,7 @@ a { color: var(--low); overflow-wrap: anywhere; }
     <p>Find out who created each account listed, then lock and remove it (`sudo userdel &lt;name&gt;`).</p>
   </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-ACC-002</code> No account has an empty password</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-ACC-002</code> No account has an empty password <span class="target">posture-ubuntu</span></summary>
     <p>An empty password field means anyone can log in as that account (locally, and over SSH if PermitEmptyPasswords is on) or `su` to it without knowing anything.</p>
     <dl>
       <dt>CIS</dt>
@@ -88,7 +94,7 @@ a { color: var(--low); overflow-wrap: anywhere; }
     <p>Lock each listed account (`sudo passwd -l &lt;name&gt;`), then set a password if it is needed.</p>
   </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-FILE-002</code> /etc/passwd and /etc/group can only be changed by root</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-002</code> /etc/passwd and /etc/group can only be changed by root <span class="target">posture-ubuntu</span></summary>
     <p>Whoever can write /etc/passwd or /etc/group can create a UID 0 account or join the sudo group: instant root. (CIS 7.1.3 covers /etc/group.)</p>
     <dl>
       <dt>CIS</dt>
@@ -125,11 +131,109 @@ a { color: var(--low); overflow-wrap: anywhere; }
     <p>Set both files to `root:root 644`.</p>
 <pre>sudo chown root:root /etc/passwd /etc/group &amp;&amp; sudo chmod 644 /etc/passwd /etc/group
 </pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-ACC-001</code> root is the only account with UID 0 <span class="target">posture-rocky</span></summary>
+    <p>Any account with UID 0 is root under another name: a classic backdoor that survives a root password change and hides in the user list.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.4.2.1</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.4.2.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1136/001/">T1136.001</a> <a href="https://attack.mitre.org/techniques/T1078/003/">T1078.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>toor
+</pre>
+    <h3>Remediation</h3>
+    <p>Find out who created each account listed, then lock and remove it (`sudo userdel &lt;name&gt;`).</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-ACC-002</code> No account has an empty password <span class="target">posture-rocky</span></summary>
+    <p>An empty password field means anyone can log in as that account (locally, and over SSH if PermitEmptyPasswords is on) or `su` to it without knowing anything.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 7.2.2</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 7.2.2</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/003/">T1078.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>guest
+</pre>
+    <h3>Remediation</h3>
+    <p>Lock each listed account (`sudo passwd -l &lt;name&gt;`), then set a password if it is needed.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-002</code> /etc/passwd and /etc/group can only be changed by root <span class="target">posture-rocky</span></summary>
+    <p>Whoever can write /etc/passwd or /etc/group can create a UID 0 account or join the sudo group: instant root. (CIS 7.1.3 covers /etc/group.)</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 7.1.1</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 7.1.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1136/001/">T1136.001</a> <a href="https://attack.mitre.org/techniques/T1098/">T1098</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;files./etc/passwd.owner&#34;,
+  &#34;value&#34;: &#34;root&#34;
+}
+{
+  &#34;fact&#34;: &#34;files./etc/passwd.world_writable&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;files./etc/passwd.group_writable&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;files./etc/group.owner&#34;,
+  &#34;value&#34;: &#34;root&#34;
+}
+{
+  &#34;fact&#34;: &#34;files./etc/group.world_writable&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;files./etc/group.group_writable&#34;,
+  &#34;value&#34;: true
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set both files to `root:root 644`.</p>
+<pre>sudo chown root:root /etc/passwd /etc/group &amp;&amp; sudo chmod 644 /etc/passwd /etc/group
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-KRB-003</code> No computer other than a DC is trusted for unconstrained delegation <span class="target">posture-dc.posture.test</span></summary>
+    <p>A host trusted for unconstrained delegation receives the TGT of everyone who authenticates to it. Whoever controls that host can reuse those tickets as the users, and can coerce a DC into authenticating to it, which yields the DC&#39;s own ticket and with it the domain.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1558/">T1558</a> <a href="https://attack.mitre.org/techniques/T1550/003/">T1550.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>ws01$
+</pre>
+    <h3>Remediation</h3>
+    <p>Remove &#34;Trust this computer for delegation to any service&#34; from each listed computer; if a service really needs delegation, use constrained or resource-based constrained delegation to the named services only.</p>
+<pre>Set-ADAccountControl -Identity &#39;&lt;name&gt;&#39; -TrustedForDelegation $false
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/defender-for-identity/security-assessment-unconstrained-kerberos">https://learn.microsoft.com/en-us/defender-for-identity/security-assessment-unconstrained-kerberos</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-PWD-003</code> Passwords are not stored with reversible encryption <span class="target">posture-dc.posture.test</span></summary>
+    <p>With reversible encryption the DC keeps every password it is given in a form it can turn back into cleartext, so anyone who can replicate from it (DCSync) or read its database gets the passwords themselves, not just hashes.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Windows Server 2019 Benchmark v4.0.0, control 1.1.6</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1003/006/">T1003.006</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;domain.reversible_encryption&#34;,
+  &#34;value&#34;: true
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Disable &#34;Store passwords using reversible encryption&#34; in the Default Domain Policy, then have users change their passwords: the setting only stops new cleartext being stored.</p>
+  </details>
 </section>
 <section>
-  <h2 class="sev-high">High (6)</h2>
+  <h2 class="sev-high">High (27)</h2>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-SUDO-001</code> No sudo rule grants every command without a password</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-SUDO-001</code> No sudo rule grants every command without a password <span class="target">posture-ubuntu</span></summary>
     <p>`NOPASSWD: ALL` makes root one command away for anyone who gets that user&#39;s session (a stolen SSH key, a hijacked process), with no password standing in the way.</p>
     <dl>
       <dt>CIS</dt>
@@ -145,7 +249,7 @@ vagrant
     <p>Remove NOPASSWD from the listed rules, or limit them to the exact commands needed (as deploy/sudoers.posture does). Edit with `sudo visudo -f &lt;file&gt;`.</p>
   </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-FILE-001</code> /etc/shadow is owned by root and not readable by everyone</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-001</code> /etc/shadow is owned by root and not readable by everyone <span class="target">posture-ubuntu</span></summary>
     <p>/etc/shadow holds every password hash. If any user can read it, offline cracking needs nothing more than a copy of the file.</p>
     <dl>
       <dt>CIS</dt>
@@ -175,7 +279,7 @@ vagrant
 <pre>sudo chown root /etc/shadow &amp;&amp; sudo chmod o-rwx,g-wx /etc/shadow
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-FW-001</code> ufw is active and denies incoming traffic by default</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-FW-001</code> ufw is active and denies incoming traffic by default <span class="target">posture-ubuntu</span></summary>
     <p>With no host firewall, every service that listens on the network (a debug port, a database bound to 0.0.0.0) is reachable by anyone who can route to the host. CIS 4.2.7 covers the default deny policy.</p>
     <dl>
       <dt>CIS</dt>
@@ -199,7 +303,7 @@ sudo ufw default deny incoming
 sudo ufw --force enable
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-SSH-001</code> SSH root login is disabled</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-001</code> SSH root login is disabled <span class="target">posture-ubuntu</span></summary>
     <p>root exists on every Linux host, so it is the first account password guessers try, and logging in as root directly leaves no trail of which person used it. Admins should log in as themselves and escalate with sudo.</p>
     <dl>
       <dt>CIS</dt>
@@ -218,7 +322,7 @@ sudo ufw --force enable
 sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-SSH-002</code> SSH refuses empty passwords</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-002</code> SSH refuses empty passwords <span class="target">posture-ubuntu</span></summary>
     <p>With PermitEmptyPasswords on, any account whose password is empty can be logged into over the network with no secret at all.</p>
     <dl>
       <dt>CIS</dt>
@@ -237,7 +341,7 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
 sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-UPD-001</code> No security updates are waiting to be installed</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-UPD-001</code> No security updates are waiting to be installed <span class="target">posture-ubuntu</span></summary>
     <p>A published security fix is also a published description of the bug: exploits for unpatched local privilege escalation and network services follow within days.</p>
     <dl>
       <dt>CIS</dt>
@@ -254,11 +358,391 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
     <p>Install the pending updates and reboot if the kernel or libc changed.</p>
 <pre>if command -v apt-get &gt;/dev/null; then sudo apt-get update &amp;&amp; sudo apt-get -y upgrade; else sudo dnf -y upgrade --security; fi
 </pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SUDO-001</code> No sudo rule grants every command without a password <span class="target">posture-rocky</span></summary>
+    <p>`NOPASSWD: ALL` makes root one command away for anyone who gets that user&#39;s session (a stolen SSH key, a hijacked process), with no password standing in the way.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.2.4</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.2.4</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1548/003/">T1548.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>%vagrant
+alice
+</pre>
+    <h3>Remediation</h3>
+    <p>Remove NOPASSWD from the listed rules, or limit them to the exact commands needed (as deploy/sudoers.posture does). Edit with `sudo visudo -f &lt;file&gt;`.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-001</code> /etc/shadow is owned by root and not readable by everyone <span class="target">posture-rocky</span></summary>
+    <p>/etc/shadow holds every password hash. If any user can read it, offline cracking needs nothing more than a copy of the file.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 7.1.5</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 7.1.5</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1003/008/">T1003.008</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;files./etc/shadow.owner&#34;,
+  &#34;value&#34;: &#34;root&#34;
+}
+{
+  &#34;fact&#34;: &#34;files./etc/shadow.world_readable&#34;,
+  &#34;value&#34;: true
+}
+{
+  &#34;fact&#34;: &#34;files./etc/shadow.world_writable&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;files./etc/shadow.group_writable&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Restore owner and mode (Ubuntu `root:shadow 640`, Rocky `root:root 000`).</p>
+<pre>sudo chown root /etc/shadow &amp;&amp; sudo chmod o-rwx,g-wx /etc/shadow
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FW-002</code> firewalld is running and its zone doesn&#39;t accept everything <span class="target">posture-rocky</span></summary>
+    <p>With firewalld stopped, or a zone whose target is ACCEPT, every listening service is reachable from the network. CIS 4.2.1 covers dropping unneeded services and ports.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 4.1.2</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1190/">T1190</a> <a href="https://attack.mitre.org/techniques/T1021/">T1021</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;firewalld.running&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;firewalld.target&#34;,
+  &#34;value&#34;: null
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Start firewalld and set the zone target back to default.</p>
+<pre>sudo systemctl enable --now firewalld
+sudo firewall-cmd --permanent --set-target=default &amp;&amp; sudo firewall-cmd --reload
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-001</code> SSH root login is disabled <span class="target">posture-rocky</span></summary>
+    <p>root exists on every Linux host, so it is the first account password guessers try, and logging in as root directly leaves no trail of which person used it. Admins should log in as themselves and escalate with sudo.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.20</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.20</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1110/001/">T1110.001</a> <a href="https://attack.mitre.org/techniques/T1078/003/">T1078.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.permitrootlogin&#34;,
+  &#34;value&#34;: &#34;yes&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set `PermitRootLogin no` and reload sshd.</p>
+<pre>echo &#39;PermitRootLogin no&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-002</code> SSH refuses empty passwords <span class="target">posture-rocky</span></summary>
+    <p>With PermitEmptyPasswords on, any account whose password is empty can be logged into over the network with no secret at all.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.19</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.19</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/003/">T1078.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.permitemptypasswords&#34;,
+  &#34;value&#34;: &#34;yes&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set `PermitEmptyPasswords no` and reload sshd.</p>
+<pre>echo &#39;PermitEmptyPasswords no&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-UPD-001</code> No security updates are waiting to be installed <span class="target">posture-rocky</span></summary>
+    <p>A published security fix is also a published description of the bug: exploits for unpatched local privilege escalation and network services follow within days.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 1.2.2.1</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 1.2.2.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1068/">T1068</a> <a href="https://attack.mitre.org/techniques/T1190/">T1190</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;updates.pending_security&#34;,
+  &#34;value&#34;: 172
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Install the pending updates and reboot if the kernel or libc changed.</p>
+<pre>if command -v apt-get &gt;/dev/null; then sudo apt-get update &amp;&amp; sudo apt-get -y upgrade; else sudo dnf -y upgrade --security; fi
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-ACC-001</code> No enabled account is allowed an empty password <span class="target">posture-dc.posture.test</span></summary>
+    <p>PASSWD_NOTREQD lets the account&#39;s password be set to nothing regardless of the domain policy. Such an account may already have an empty password, which anyone can log on with.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/002/">T1078.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>temp.user
+</pre>
+    <h3>Remediation</h3>
+    <p>Clear the flag on each listed account, then set a password that meets the policy.</p>
+<pre>Set-ADAccountControl -Identity &lt;name&gt; -PasswordNotRequired $false
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/useraccountcontrol-manipulate-account-properties">https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/useraccountcontrol-manipulate-account-properties</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-LAPS-001</code> Every enabled non-DC computer has its admin password managed by LAPS <span class="target">posture-dc.posture.test</span></summary>
+    <p>Without LAPS, local Administrator passwords are usually the same on every machine (set once in the image). One hash from one workstation then logs on to all of them (pass-the-hash). The check looks only at LAPS&#39;s password expiry attributes, never at the passwords.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/003/">T1078.003</a> <a href="https://attack.mitre.org/techniques/T1550/002/">T1550.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>ws01$
+ws02$
+</pre>
+    <h3>Remediation</h3>
+    <p>Deploy Windows LAPS (built into Windows Server 2019 and Windows 10/11 since the April 2023 update): run `Update-LapsADSchema` once, then enable &#34;Configure password backup directory&#34; for these computers by GPO.</p>
+    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview">https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>DC-SMB-001</code> The DC requires SMB signing <span class="target">posture-dc.posture.test</span></summary>
+    <p>Without required signing, an attacker who catches an authentication (by poisoning name resolution, or coercing a host to connect) can relay it to the DC&#39;s SMB server and act as that account there.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Windows Server 2019 Benchmark v4.0.0, control 2.3.9.2</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1557/001/">T1557.001</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;dc.smb_signing_required&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Enable &#34;Microsoft network server: Digitally sign communications (always)&#34; in the Default Domain Controllers Policy (Security Options).</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>DC-LDAP-001</code> The DC requires LDAP signing <span class="target">posture-dc.posture.test</span></summary>
+    <p>If unsigned LDAP binds are accepted, a relayed NTLM authentication can be replayed against LDAP to change the directory as the victim, for example adding an account to a group or granting delegation rights.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Windows Server 2019 Benchmark v4.0.0, control 2.3.5.4</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1557/">T1557</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;dc.ldap_server_integrity&#34;,
+  &#34;value&#34;: 1
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set &#34;Domain controller: LDAP server signing requirements&#34; to &#34;Require signing&#34; in the Default Domain Controllers Policy, after checking the DC&#39;s Directory Service log (event 2889) for clients that still bind unsigned.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>DC-NTLM-001</code> The DC accepts NTLMv2 only <span class="target">posture-dc.posture.test</span></summary>
+    <p>LM and NTLMv1 responses can be cracked or reduced to the account&#39;s NT hash in hours, from one captured logon. Level 5 makes the DC refuse them, so a downgrade gets nothing usable.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Windows Server 2019 Benchmark v4.0.0, control 2.3.11.7</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1557/001/">T1557.001</a> <a href="https://attack.mitre.org/techniques/T1110/002/">T1110.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;dc.lm_compatibility_level&#34;,
+  &#34;value&#34;: 1
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set &#34;Network security: LAN Manager authentication level&#34; to &#34;Send NTLMv2 response only. Refuse LM &amp; NTLM&#34; in the Default Domain Controllers Policy, after auditing NTLMv1 use (event 4624 with &#34;Package Name (NTLM only): NTLM V1&#34;).</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-KRB-001</code> No enabled user account has a service principal name <span class="target">posture-dc.posture.test</span></summary>
+    <p>Any domain user can ask for a service ticket for any SPN, and part of that ticket is encrypted with the service account&#39;s password hash. On a user account that password was chosen by a person, so it can be cracked offline at leisure (Kerberoasting).</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1558/003/">T1558.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>svc-sql
+</pre>
+    <h3>Remediation</h3>
+    <p>Move each listed service to a group managed service account (gMSA), whose 120-character password AD rotates itself. Until then, give the account a long random password and allow only AES (`Set-ADUser &lt;name&gt; -KerberosEncryptionType AES128,AES256`).</p>
+    <ul class="refs"><li><a href="https://attack.mitre.org/techniques/T1558/003/">https://attack.mitre.org/techniques/T1558/003/</a></li><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-managed-service-accounts/group-managed-service-accounts/group-managed-service-accounts-overview">https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-managed-service-accounts/group-managed-service-accounts/group-managed-service-accounts-overview</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-KRB-002</code> Kerberos pre-authentication is required for every enabled user <span class="target">posture-dc.posture.test</span></summary>
+    <p>Without pre-authentication the DC hands an encrypted reply to anyone who asks for that account, without any proof of identity, and the reply can be cracked offline for the account&#39;s password (AS-REP roasting).</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1558/004/">T1558.004</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>legacy.app
+</pre>
+    <h3>Remediation</h3>
+    <p>Clear &#34;Do not require Kerberos preauthentication&#34; on each listed account.</p>
+<pre>Set-ADAccountControl -Identity &lt;name&gt; -DoesNotRequirePreAuth $false
+</pre>    <ul class="refs"><li><a href="https://attack.mitre.org/techniques/T1558/004/">https://attack.mitre.org/techniques/T1558/004/</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-PWD-001</code> Domain passwords are at least 14 characters <span class="target">posture-dc.posture.test</span></summary>
+    <p>Every domain account can be guessed online against any DC, and every captured hash can be cracked offline. Length is what makes both slow; seven characters fall to a laptop in hours.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Windows Server 2019 Benchmark v4.0.0, control 1.1.4</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1110/001/">T1110.001</a> <a href="https://attack.mitre.org/techniques/T1110/003/">T1110.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;domain.min_password_length&#34;,
+  &#34;value&#34;: 7
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Raise &#34;Minimum password length&#34; to 14 in the Default Domain Policy (Computer Configuration &gt; Policies &gt; Windows Settings &gt; Security Settings &gt; Account Policies &gt; Password Policy). Existing passwords keep working until they are changed.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-PWD-004</code> Accounts lock out after at most 5 failed logons <span class="target">posture-dc.posture.test</span></summary>
+    <p>With no lockout threshold an attacker can try passwords against an account for as long as they like. A low threshold caps online guessing at a handful of tries per lockout window.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Windows Server 2019 Benchmark v4.0.0, control 1.2.2</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1110/001/">T1110.001</a> <a href="https://attack.mitre.org/techniques/T1110/003/">T1110.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;domain.lockout_threshold&#34;,
+  &#34;value&#34;: 0
+}
+{
+  &#34;fact&#34;: &#34;domain.lockout_threshold&#34;,
+  &#34;value&#34;: 0
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set &#34;Account lockout threshold&#34; to 5 (with a lockout duration and reset counter of 15 minutes) in the Default Domain Policy.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-IAM-001</code> MFA is enforced for administrators <span class="target">posture-lab-weak</span></summary>
+    <p>Without MFA, a Global Administrator&#39;s password is the only thing between a password-spraying or phishing attacker and the whole tenant and every subscription under it. Counted as enforced: Security Defaults on, or an enabled Conditional Access policy over all apps that requires MFA of all users or of the Global Administrator role (report-only policies enforce nothing).</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Azure Foundations Benchmark v3.0.0, control 2.2.4</dd><dd>CIS Microsoft 365 Foundations Benchmark v4.0.0, control 5.2.2.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/004/">T1078.004</a> <a href="https://attack.mitre.org/techniques/T1110/003/">T1110.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;identity.admin_mfa_enforced&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Create a Conditional Access policy that targets the admin roles (or all users), all cloud apps, and grants access only with MFA. Exclude one or two monitored break-glass accounts, run it in report-only mode first, then switch it on. Without Entra ID P1, turn on Security Defaults instead.</p>
+    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-admin-mfa">https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-admin-mfa</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-IAM-002</code> Legacy authentication is blocked <span class="target">posture-lab-weak</span></summary>
+    <p>Legacy protocols (IMAP, POP, SMTP AUTH, older Office clients) can&#39;t do MFA, so they let a sprayed or leaked password straight in even where MFA is required elsewhere. Counted as blocked: Security Defaults on, or an enabled Conditional Access policy for all users and all apps that blocks the Exchange ActiveSync and &#34;other&#34; client types.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft 365 Foundations Benchmark v4.0.0, control 5.2.2.3</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1110/003/">T1110.003</a> <a href="https://attack.mitre.org/techniques/T1078/004/">T1078.004</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;identity.legacy_auth_blocked&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Check the sign-in logs for legacy clients still in use, then create a Conditional Access policy for all users and all apps, with client apps &#34;Exchange ActiveSync&#34; and &#34;Other clients&#34;, that blocks access. Start in report-only mode.</p>
+    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-block-legacy-authentication">https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-block-legacy-authentication</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-NET-001</code> No NSG allows RDP from the Internet <span class="target">posture-lab-weak</span></summary>
+    <p>RDP open to the Internet is scanned within minutes and sprayed with passwords all day; with one weak or reused password, or an unpatched RDP flaw, the attacker has a desktop inside the network.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Azure Foundations Benchmark v3.0.0, control 7.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1133/">T1133</a> <a href="https://attack.mitre.org/techniques/T1021/001/">T1021.001</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>posture-lab-vm-nsg/allow-rdp
+posture-lab-db-nsg/allow-all
+</pre>
+    <h3>Remediation</h3>
+    <p>Remove each listed rule, or limit its source to known addresses; reach VMs through Azure Bastion or just-in-time VM access instead.</p>
+<pre>az network nsg rule delete --resource-group &lt;resource-group&gt; --nsg-name &lt;nsg&gt; --name &lt;rule&gt;
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices">https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-NET-002</code> No NSG allows SSH from the Internet <span class="target">posture-lab-weak</span></summary>
+    <p>SSH open to the Internet gets constant password guessing; one VM with password logins or a leaked key gives the attacker a shell inside the virtual network.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Azure Foundations Benchmark v3.0.0, control 7.2</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1133/">T1133</a> <a href="https://attack.mitre.org/techniques/T1021/004/">T1021.004</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>posture-lab-vm-nsg/allow-ssh
+posture-lab-db-nsg/allow-all
+</pre>
+    <h3>Remediation</h3>
+    <p>Remove each listed rule, or limit its source to known addresses; reach VMs through Azure Bastion or just-in-time VM access instead.</p>
+<pre>az network nsg rule delete --resource-group &lt;resource-group&gt; --nsg-name &lt;nsg&gt; --name &lt;rule&gt;
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices">https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-NET-003</code> No NSG allows database or WinRM ports from the Internet <span class="target">posture-lab-weak</span></summary>
+    <p>SQL Server (1433), MySQL (3306) and WinRM (5985/5986) are management and data interfaces, not public services: exposed, they invite password spraying against database and Windows accounts and exploitation of the server itself.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1133/">T1133</a> <a href="https://attack.mitre.org/techniques/T1190/">T1190</a> <a href="https://attack.mitre.org/techniques/T1021/006/">T1021.006</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>posture-lab-vm-nsg/allow-mgmt
+posture-lab-vm-nsg/allow-mgmt
+posture-lab-vm-nsg/allow-mgmt
+posture-lab-db-nsg/allow-all
+posture-lab-db-nsg/allow-all
+posture-lab-db-nsg/allow-all
+posture-lab-db-nsg/allow-all
+</pre>
+    <h3>Remediation</h3>
+    <p>Remove each listed rule; reach databases through private endpoints or service endpoints, and manage Windows VMs through Bastion.</p>
+<pre>az network nsg rule delete --resource-group &lt;resource-group&gt; --nsg-name &lt;nsg&gt; --name &lt;rule&gt;
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices">https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-STG-001</code> Storage accounts don&#39;t allow anonymous blob access <span class="target">posture-lab-weak</span></summary>
+    <p>With anonymous access allowed on the account, one container set to public by mistake publishes its blobs to anyone who guesses the URL, and storage account names are easy to enumerate. An account that predates the setting allows it until it is turned off.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Azure Foundations Benchmark v3.0.0, control 4.17</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1530/">T1530</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>posturelabweakdata
+posturelabweaklegacy
+</pre>
+    <h3>Remediation</h3>
+    <p>Check which containers are public and who depends on them, then disallow anonymous access on each listed account (Azure Policy can enforce it for new ones).</p>
+<pre>az storage account update --name &lt;name&gt; --resource-group &lt;resource-group&gt; --allow-blob-public-access false
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/azure/storage/blobs/anonymous-read-access-prevent">https://learn.microsoft.com/en-us/azure/storage/blobs/anonymous-read-access-prevent</a></li></ul>
+  </details>
 </section>
 <section>
-  <h2 class="sev-medium">Medium (11)</h2>
+  <h2 class="sev-medium">Medium (33)</h2>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-FILE-003</code> sshd_config is owned by root and private</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-003</code> sshd_config is owned by root and private <span class="target">posture-ubuntu</span></summary>
     <p>Whoever can write sshd_config can enable root login or point AuthorizedKeysFile at a file they control; reading it maps the SSH attack surface. CIS asks for mode 600.</p>
     <dl>
       <dt>CIS</dt>
@@ -288,7 +772,7 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
 <pre>sudo chown root:root /etc/ssh/sshd_config &amp;&amp; sudo chmod 600 /etc/ssh/sshd_config
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-FILE-004</code> No world-writable files outside temporary directories</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-004</code> No world-writable files outside temporary directories <span class="target">posture-ubuntu</span></summary>
     <p>A world-writable script or binary runs whatever any local user puts in it, as whoever runs it next: often root, from cron or a service. (/tmp, /var/tmp and /dev/shm are not counted.)</p>
     <dl>
       <dt>CIS</dt>
@@ -307,7 +791,7 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
     <p>Remove write for others on each file listed (`sudo chmod o-w &lt;file&gt;`) after checking who needs it.</p>
   </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-FILE-005</code> Only expected programs are setuid</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-005</code> Only expected programs are setuid <span class="target">posture-ubuntu</span></summary>
     <p>A setuid program runs as its owner (usually root) whoever starts it. Programs like find, vim or python made setuid are a one-line path to root (see GTFOBins). This allowlist holds the setuid programs Ubuntu 24.04 and Rocky 9 ship; anything else needs a reason.</p>
     <dl>
       <dt>CIS</dt>
@@ -327,7 +811,7 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
     <p>Remove the setuid bit from each program listed (`sudo chmod u-s &lt;file&gt;`), or add it to the allowlist with a reason.</p>
   </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-LOG-001</code> auditd is enabled and running</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-LOG-001</code> auditd is enabled and running <span class="target">posture-ubuntu</span></summary>
     <p>auditd records who changed what at the kernel level (file writes, privilege use). With it stopped, an intruder doesn&#39;t need to tamper with the audit system: there is none.</p>
     <dl>
       <dt>CIS</dt>
@@ -350,7 +834,7 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
 sudo systemctl enable --now auditd
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-LOG-002</code> Changes to accounts and sudo rules are audited</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-LOG-002</code> Changes to accounts and sudo rules are audited <span class="target">posture-ubuntu</span></summary>
     <p>Adding a user, changing a group or granting sudo are the usual first steps of persistence. Watching these files records when it happened and which process did it. (CIS 6.2.3.1 / 6.3.3.1 cover sudoers.)</p>
     <dl>
       <dt>CIS</dt>
@@ -384,7 +868,7 @@ sudo systemctl enable --now auditd
 sudo augenrules --load
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-SSH-003</code> SSH password authentication is disabled</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-003</code> SSH password authentication is disabled <span class="target">posture-ubuntu</span></summary>
     <p>Passwords can be guessed, sprayed or reused from other breaches; SSH keys (or certificates) can&#39;t. Not a CIS Level 1 control, but the single most effective SSH hardening step for a host reachable from untrusted networks.</p>
     <dl>
       <dt>ATT&amp;CK</dt>
@@ -403,7 +887,7 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
 </pre>    <ul class="refs"><li><a href="https://attack.mitre.org/techniques/T1110/">https://attack.mitre.org/techniques/T1110/</a></li><li><a href="https://man.openbsd.org/sshd_config#PasswordAuthentication">https://man.openbsd.org/sshd_config#PasswordAuthentication</a></li></ul>
   </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-SSH-005</code> SSH offers no weak ciphers</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-005</code> SSH offers no weak ciphers <span class="target">posture-ubuntu</span></summary>
     <p>CBC-mode, 3DES, RC4 (arcfour), Blowfish and CAST ciphers have known weaknesses; a man-in-the-middle can downgrade a connection to whatever the server still accepts.</p>
     <dl>
       <dt>CIS</dt>
@@ -425,7 +909,7 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
 sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-SSH-006</code> SSH offers no weak MACs</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-006</code> SSH offers no weak MACs <span class="target">posture-ubuntu</span></summary>
     <p>MD5, RIPEMD-160, SHA-1 and truncated (-96, 64-bit) MACs weaken the integrity protection of the session, which is what stops a man-in-the-middle from altering traffic.</p>
     <dl>
       <dt>CIS</dt>
@@ -449,7 +933,7 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
 sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-SSH-007</code> SSH offers no weak key exchange algorithms</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-007</code> SSH offers no weak key exchange algorithms <span class="target">posture-ubuntu</span></summary>
     <p>1024-bit Diffie-Hellman groups and SHA-1 based key exchange are within reach of well-funded attackers and let a man-in-the-middle negotiate down to them.</p>
     <dl>
       <dt>CIS</dt>
@@ -470,7 +954,7 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
 sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-SSH-008</code> SSH forwarding (X11, agent, TCP) is disabled</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-008</code> SSH forwarding (X11, agent, TCP) is disabled <span class="target">posture-ubuntu</span></summary>
     <p>Forwarding turns any SSH login into a tunnel: an attacker with one account can reach internal services through this host, or hijack a forwarded agent or X display.</p>
     <dl>
       <dt>CIS</dt>
@@ -489,7 +973,7 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
 sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-UPD-003</code> Security updates are installed automatically</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-UPD-003</code> Security updates are installed automatically <span class="target">posture-ubuntu</span></summary>
     <p>Manual patching slips. Automatic security updates close the window between a fix being published and it being exploited, without waiting for someone to remember.</p>
     <dl>
       <dt>ATT&amp;CK</dt>
@@ -510,11 +994,460 @@ else
 fi
 </pre>    <ul class="refs"><li><a href="https://documentation.ubuntu.com/server/how-to/software/automatic-updates/">https://documentation.ubuntu.com/server/how-to/software/automatic-updates/</a></li><li><a href="https://dnf.readthedocs.io/en/latest/automatic.html">https://dnf.readthedocs.io/en/latest/automatic.html</a></li></ul>
   </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-003</code> sshd_config is owned by root and private <span class="target">posture-rocky</span></summary>
+    <p>Whoever can write sshd_config can enable root login or point AuthorizedKeysFile at a file they control; reading it maps the SSH attack surface. CIS asks for mode 600.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.1</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1556/">T1556</a> <a href="https://attack.mitre.org/techniques/T1098/004/">T1098.004</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;files./etc/ssh/sshd_config.owner&#34;,
+  &#34;value&#34;: &#34;root&#34;
+}
+{
+  &#34;fact&#34;: &#34;files./etc/ssh/sshd_config.world_readable&#34;,
+  &#34;value&#34;: true
+}
+{
+  &#34;fact&#34;: &#34;files./etc/ssh/sshd_config.world_writable&#34;,
+  &#34;value&#34;: false
+}
+{
+  &#34;fact&#34;: &#34;files./etc/ssh/sshd_config.group_writable&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set it to `root:root 600`.</p>
+<pre>sudo chown root:root /etc/ssh/sshd_config &amp;&amp; sudo chmod 600 /etc/ssh/sshd_config
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-004</code> No world-writable files outside temporary directories <span class="target">posture-rocky</span></summary>
+    <p>A world-writable script or binary runs whatever any local user puts in it, as whoever runs it next: often root, from cron or a service. (/tmp, /var/tmp and /dev/shm are not counted.)</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 7.1.11</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 7.1.11</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1053/003/">T1053.003</a> <a href="https://attack.mitre.org/techniques/T1574/">T1574</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;special_files.world_writable&#34;,
+  &#34;value&#34;: [
+    &#34;/etc/cron.daily/posture-lab-backup&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Remove write for others on each file listed (`sudo chmod o-w &lt;file&gt;`) after checking who needs it.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-FILE-005</code> Only expected programs are setuid <span class="target">posture-rocky</span></summary>
+    <p>A setuid program runs as its owner (usually root) whoever starts it. Programs like find, vim or python made setuid are a one-line path to root (see GTFOBins). This allowlist holds the setuid programs Ubuntu 24.04 and Rocky 9 ship; anything else needs a reason.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 7.1.13</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 7.1.13</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1548/001/">T1548.001</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;special_files.setuid&#34;,
+  &#34;value&#34;: [
+    &#34;/opt/VBoxGuestAdditions-7.2.4/bin/VBoxDRMClient&#34;,
+    &#34;/usr/bin/find&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Remove the setuid bit from each program listed (`sudo chmod u-s &lt;file&gt;`), or add it to the allowlist with a reason.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-LOG-001</code> auditd is enabled and running <span class="target">posture-rocky</span></summary>
+    <p>auditd records who changed what at the kernel level (file writes, privilege use). With it stopped, an intruder doesn&#39;t need to tamper with the audit system: there is none.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 6.2.1.2</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 6.3.1.4</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1562/012/">T1562.012</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;units.auditd_service.active&#34;,
+  &#34;value&#34;: &#34;inactive&#34;
+}
+{
+  &#34;fact&#34;: &#34;units.auditd_service.enabled&#34;,
+  &#34;value&#34;: &#34;disabled&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Install and enable auditd.</p>
+<pre>if command -v apt-get &gt;/dev/null; then sudo apt-get install -y auditd; else sudo dnf install -y audit; fi
+sudo systemctl enable --now auditd
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-LOG-002</code> Changes to accounts and sudo rules are audited <span class="target">posture-rocky</span></summary>
+    <p>Adding a user, changing a group or granting sudo are the usual first steps of persistence. Watching these files records when it happened and which process did it. (CIS 6.2.3.1 / 6.3.3.1 cover sudoers.)</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 6.2.3.8</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 6.3.3.8</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1136/001/">T1136.001</a> <a href="https://attack.mitre.org/techniques/T1098/">T1098</a> <a href="https://attack.mitre.org/techniques/T1548/003/">T1548.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;audit.rules&#34;,
+  &#34;value&#34;: []
+}
+{
+  &#34;fact&#34;: &#34;audit.rules&#34;,
+  &#34;value&#34;: []
+}
+{
+  &#34;fact&#34;: &#34;audit.rules&#34;,
+  &#34;value&#34;: []
+}
+{
+  &#34;fact&#34;: &#34;audit.rules&#34;,
+  &#34;value&#34;: []
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Add watch rules for the identity files and sudoers, then load them.</p>
+<pre>printf &#39;%s\n&#39; &#39;-w /etc/passwd -p wa -k identity&#39; &#39;-w /etc/shadow -p wa -k identity&#39; \
+  &#39;-w /etc/group -p wa -k identity&#39; &#39;-w /etc/gshadow -p wa -k identity&#39; \
+  &#39;-w /etc/sudoers -p wa -k scope&#39; &#39;-w /etc/sudoers.d -p wa -k scope&#39; \
+  | sudo tee /etc/audit/rules.d/50-posture.rules
+sudo augenrules --load
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-003</code> SSH password authentication is disabled <span class="target">posture-rocky</span></summary>
+    <p>Passwords can be guessed, sprayed or reused from other breaches; SSH keys (or certificates) can&#39;t. Not a CIS Level 1 control, but the single most effective SSH hardening step for a host reachable from untrusted networks.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1110/001/">T1110.001</a> <a href="https://attack.mitre.org/techniques/T1110/003/">T1110.003</a> <a href="https://attack.mitre.org/techniques/T1110/004/">T1110.004</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.passwordauthentication&#34;,
+  &#34;value&#34;: &#34;yes&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Make sure every admin has a working key first, then set `PasswordAuthentication no` and reload sshd.</p>
+<pre>echo &#39;PasswordAuthentication no&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>    <ul class="refs"><li><a href="https://attack.mitre.org/techniques/T1110/">https://attack.mitre.org/techniques/T1110/</a></li><li><a href="https://man.openbsd.org/sshd_config#PasswordAuthentication">https://man.openbsd.org/sshd_config#PasswordAuthentication</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-005</code> SSH offers no weak ciphers <span class="target">posture-rocky</span></summary>
+    <p>CBC-mode, 3DES, RC4 (arcfour), Blowfish and CAST ciphers have known weaknesses; a man-in-the-middle can downgrade a connection to whatever the server still accepts.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.6</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.4</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1557/">T1557</a> <a href="https://attack.mitre.org/techniques/T1040/">T1040</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.ciphers&#34;,
+  &#34;value&#34;: [
+    &#34;aes128-cbc&#34;,
+    &#34;aes256-cbc&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Allow only AEAD and CTR ciphers. On Rocky, prefer the system crypto policy (`update-crypto-policies --set DEFAULT`).</p>
+<pre>echo &#39;Ciphers aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-006</code> SSH offers no weak MACs <span class="target">posture-rocky</span></summary>
+    <p>MD5, RIPEMD-160, SHA-1 and truncated (-96, 64-bit) MACs weaken the integrity protection of the session, which is what stops a man-in-the-middle from altering traffic.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.15</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.6</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1557/">T1557</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.macs&#34;,
+  &#34;value&#34;: [
+    &#34;umac-64-etm@openssh.com&#34;,
+    &#34;hmac-sha1-etm@openssh.com&#34;,
+    &#34;umac-64@openssh.com&#34;,
+    &#34;hmac-sha1&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Allow only SHA-2 and umac-128 MACs, preferably the encrypt-then-MAC (-etm) ones.</p>
+<pre>echo &#39;MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-007</code> SSH offers no weak key exchange algorithms <span class="target">posture-rocky</span></summary>
+    <p>1024-bit Diffie-Hellman groups and SHA-1 based key exchange are within reach of well-funded attackers and let a man-in-the-middle negotiate down to them.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.12</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.5</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1557/">T1557</a> <a href="https://attack.mitre.org/techniques/T1040/">T1040</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.kexalgorithms&#34;,
+  &#34;value&#34;: [
+    &#34;diffie-hellman-group14-sha1&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Allow only curve25519, sntrup/mlkem hybrids, ECDH and SHA-2 DH groups.</p>
+<pre>echo &#39;KexAlgorithms sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-008</code> SSH forwarding (X11, agent, TCP) is disabled <span class="target">posture-rocky</span></summary>
+    <p>Forwarding turns any SSH login into a tunnel: an attacker with one account can reach internal services through this host, or hijack a forwarded agent or X display.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.8</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.10</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1572/">T1572</a> <a href="https://attack.mitre.org/techniques/T1090/">T1090</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.disableforwarding&#34;,
+  &#34;value&#34;: &#34;no&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set `DisableForwarding yes` (allow it per user with a Match block if someone needs it).</p>
+<pre>echo &#39;DisableForwarding yes&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-UPD-003</code> Security updates are installed automatically <span class="target">posture-rocky</span></summary>
+    <p>Manual patching slips. Automatic security updates close the window between a fix being published and it being exploited, without waiting for someone to remember.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1068/">T1068</a> <a href="https://attack.mitre.org/techniques/T1190/">T1190</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;updates.automatic&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Ubuntu: install and enable unattended-upgrades. Rocky: install dnf-automatic with `apply_updates = yes` and enable dnf-automatic.timer.</p>
+<pre>if command -v apt-get &gt;/dev/null; then
+  sudo apt-get install -y unattended-upgrades &amp;&amp; echo &#39;APT::Periodic::Unattended-Upgrade &#34;1&#34;;&#39; | sudo tee /etc/apt/apt.conf.d/20auto-upgrades
+else
+  sudo dnf install -y dnf-automatic &amp;&amp; sudo systemctl enable --now dnf-automatic-install.timer
+fi
+</pre>    <ul class="refs"><li><a href="https://documentation.ubuntu.com/server/how-to/software/automatic-updates/">https://documentation.ubuntu.com/server/how-to/software/automatic-updates/</a></li><li><a href="https://dnf.readthedocs.io/en/latest/automatic.html">https://dnf.readthedocs.io/en/latest/automatic.html</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-ACC-002</code> Privileged accounts&#39; passwords expire <span class="target">posture-dc.posture.test</span></summary>
+    <p>An admin password that never expires is often years old, shared, or written down. Any one leak of it stays valid indefinitely, and with it full control of the domain.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/002/">T1078.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>adm.ops
+vagrant
+</pre>
+    <h3>Remediation</h3>
+    <p>Clear &#34;Password never expires&#34; on each listed admin account and rotate its password, or move service-style admin accounts to gMSAs.</p>
+<pre>Set-ADUser &lt;name&gt; -PasswordNeverExpires $false
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/implementing-least-privilege-administrative-models">https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/implementing-least-privilege-administrative-models</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-ACC-003</code> Privileged groups have at most 3 members <span class="target">posture-dc.posture.test</span></summary>
+    <p>Every member of Domain Admins, Administrators and the other groups that control the domain is one phished account away from losing it. Day-to-day admin work rarely needs them; a short list is also one that someone actually reviews.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/002/">T1078.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>Administrators
+Domain Admins
+</pre>
+    <h3>Remediation</h3>
+    <p>Remove members who don&#39;t need standing domain-wide rights (nested groups count: members are expanded) and delegate narrower rights on OUs instead. Adjust the threshold to your domain.</p>
+    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/implementing-least-privilege-administrative-models">https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/implementing-least-privilege-administrative-models</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-ACC-005</code> Ordinary users can&#39;t add computers to the domain <span class="target">posture-dc.posture.test</span></summary>
+    <p>By default any user can create 10 computer accounts. An attacker with one user account gets accounts with SPNs and passwords they choose, the starting point of resource-based delegation and several privilege-escalation chains.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1136/002/">T1136.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;domain.machine_account_quota&#34;,
+  &#34;value&#34;: 10
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set ms-DS-MachineAccountQuota to 0 and delegate &#34;Create computer objects&#34; on the target OU to the group that actually joins machines.</p>
+<pre>Set-ADDomain (Get-ADDomain) -Replace @{ &#39;ms-DS-MachineAccountQuota&#39; = 0 }
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/default-workstation-numbers-join-domain">https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/default-workstation-numbers-join-domain</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-PWD-002</code> Domain passwords must meet complexity requirements <span class="target">posture-dc.posture.test</span></summary>
+    <p>Without complexity, users pick dictionary words and names: the first guesses in any password spray, where one common password tried against every account is enough.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Windows Server 2019 Benchmark v4.0.0, control 1.1.5</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1110/001/">T1110.001</a> <a href="https://attack.mitre.org/techniques/T1110/003/">T1110.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;domain.password_complexity&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Enable &#34;Password must meet complexity requirements&#34; in the Default Domain Policy, or move to long passphrases with a banned-password list.</p>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-GST-001</code> Only admins and Guest Inviters can invite guests <span class="target">posture-lab-weak</span></summary>
+    <p>When anyone, including existing guests, can invite, one compromised account can add the attacker&#39;s own outside accounts to the tenant: a quiet way back in that survives a password reset of the account that was used.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Azure Foundations Benchmark v3.0.0, control 2.16</dd><dd>CIS Microsoft 365 Foundations Benchmark v4.0.0, control 5.1.6.3</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1136/003/">T1136.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;guests.invites_from&#34;,
+  &#34;value&#34;: &#34;everyone&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set guest invite restrictions to &#34;Only users assigned to specific admin roles can invite guest users&#34; (External Identities, External collaboration settings).</p>
+<pre>Update-MgPolicyAuthorizationPolicy -AllowInvitesFrom adminsAndGuestInviters
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/entra/external-id/external-collaboration-settings-configure">https://learn.microsoft.com/en-us/entra/external-id/external-collaboration-settings-configure</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-IAM-003</code> Every administrator has registered MFA <span class="target">posture-lab-weak</span></summary>
+    <p>An admin who has not registered a second factor yet can be enrolled by whoever signs in with their password first: an attacker with a phished password registers their own authenticator and keeps it, even after MFA is enforced.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Azure Foundations Benchmark v3.0.0, control 2.1.2</dd><dd>CIS Microsoft 365 Foundations Benchmark v4.0.0, control 5.2.3.4</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/004/">T1078.004</a> <a href="https://attack.mitre.org/techniques/T1098/005/">T1098.005</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>adm.helpdesk@posture.test
+old.admin@posture.test
+</pre>
+    <h3>Remediation</h3>
+    <p>Have each listed admin register a strong method (FIDO2 key, Authenticator) now, or give them a Temporary Access Pass to do it; remove the role from accounts that no longer need it.</p>
+    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/entra/identity/authentication/howto-registration-mfa-sso-combined">https://learn.microsoft.com/en-us/entra/identity/authentication/howto-registration-mfa-sso-combined</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-IAM-004</code> Between 2 and 4 principals hold Global Administrator <span class="target">posture-lab-weak</span></summary>
+    <p>Each Global Administrator can take over the tenant and, by elevating access, every subscription in it, so each one is a target worth phishing. One alone is a lockout risk; more than four is usually standing access nobody reviews. Service principals count: an app with the role is a Global Administrator whose secret can leak.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Azure Foundations Benchmark v3.0.0, control 2.26</dd><dd>CIS Microsoft 365 Foundations Benchmark v4.0.0, control 1.1.3</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/004/">T1078.004</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;global_admin_count&#34;,
+  &#34;value&#34;: 5
+}
+{
+  &#34;fact&#34;: &#34;global_admin_count&#34;,
+  &#34;value&#34;: 5
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Keep two cloud-only break-glass accounts plus the few admins who need the role; move the others to narrower roles (User, Exchange, Security Administrator...), make the role eligible through PIM where licensed, and take it away from service principals.</p>
+    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/best-practices">https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/best-practices</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-LOG-001</code> The subscription Activity Log is exported <span class="target">posture-lab-weak</span></summary>
+    <p>The Activity Log records who changed what in the subscription, but Azure keeps it for 90 days only and nothing alerts on it. Without a diagnostic setting sending it to a workspace or storage, an intrusion found later has no control-plane trail.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Azure Foundations Benchmark v3.0.0, control 6.1.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1562/008/">T1562.008</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;activity_log.exported&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Add a subscription diagnostic setting that sends at least the Administrative, Security, Policy and Alert categories to a Log Analytics workspace (or a storage account with a retention policy).</p>
+    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/activity-log">https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/activity-log</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-LOG-002</code> Microsoft Defender for Cloud plans are on <span class="target">posture-lab-weak</span></summary>
+    <p>On the Free tier, Defender for Cloud only scores configuration: there is no threat detection for VMs, SQL, storage, Key Vault or Resource Manager, so credential misuse or data theft on those resources raises no alert. CIS Azure 3.0.0 section 3.1 has one control per plan.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1562/001/">T1562.001</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>VirtualMachines
+SqlServers
+AppServices
+StorageAccounts
+KeyVaults
+Arm
+Containers
+CloudPosture
+</pre>
+    <h3>Remediation</h3>
+    <p>Turn on the listed plans for the resource types the subscription uses (each plan is billed per resource).</p>
+<pre>az security pricing create --name &lt;name&gt; --tier Standard
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction">https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-STG-002</code> Storage accounts require secure transfer (HTTPS) <span class="target">posture-lab-weak</span></summary>
+    <p>Over plain HTTP, the data and the shared access signatures in request URLs cross the network in clear, where anyone on the path can read them and reuse the signature.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Azure Foundations Benchmark v3.0.0, control 4.1</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1557/">T1557</a> <a href="https://attack.mitre.org/techniques/T1530/">T1530</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>posturelabweakdata
+</pre>
+    <h3>Remediation</h3>
+    <p>Enable &#34;Secure transfer required&#34; on each listed account.</p>
+<pre>az storage account update --name &lt;name&gt; --resource-group &lt;resource-group&gt; --https-only true
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer">https://learn.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-STG-003</code> Storage accounts require TLS 1.2 or later <span class="target">posture-lab-weak</span></summary>
+    <p>TLS 1.0 and 1.1 have known weaknesses and are kept only for old clients; accepting them lets an attacker on the path force a weaker connection. An absent setting means TLS 1.0.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Azure Foundations Benchmark v3.0.0, control 4.15</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1557/">T1557</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>posturelabweakdata
+posturelabweaklegacy
+</pre>
+    <h3>Remediation</h3>
+    <p>Check the account&#39;s logs for clients still on TLS 1.0 / 1.1, then set the minimum to TLS 1.2 on each listed account.</p>
+<pre>az storage account update --name &lt;name&gt; --resource-group &lt;resource-group&gt; --min-tls-version TLS1_2
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/azure/storage/common/transport-layer-security-configure-minimum-version">https://learn.microsoft.com/en-us/azure/storage/common/transport-layer-security-configure-minimum-version</a></li></ul>
+  </details>
 </section>
 <section>
-  <h2 class="sev-low">Low (5)</h2>
+  <h2 class="sev-low">Low (12)</h2>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-SUDO-002</code> sudo runs commands in a pseudo-terminal</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-SUDO-002</code> sudo runs commands in a pseudo-terminal <span class="target">posture-ubuntu</span></summary>
     <p>Without use_pty, a command run through sudo can keep running in the background after sudo returns and inject keystrokes into the user&#39;s terminal.</p>
     <dl>
       <dt>CIS</dt>
@@ -538,7 +1471,7 @@ fi
 sudo chmod 440 /etc/sudoers.d/00-posture-defaults &amp;&amp; sudo visudo -c
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-SUDO-003</code> sudo keeps its own log file</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-SUDO-003</code> sudo keeps its own log file <span class="target">posture-ubuntu</span></summary>
     <p>A dedicated sudo log records every privileged command and who ran it, and survives an attacker clearing the general system logs.</p>
     <dl>
       <dt>CIS</dt>
@@ -562,7 +1495,7 @@ sudo chmod 440 /etc/sudoers.d/00-posture-defaults &amp;&amp; sudo visudo -c
 sudo chmod 440 /etc/sudoers.d/00-posture-defaults &amp;&amp; sudo visudo -c
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-LOG-003</code> journald keeps logs across reboots</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-LOG-003</code> journald keeps logs across reboots <span class="target">posture-ubuntu</span></summary>
     <p>With volatile storage the journal lives in RAM: a reboot (or a crash an attacker causes) erases the evidence.</p>
     <dl>
       <dt>CIS</dt>
@@ -582,7 +1515,7 @@ printf &#39;[Journal]\nStorage=persistent\n&#39; | sudo tee /etc/systemd/journal
 sudo systemctl restart systemd-journald
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-SSH-004</code> SSH allows at most 4 authentication attempts per connection</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-004</code> SSH allows at most 4 authentication attempts per connection <span class="target">posture-ubuntu</span></summary>
     <p>Each connection may try MaxAuthTries passwords; a low limit slows online guessing and makes it show up sooner in the logs.</p>
     <dl>
       <dt>CIS</dt>
@@ -601,7 +1534,7 @@ sudo systemctl restart systemd-journald
 sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
 </pre>  </details>
   <details class="finding">
-    <summary><span class="status fail">fail</span> <code>LNX-UPD-002</code> Package metadata was refreshed in the last 7 days</summary>
+    <summary><span class="status fail">fail</span> <code>LNX-UPD-002</code> Package metadata was refreshed in the last 7 days <span class="target">posture-ubuntu</span></summary>
     <p>The pending-update count above is only as current as the package cache. A cache weeks old can report zero pending updates on a host that is far behind.</p>
     <dl>
       <dt>ATT&amp;CK</dt>
@@ -618,12 +1551,166 @@ sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload ssh
 <pre>if command -v apt-get &gt;/dev/null; then sudo apt-get update; else sudo dnf makecache; fi
 </pre>    <ul class="refs"><li><a href="https://ubuntu.com/server/docs/package-management">https://ubuntu.com/server/docs/package-management</a></li><li><a href="https://docs.rockylinux.org/books/admin_guide/13-softwares/">https://docs.rockylinux.org/books/admin_guide/13-softwares/</a></li></ul>
   </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SUDO-002</code> sudo runs commands in a pseudo-terminal <span class="target">posture-rocky</span></summary>
+    <p>Without use_pty, a command run through sudo can keep running in the background after sudo returns and inject keystrokes into the user&#39;s terminal.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.2.2</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.2.2</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1548/003/">T1548.003</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;sudoers.defaults&#34;,
+  &#34;value&#34;: [
+    &#34;!visiblepw&#34;,
+    &#34;always_set_home&#34;,
+    &#34;match_group_by_gid&#34;,
+    &#34;always_query_group_plugin&#34;,
+    &#34;env_reset&#34;,
+    &#34;env_keep =  \&#34;COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS\&#34;&#34;,
+    &#34;env_keep += \&#34;MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE\&#34;&#34;,
+    &#34;env_keep += \&#34;LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES\&#34;&#34;,
+    &#34;env_keep += \&#34;LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE\&#34;&#34;,
+    &#34;env_keep += \&#34;LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY\&#34;&#34;,
+    &#34;secure_path = /sbin:/bin:/usr/sbin:/usr/bin&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Add `Defaults use_pty`.</p>
+<pre>echo &#39;Defaults use_pty&#39; | sudo tee -a /etc/sudoers.d/00-posture-defaults
+sudo chmod 440 /etc/sudoers.d/00-posture-defaults &amp;&amp; sudo visudo -c
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SUDO-003</code> sudo keeps its own log file <span class="target">posture-rocky</span></summary>
+    <p>A dedicated sudo log records every privileged command and who ran it, and survives an attacker clearing the general system logs.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.2.3</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.2.3</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1548/003/">T1548.003</a> <a href="https://attack.mitre.org/techniques/T1070/002/">T1070.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;sudoers.defaults&#34;,
+  &#34;value&#34;: [
+    &#34;!visiblepw&#34;,
+    &#34;always_set_home&#34;,
+    &#34;match_group_by_gid&#34;,
+    &#34;always_query_group_plugin&#34;,
+    &#34;env_reset&#34;,
+    &#34;env_keep =  \&#34;COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS\&#34;&#34;,
+    &#34;env_keep += \&#34;MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE\&#34;&#34;,
+    &#34;env_keep += \&#34;LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES\&#34;&#34;,
+    &#34;env_keep += \&#34;LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE\&#34;&#34;,
+    &#34;env_keep += \&#34;LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY\&#34;&#34;,
+    &#34;secure_path = /sbin:/bin:/usr/sbin:/usr/bin&#34;
+  ]
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Add `Defaults logfile=&#34;/var/log/sudo.log&#34;`.</p>
+<pre>echo &#39;Defaults logfile=&#34;/var/log/sudo.log&#34;&#39; | sudo tee -a /etc/sudoers.d/00-posture-defaults
+sudo chmod 440 /etc/sudoers.d/00-posture-defaults &amp;&amp; sudo visudo -c
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-LOG-003</code> journald keeps logs across reboots <span class="target">posture-rocky</span></summary>
+    <p>With volatile storage the journal lives in RAM: a reboot (or a crash an attacker causes) erases the evidence.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 6.1.2.4</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 6.2.2.4</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1070/002/">T1070.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;journald.persistent&#34;,
+  &#34;value&#34;: false
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set `Storage=persistent`.</p>
+<pre>sudo mkdir -p /etc/systemd/journald.conf.d
+printf &#39;[Journal]\nStorage=persistent\n&#39; | sudo tee /etc/systemd/journald.conf.d/00-posture.conf
+sudo systemctl restart systemd-journald
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-SSH-004</code> SSH allows at most 4 authentication attempts per connection <span class="target">posture-rocky</span></summary>
+    <p>Each connection may try MaxAuthTries passwords; a low limit slows online guessing and makes it show up sooner in the logs.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0, control 5.1.16</dd><dd>CIS Red Hat Enterprise Linux 9 Benchmark v2.0.0, control 5.1.16</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1110/001/">T1110.001</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;ssh.maxauthtries&#34;,
+  &#34;value&#34;: 10
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set `MaxAuthTries 4` and reload sshd.</p>
+<pre>echo &#39;MaxAuthTries 4&#39; | sudo tee -a /etc/ssh/sshd_config.d/00-posture.conf
+sudo sshd -t &amp;&amp; { sudo systemctl reload ssh || sudo systemctl reload sshd; }
+</pre>  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>LNX-UPD-002</code> Package metadata was refreshed in the last 7 days <span class="target">posture-rocky</span></summary>
+    <p>The pending-update count above is only as current as the package cache. A cache weeks old can report zero pending updates on a host that is far behind.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1068/">T1068</a> <a href="https://attack.mitre.org/techniques/T1190/">T1190</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;updates.cache_age_days&#34;,
+  &#34;value&#34;: 40.0
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Refresh the cache regularly (automatic updates do it daily).</p>
+<pre>if command -v apt-get &gt;/dev/null; then sudo apt-get update; else sudo dnf makecache; fi
+</pre>    <ul class="refs"><li><a href="https://ubuntu.com/server/docs/package-management">https://ubuntu.com/server/docs/package-management</a></li><li><a href="https://docs.rockylinux.org/books/admin_guide/13-softwares/">https://docs.rockylinux.org/books/admin_guide/13-softwares/</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-ACC-004</code> No enabled account keeps adminCount outside a privileged group <span class="target">posture-dc.posture.test</span></summary>
+    <p>adminCount=1 marks an account protected by AdminSDHolder. Left behind on an account that is no longer an admin, it keeps the old protected ACL and hints at past privilege, and is a common sign of a forgotten or hidden admin account.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/002/">T1078.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>old.admin
+</pre>
+    <h3>Remediation</h3>
+    <p>Confirm each listed account is no longer meant to be an admin, then clear adminCount and re-enable inheritance on its ACL.</p>
+<pre>Set-ADUser &lt;name&gt; -Clear adminCount
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/appendix-c--protected-accounts-and-groups-in-active-directory">https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/appendix-c--protected-accounts-and-groups-in-active-directory</a></li></ul>
+  </details>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AZ-GST-002</code> Guests can read only their own directory objects <span class="target">posture-lab-weak</span></summary>
+    <p>With member-level or default directory access, a guest account (often a partner&#39;s, with weaker controls) can list users, groups and their memberships: the target list for phishing and the map of who is an admin.</p>
+    <dl>
+      <dt>CIS</dt>
+<dd>CIS Microsoft Azure Foundations Benchmark v3.0.0, control 2.15</dd><dd>CIS Microsoft 365 Foundations Benchmark v4.0.0, control 5.1.6.2</dd>      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1087/004/">T1087.004</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>{
+  &#34;fact&#34;: &#34;guests.directory_access&#34;,
+  &#34;value&#34;: &#34;member&#34;
+}
+</pre>
+    <h3>Remediation</h3>
+    <p>Set guest user access to &#34;Guest user access is restricted to properties and memberships of their own directory objects&#34;.</p>
+<pre>Update-MgPolicyAuthorizationPolicy -GuestUserRoleId 2af84b1e-32c8-42b7-82bc-daa82404023b
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/entra/identity/users/users-restrict-guest-permissions">https://learn.microsoft.com/en-us/entra/identity/users/users-restrict-guest-permissions</a></li></ul>
+  </details>
 </section>
 <section>
   <details>
-    <summary>Passed and skipped (1)</summary>
+    <summary>Passed and skipped (2)</summary>
     <ul>
-      <li><span class="status skip">skip</span> <code>LNX-FW-002</code> firewalld is running and its zone doesn&#39;t accept everything</li>
+      <li><span class="status skip">skip</span> <code>LNX-FW-002</code> firewalld is running and its zone doesn&#39;t accept everything <span class="target">posture-ubuntu</span></li>
+      <li><span class="status skip">skip</span> <code>LNX-FW-001</code> ufw is active and denies incoming traffic by default <span class="target">posture-rocky</span></li>
     </ul>
   </details>
 </section>

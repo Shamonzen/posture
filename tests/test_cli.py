@@ -95,3 +95,44 @@ def test_usage_errors_exit_2(tmp_path):
 def test_nothing_collected_exits_2(tmp_path):
     (tmp_path / "rec").mkdir()  # an empty recording: every command is missing
     assert main(["audit", "linux", "--replay", str(tmp_path / "rec"), *CHECKS]) == 2
+
+
+INVENTORIES = Path(__file__).parent / "fixtures" / "inventories"
+
+
+@pytest.mark.parametrize(("profile", "code"), [("weak", 1), ("hardened", 0)])
+def test_inventory_audits_every_lab_target_into_one_report(tmp_path, profile, code):
+    out = tmp_path / "report.json"
+    inventory = str(INVENTORIES / f"lab-{profile}.yaml")
+    assert (
+        main(["audit", "--inventory", inventory, *CHECKS, "--fail-on", "high", "--json", str(out)])
+        == code
+    )
+    report = json.loads(out.read_text())
+    assert [s["platform"] for s in report["snapshots"]] == ["linux", "linux", "ad", "azure"]
+    assert {f["target"] for f in report["findings"]} == {s["target"] for s in report["snapshots"]}
+
+
+@pytest.mark.parametrize(
+    ("body", "error"),
+    [
+        ("targets: []", "no targets"),
+        ("targets:\n  - platform: linux", "exactly one of"),
+        ("targets:\n  - {platform: linux, local: true, ssh: h}", "exactly one of"),
+        ("targets:\n  - {platform: linux, local: true, shell: id}", "Extra inputs"),
+        ("targets: [{platform: linux, replay: R}, {platform: linux, replay: R}]", "two snapshots"),
+    ],
+)
+def test_bad_inventory_exits_2(tmp_path, capsys, body, error):
+    # An absolute replay path stays as it is; relative ones resolve against the inventory.
+    (tmp_path / "inv.yaml").write_text(
+        body.replace("R", json.dumps(str(RECORDINGS / "ubuntu-weak")))
+    )
+    assert main(["audit", "--inventory", str(tmp_path / "inv.yaml"), *CHECKS]) == 2
+    assert error in capsys.readouterr().err
+
+
+def test_inventory_and_platform_are_exclusive(tmp_path):
+    assert main(["audit", "linux", "--inventory", str(INVENTORIES / "lab-weak.yaml")]) == 2
+    with pytest.raises(SystemExit):
+        main(["audit", "linux"])

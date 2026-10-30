@@ -7,10 +7,11 @@ from pathlib import Path
 import pytest
 
 from posture.checks import load_checks
+from posture.cli import main
 from posture.collectors import ad, linux
 from posture.collectors.transport import ReplayRunner, SshRunner
 from posture.engine import evaluate_all
-from posture.models import Status
+from posture.models import Report, Status
 
 pytestmark = pytest.mark.lab
 ROOT = Path(__file__).parent.parent.parent
@@ -70,3 +71,15 @@ def test_live_ldaps_and_winrm_audit_matches_a_recording():
     replays = [ReplayRunner(recordings / f"dc-{p}") for p in ("weak", "hardened")]
     recorded = [ad.collect(r, r) for r in replays]
     assert _shape(live) in [_shape(r) for r in recorded]
+
+
+def test_live_inventory_audits_all_three_vms(tmp_path, monkeypatch):
+    env = dict(
+        line.split("=", 1) for line in (ROOT / ".env").read_text().splitlines() if "=" in line
+    )
+    monkeypatch.setenv("POSTURE_LDAP_PASSWORD", env["POSTURE_AUDIT_PASSWORD"])
+    out = tmp_path / "lab.json"
+    assert main(["audit", "--inventory", "lab/inventory.yaml", "--json", str(out)]) == 0
+    report = Report.model_validate_json(out.read_text(encoding="utf-8"))
+    assert [s.target for s in report.snapshots][:2] == ["posture-ubuntu", "posture-rocky"]
+    assert all(s.errors == [] for s in report.snapshots)

@@ -187,7 +187,8 @@ class Finding(Strict):
 class Report(Strict):
     """The JSON report, which is also the baseline format."""
 
-    schema_version: Literal[1] = 1
+    schema_version: Literal[2] = 2
     tool_version: str
-    snapshot: Snapshot  # facts dropped: the snapshot file is the evidence, not the report
+    # One per target audited; facts dropped: the snapshot files are the evidence, not the report.
+    snapshots: list[Snapshot]
     findings: list[Finding]

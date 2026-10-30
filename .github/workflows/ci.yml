@@ -58,30 +58,20 @@ jobs:
             platform="${os#*:}" os="${os%:*}"
             uv run posture audit "$platform" --replay "tests/fixtures/recordings/$os-hardened" --fail-on high
             code=0
-            uv run posture audit "$platform" --replay "tests/fixtures/recordings/$os-weak" \
-              --fail-on high --sarif "out/$os-weak.sarif" || code=$?
+            uv run posture audit "$platform" --replay "tests/fixtures/recordings/$os-weak" --fail-on high || code=$?
             test "$code" -eq 1
           done
+      - name: Gate the whole lab in one run (inventory)
+        run: |
+          uv run posture audit --inventory tests/fixtures/inventories/lab-hardened.yaml --fail-on high
+          code=0
+          uv run posture audit --inventory tests/fixtures/inventories/lab-weak.yaml             --fail-on high --sarif out/lab-weak.sarif || code=$?
+          test "$code" -eq 1
       - if: always() && github.event.repository.visibility == 'public'
         uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4
         with:
-          sarif_file: out/ubuntu-weak.sarif
-          category: posture-ubuntu
-      - if: always() && github.event.repository.visibility == 'public'
-        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4
-        with:
-          sarif_file: out/rocky-weak.sarif
-          category: posture-rocky
-      - if: always() && github.event.repository.visibility == 'public'
-        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4
-        with:
-          sarif_file: out/dc-weak.sarif
-          category: posture-dc
-      - if: always() && github.event.repository.visibility == 'public'
-        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4
-        with:
-          sarif_file: out/azure-weak.sarif
-          category: posture-azure
+          sarif_file: out/lab-weak.sarif
+          category: posture-lab
 
   dependencies:
     runs-on: ubuntu-latest

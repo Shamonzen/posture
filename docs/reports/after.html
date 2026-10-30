@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; style-src &#39;sha256-KUwlgByUQdyMlLQWeH2o9y/XgHGrO3vz/oKpOSC38lc=&#39;">
+<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; style-src &#39;sha256-5V4ebg6k/A0vyQ7DXCX5c+1VnCW2IEg5ePl97Y8adYI=&#39;">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Posture report: posture-ubuntu</title>
+<title>Posture report: posture-ubuntu, posture-rocky, posture-dc.posture.test, posture-lab-hardened</title>
 <style>:root {
   --bg: #fafafa; --fg: #1d1f21; --muted: #5f6368; --card: #fff; --line: #dadce0;
   --critical: #a50e0e; --high: #d93025; --medium: #e37400; --low: #1a73e8;
@@ -25,7 +25,8 @@ header, main, footer { max-width: 960px; margin: 0 auto; padding: 16px; }
 h1 { font-size: 1.5rem; margin: 0 0 4px; overflow-wrap: anywhere; }
 h2 { font-size: 1.15rem; border-bottom: 2px solid currentColor; padding-bottom: 4px; }
 h3 { font-size: .95rem; margin: 12px 0 4px; }
-.meta, footer, .message { color: var(--muted); }
+.meta, footer, .message, .target { color: var(--muted); }
+ul.meta { list-style: none; padding: 0; margin: 0 0 4px; overflow-wrap: anywhere; }
 .counts { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
 .counts li { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; }
 .counts b { font-size: 1.2rem; }
@@ -46,47 +47,125 @@ a { color: var(--low); overflow-wrap: anywhere; }
 </head>
 <body>
 <header>
-  <h1>Posture report: posture-ubuntu</h1>
-  <p class="meta">linux · collected 2026-10-29 14:09 UTC
- as posture · posture 0.1.0</p>
+  <h1>Posture report: posture-ubuntu, posture-rocky, posture-dc.posture.test, posture-lab-hardened</h1>
+  <ul class="meta">
+    <li><b>posture-ubuntu</b>: linux · collected 2026-10-30 07:45 UTC as posture</li>
+    <li><b>posture-rocky</b>: linux · collected 2026-10-30 07:45 UTC as posture</li>
+    <li><b>posture-dc.posture.test</b>: ad · collected 2026-10-30 07:45 UTC as POSTURE\posture</li>
+    <li><b>posture-lab-hardened</b>: azure · collected 2026-10-30 07:45 UTC</li>
+  </ul>
+  <p class="meta">posture 0.1.0</p>
   <ul class="counts">
-    <li class="fail"><b>0</b> fail</li>
+    <li class="fail"><b>1</b> fail</li>
     <li class="error"><b>0</b> error</li>
-    <li class="pass"><b>25</b> pass</li>
-    <li class="skip"><b>1</b> skip</li>
+    <li class="pass"><b>79</b> pass</li>
+    <li class="skip"><b>2</b> skip</li>
   </ul>
 </header>
 <main>
 <section>
+  <h2 class="sev-medium">Medium (1)</h2>
+  <details class="finding">
+    <summary><span class="status fail">fail</span> <code>AD-ACC-002</code> Privileged accounts&#39; passwords expire <span class="target">posture-dc.posture.test</span></summary>
+    <p>An admin password that never expires is often years old, shared, or written down. Any one leak of it stays valid indefinitely, and with it full control of the domain.</p>
+    <dl>
+      <dt>ATT&amp;CK</dt>
+      <dd><a href="https://attack.mitre.org/techniques/T1078/002/">T1078.002</a> </dd>
+    </dl>
+    <h3>Evidence</h3>
+    <pre>vagrant
+</pre>
+    <h3>Remediation</h3>
+    <p>Clear &#34;Password never expires&#34; on each listed admin account and rotate its password, or move service-style admin accounts to gMSAs.</p>
+<pre>Set-ADUser &lt;name&gt; -PasswordNeverExpires $false
+</pre>    <ul class="refs"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/implementing-least-privilege-administrative-models">https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/implementing-least-privilege-administrative-models</a></li></ul>
+  </details>
+</section>
+<section>
   <details>
-    <summary>Passed and skipped (26)</summary>
+    <summary>Passed and skipped (81)</summary>
     <ul>
-      <li><span class="status pass">pass</span> <code>LNX-ACC-001</code> root is the only account with UID 0</li>
-      <li><span class="status pass">pass</span> <code>LNX-ACC-002</code> No account has an empty password</li>
-      <li><span class="status pass">pass</span> <code>LNX-SUDO-001</code> No sudo rule grants every command without a password</li>
-      <li><span class="status pass">pass</span> <code>LNX-SUDO-002</code> sudo runs commands in a pseudo-terminal</li>
-      <li><span class="status pass">pass</span> <code>LNX-SUDO-003</code> sudo keeps its own log file</li>
-      <li><span class="status pass">pass</span> <code>LNX-FILE-001</code> /etc/shadow is owned by root and not readable by everyone</li>
-      <li><span class="status pass">pass</span> <code>LNX-FILE-002</code> /etc/passwd and /etc/group can only be changed by root</li>
-      <li><span class="status pass">pass</span> <code>LNX-FILE-003</code> sshd_config is owned by root and private</li>
-      <li><span class="status pass">pass</span> <code>LNX-FILE-004</code> No world-writable files outside temporary directories</li>
-      <li><span class="status pass">pass</span> <code>LNX-FILE-005</code> Only expected programs are setuid</li>
-      <li><span class="status pass">pass</span> <code>LNX-FW-001</code> ufw is active and denies incoming traffic by default</li>
-      <li><span class="status skip">skip</span> <code>LNX-FW-002</code> firewalld is running and its zone doesn&#39;t accept everything</li>
-      <li><span class="status pass">pass</span> <code>LNX-LOG-001</code> auditd is enabled and running</li>
-      <li><span class="status pass">pass</span> <code>LNX-LOG-002</code> Changes to accounts and sudo rules are audited</li>
-      <li><span class="status pass">pass</span> <code>LNX-LOG-003</code> journald keeps logs across reboots</li>
-      <li><span class="status pass">pass</span> <code>LNX-SSH-001</code> SSH root login is disabled</li>
-      <li><span class="status pass">pass</span> <code>LNX-SSH-002</code> SSH refuses empty passwords</li>
-      <li><span class="status pass">pass</span> <code>LNX-SSH-003</code> SSH password authentication is disabled</li>
-      <li><span class="status pass">pass</span> <code>LNX-SSH-004</code> SSH allows at most 4 authentication attempts per connection</li>
-      <li><span class="status pass">pass</span> <code>LNX-SSH-005</code> SSH offers no weak ciphers</li>
-      <li><span class="status pass">pass</span> <code>LNX-SSH-006</code> SSH offers no weak MACs</li>
-      <li><span class="status pass">pass</span> <code>LNX-SSH-007</code> SSH offers no weak key exchange algorithms</li>
-      <li><span class="status pass">pass</span> <code>LNX-SSH-008</code> SSH forwarding (X11, agent, TCP) is disabled</li>
-      <li><span class="status pass">pass</span> <code>LNX-UPD-001</code> No security updates are waiting to be installed</li>
-      <li><span class="status pass">pass</span> <code>LNX-UPD-002</code> Package metadata was refreshed in the last 7 days</li>
-      <li><span class="status pass">pass</span> <code>LNX-UPD-003</code> Security updates are installed automatically</li>
+      <li><span class="status pass">pass</span> <code>LNX-ACC-001</code> root is the only account with UID 0 <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-ACC-002</code> No account has an empty password <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SUDO-001</code> No sudo rule grants every command without a password <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SUDO-002</code> sudo runs commands in a pseudo-terminal <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SUDO-003</code> sudo keeps its own log file <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-001</code> /etc/shadow is owned by root and not readable by everyone <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-002</code> /etc/passwd and /etc/group can only be changed by root <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-003</code> sshd_config is owned by root and private <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-004</code> No world-writable files outside temporary directories <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-005</code> Only expected programs are setuid <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FW-001</code> ufw is active and denies incoming traffic by default <span class="target">posture-ubuntu</span></li>
+      <li><span class="status skip">skip</span> <code>LNX-FW-002</code> firewalld is running and its zone doesn&#39;t accept everything <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-LOG-001</code> auditd is enabled and running <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-LOG-002</code> Changes to accounts and sudo rules are audited <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-LOG-003</code> journald keeps logs across reboots <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-001</code> SSH root login is disabled <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-002</code> SSH refuses empty passwords <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-003</code> SSH password authentication is disabled <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-004</code> SSH allows at most 4 authentication attempts per connection <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-005</code> SSH offers no weak ciphers <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-006</code> SSH offers no weak MACs <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-007</code> SSH offers no weak key exchange algorithms <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-008</code> SSH forwarding (X11, agent, TCP) is disabled <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-UPD-001</code> No security updates are waiting to be installed <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-UPD-002</code> Package metadata was refreshed in the last 7 days <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-UPD-003</code> Security updates are installed automatically <span class="target">posture-ubuntu</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-ACC-001</code> root is the only account with UID 0 <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-ACC-002</code> No account has an empty password <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SUDO-001</code> No sudo rule grants every command without a password <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SUDO-002</code> sudo runs commands in a pseudo-terminal <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SUDO-003</code> sudo keeps its own log file <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-001</code> /etc/shadow is owned by root and not readable by everyone <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-002</code> /etc/passwd and /etc/group can only be changed by root <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-003</code> sshd_config is owned by root and private <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-004</code> No world-writable files outside temporary directories <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FILE-005</code> Only expected programs are setuid <span class="target">posture-rocky</span></li>
+      <li><span class="status skip">skip</span> <code>LNX-FW-001</code> ufw is active and denies incoming traffic by default <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-FW-002</code> firewalld is running and its zone doesn&#39;t accept everything <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-LOG-001</code> auditd is enabled and running <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-LOG-002</code> Changes to accounts and sudo rules are audited <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-LOG-003</code> journald keeps logs across reboots <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-001</code> SSH root login is disabled <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-002</code> SSH refuses empty passwords <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-003</code> SSH password authentication is disabled <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-004</code> SSH allows at most 4 authentication attempts per connection <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-005</code> SSH offers no weak ciphers <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-006</code> SSH offers no weak MACs <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-007</code> SSH offers no weak key exchange algorithms <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-SSH-008</code> SSH forwarding (X11, agent, TCP) is disabled <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-UPD-001</code> No security updates are waiting to be installed <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-UPD-002</code> Package metadata was refreshed in the last 7 days <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>LNX-UPD-003</code> Security updates are installed automatically <span class="target">posture-rocky</span></li>
+      <li><span class="status pass">pass</span> <code>AD-ACC-001</code> No enabled account is allowed an empty password <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AD-ACC-003</code> Privileged groups have at most 3 members <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AD-ACC-004</code> No enabled account keeps adminCount outside a privileged group <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AD-LAPS-001</code> Every enabled non-DC computer has its admin password managed by LAPS <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AD-ACC-005</code> Ordinary users can&#39;t add computers to the domain <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>DC-SMB-001</code> The DC requires SMB signing <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>DC-LDAP-001</code> The DC requires LDAP signing <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>DC-NTLM-001</code> The DC accepts NTLMv2 only <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AD-KRB-001</code> No enabled user account has a service principal name <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AD-KRB-002</code> Kerberos pre-authentication is required for every enabled user <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AD-KRB-003</code> No computer other than a DC is trusted for unconstrained delegation <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AD-PWD-001</code> Domain passwords are at least 14 characters <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AD-PWD-002</code> Domain passwords must meet complexity requirements <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AD-PWD-003</code> Passwords are not stored with reversible encryption <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AD-PWD-004</code> Accounts lock out after at most 5 failed logons <span class="target">posture-dc.posture.test</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-GST-001</code> Only admins and Guest Inviters can invite guests <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-GST-002</code> Guests can read only their own directory objects <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-IAM-001</code> MFA is enforced for administrators <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-IAM-002</code> Legacy authentication is blocked <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-IAM-003</code> Every administrator has registered MFA <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-IAM-004</code> Between 2 and 4 principals hold Global Administrator <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-LOG-001</code> The subscription Activity Log is exported <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-LOG-002</code> Microsoft Defender for Cloud plans are on <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-NET-001</code> No NSG allows RDP from the Internet <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-NET-002</code> No NSG allows SSH from the Internet <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-NET-003</code> No NSG allows database or WinRM ports from the Internet <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-STG-001</code> Storage accounts don&#39;t allow anonymous blob access <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-STG-002</code> Storage accounts require secure transfer (HTTPS) <span class="target">posture-lab-hardened</span></li>
+      <li><span class="status pass">pass</span> <code>AZ-STG-003</code> Storage accounts require TLS 1.2 or later <span class="target">posture-lab-hardened</span></li>
     </ul>
   </details>
 </section>

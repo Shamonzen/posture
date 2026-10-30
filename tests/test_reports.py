@@ -26,7 +26,7 @@ ANSI = "\x1b[2J\x1b]0;pwned\x07"
 
 def _report(name):
     snapshot = linux.collect(ReplayRunner(FIXTURES / "recordings" / name))
-    return build_report(snapshot, evaluate_all(CHECKS, snapshot))
+    return build_report([snapshot], evaluate_all(CHECKS, snapshot))
 
 
 @pytest.fixture
@@ -41,7 +41,7 @@ def hostile():
             "errors": [CollectError(source="sshd", message=f"exit 1: {SCRIPT}{ANSI}")],
         }
     )
-    return build_report(snapshot, evaluate_all([check], snapshot))
+    return build_report([snapshot], evaluate_all([check], snapshot))
 
 
 def test_html_escapes_hostile_data(hostile):
@@ -68,7 +68,7 @@ def test_terminal_summary_strips_control_characters(hostile):
 
 def test_json_report_drops_facts_and_round_trips():
     report = _report("ubuntu-weak")
-    assert report.snapshot.facts == {}
+    assert report.snapshots[0].facts == {}
     assert type(report).model_validate_json(report.model_dump_json()) == report
 
 
@@ -82,7 +82,7 @@ def test_sarif_is_valid(name):
     failed = [f for f in report.findings if f.status == Status.FAIL]
     assert len(run["results"]) == len(failed)
     rules = {r["id"] for r in run["tool"]["driver"]["rules"]}
-    assert rules == {c.id for c in CHECKS if c.platform == report.snapshot.platform}
+    assert rules == {c.id for c in CHECKS if c.platform == report.snapshots[0].platform}
 
 
 def test_sarif_points_at_the_check_yaml():
@@ -93,3 +93,18 @@ def test_sarif_points_at_the_check_yaml():
     assert (ROOT / path).read_text(encoding="utf-8").splitlines()[line - 1] == "- id: LNX-SSH-001"
     assert result["message"]["text"].startswith("posture-ubuntu: ")
     assert result["partialFingerprints"]["postureFingerprint/v1"]
+
+
+def test_combined_report_names_every_target_and_keeps_sarif_valid():
+    snapshots = [
+        linux.collect(ReplayRunner(FIXTURES / "recordings" / n))
+        for n in ("ubuntu-weak", "rocky-weak")
+    ]
+    report = build_report(snapshots, [f for s in snapshots for f in evaluate_all(CHECKS, s)])
+    html, text = render_html(report), summary(report)
+    assert all(t in html and t in text for t in ("posture-ubuntu", "posture-rocky"))
+    schema = json.loads((FIXTURES / "sarif-schema-2.1.0.json").read_text(encoding="utf-8"))
+    sarif = json.loads(render_sarif(report, CHECKS))
+    jsonschema.validate(sarif, schema)
+    targets = {r["properties"]["target"] for r in sarif["runs"][0]["results"]}
+    assert targets == {"posture-ubuntu", "posture-rocky"}

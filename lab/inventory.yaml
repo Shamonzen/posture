@@ -1,0 +1,16 @@
+# The three lab VMs in one audit, from the repo root once the lab is up (paths are relative
+# to this file; the LDAP password comes from POSTURE_LDAP_PASSWORD or a prompt):
+#   uv run posture audit --inventory lab/inventory.yaml --html out/lab.html --fail-on high
+# Azure is left out: it runs only against a subscription you name (see docs/permissions.md).
+targets:
+  - platform: linux
+    ssh: posture-ubuntu
+    ssh_config: ssh-config
+  - platform: linux
+    ssh: posture-rocky
+    ssh_config: ssh-config
+  - platform: ad
+    ldap: 192.168.57.10
+    user: POSTURE\posture
+    ca_file: keys/posture-dc.pem
+    winrm: true

@@ -1,0 +1,11 @@
+# Every hardened lab recording in one run (paths are relative to this file):
+#   uv run posture audit --inventory tests/fixtures/inventories/lab-hardened.yaml --html out/lab-hardened.html
+targets:
+  - platform: linux
+    replay: ../recordings/ubuntu-hardened
+  - platform: linux
+    replay: ../recordings/rocky-hardened
+  - platform: ad
+    replay: ../recordings/dc-hardened
+  - platform: azure
+    replay: ../recordings/azure-hardened

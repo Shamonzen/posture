@@ -34,6 +34,7 @@ Collection and evaluation are separate: `collect` writes a snapshot, `evaluate` 
 - `uv run posture collect linux --ssh posture-ubuntu --ssh-config lab/ssh-config -o out/ubuntu.json`
 - `uv run posture collect ad --ldap 192.168.57.10 --user 'POSTURE\posture' --ca-file lab/keys/posture-dc.pem -o out/dc.json` (password: `POSTURE_LDAP_PASSWORD`)
 - `uv run posture collect azure --subscription <id> -o out/azure.json` (az login or AZURE_* env; GET only)
+- `uv run posture audit --inventory lab/inventory.yaml --html out/lab.html` (all lab VMs, one report; replay: `tests/fixtures/inventories/lab-weak.yaml`)
 - `uv run posture diff out/before.json out/after.json`
 - Lab (Git Bash, no make on this host): `bash lab/lab.sh up | weak | hardened | record <profile> [vm…] | test | status | halt | destroy`. It runs vagrant from `lab/` and names the posture-* VMs explicitly.
 

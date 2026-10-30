@@ -10,6 +10,7 @@ from posture.checks import CheckError, load_checks
 from posture.collectors import ad, azure, linux
 from posture.collectors.transport import LocalRunner, ReplayRunner, SshRunner
 from posture.engine import evaluate_all
+from posture.inventory import load_inventory
 from posture.models import Severity, Snapshot
 from posture.reports import build_report, clean, summary
 from posture.reports.html import render_html
@@ -20,9 +21,18 @@ from posture.reports.sarif import render_sarif
 EXIT_GATE, EXIT_USAGE = 1, 2
 
 
-def _add_source(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("platform", choices=["linux", "ad", "azure"])
+def _add_source(parser: argparse.ArgumentParser, inventory: bool = False) -> None:
+    parser.add_argument(
+        "platform", choices=["linux", "ad", "azure"], nargs="?" if inventory else None
+    )
     source = parser.add_mutually_exclusive_group(required=True)
+    if inventory:
+        source.add_argument(
+            "--inventory",
+            type=Path,
+            metavar="FILE",
+            help="audit every target in this YAML file (no PLATFORM), into one report",
+        )
     source.add_argument("--local", action="store_true", help="audit this host (linux)")
     source.add_argument("--ssh", metavar="HOST", help="audit HOST through the system ssh client")
     source.add_argument("--ldap", metavar="DC", help="audit DC's domain over LDAPS (ad)")
@@ -78,11 +88,13 @@ def build_parser() -> argparse.ArgumentParser:
     collect.add_argument("-o", "--output", type=Path, help="write the snapshot here, not stdout")
 
     evaluate = sub.add_parser("evaluate", help="run the checks over a snapshot")
-    evaluate.add_argument("snapshot", type=Path, help="snapshot JSON from `posture collect`")
+    evaluate.add_argument(
+        "snapshots", type=Path, nargs="+", metavar="SNAPSHOT", help="from `posture collect`"
+    )
     _add_outputs(evaluate)
 
     audit = sub.add_parser("audit", help="collect, then evaluate")
-    _add_source(audit)
+    _add_source(audit, inventory=True)
     _add_outputs(audit)
 
     compare = sub.add_parser("diff", help="new, fixed and unchanged findings between two reports")
@@ -132,12 +144,29 @@ def _collect(args: argparse.Namespace) -> Snapshot:
     return snapshot
 
 
-def _evaluate(args: argparse.Namespace, snapshot: Snapshot) -> int:
+def _collect_inventory(args: argparse.Namespace) -> list[Snapshot]:
+    if args.platform:
+        raise ValueError("--inventory names each target's platform itself: drop PLATFORM")
+    snapshots = []
+    for i, target in enumerate(load_inventory(args.inventory), 1):
+        try:
+            snapshots.append(_collect(argparse.Namespace(**target.model_dump(), record=None)))
+        except (OSError, ValueError) as exc:
+            # Fail the whole run: a report missing a target would read as a clean one.
+            raise ValueError(f"{args.inventory} target {i} ({target.platform}): {exc}") from exc
+    return snapshots
+
+
+def _evaluate(args: argparse.Namespace, snapshots: list[Snapshot]) -> int:
+    names = [s.target for s in snapshots]
+    if dupes := sorted({n for n in names if names.count(n) > 1}):
+        # Findings and fingerprints are keyed by target: two hosts can't share a name.
+        raise ValueError(f"two snapshots for target {', '.join(dupes)}: name them apart")
     checks = load_checks(args.checks)
-    findings = evaluate_all(checks, snapshot)
+    findings = [f for s in snapshots for f in evaluate_all(checks, s)]
     if args.baseline:
         findings = apply_baseline(findings, load_report(args.baseline))
-    report = build_report(snapshot, findings)
+    report = build_report(snapshots, findings)
     if args.json:
         _write(args.json, report.model_dump_json(indent=2))
     if args.html:
@@ -145,8 +174,8 @@ def _evaluate(args: argparse.Namespace, snapshot: Snapshot) -> int:
     if args.sarif:
         _write(args.sarif, render_sarif(report, checks))
     print(summary(report))
-    if not snapshot.facts:
-        print("error: nothing could be collected from the target", file=sys.stderr)
+    if empty := [s.target for s in snapshots if not s.facts]:
+        print(clean(f"error: nothing could be collected from {', '.join(empty)}"), file=sys.stderr)
         return EXIT_USAGE
     if args.fail_on and (blocking := gate(findings, args.fail_on)):
         print(f"gate: {len(blocking)} finding(s) at or above {args.fail_on}", file=sys.stderr)
@@ -172,10 +201,16 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 print(text)
         elif args.command == "evaluate":
-            snapshot = Snapshot.model_validate_json(args.snapshot.read_text(encoding="utf-8"))
-            return _evaluate(args, snapshot)
+            snapshots = [
+                Snapshot.model_validate_json(p.read_text(encoding="utf-8")) for p in args.snapshots
+            ]
+            return _evaluate(args, snapshots)
         elif args.command == "audit":
-            return _evaluate(args, _collect(args))
+            if args.inventory:
+                return _evaluate(args, _collect_inventory(args))
+            if not args.platform:
+                raise ValueError("audit needs PLATFORM (or --inventory)")
+            return _evaluate(args, [_collect(args)])
         elif args.command == "diff":
             return _diff(args)
     except (CheckError, OSError, ValueError) as exc:

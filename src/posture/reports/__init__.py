@@ -13,23 +13,26 @@ def clean(text: str) -> str:
     return _CONTROL.sub("", text)
 
 
-def build_report(snapshot: Snapshot, findings: list[Finding]) -> Report:
-    meta = snapshot.model_copy(update={"facts": {}})
-    return Report(tool_version=snapshot.tool_version, snapshot=meta, findings=findings)
+def build_report(snapshots: list[Snapshot], findings: list[Finding]) -> Report:
+    metas = [s.model_copy(update={"facts": {}}) for s in snapshots]
+    return Report(tool_version=snapshots[0].tool_version, snapshots=metas, findings=findings)
 
 
 def summary(report: Report) -> str:
-    """The terminal view: what failed or could not be checked, most severe first."""
-    snap = report.snapshot
-    lines = [
-        clean(f"{snap.target} ({snap.platform}), collected {snap.collected_at:%Y-%m-%d %H:%M} UTC")
-    ]
-    lines += [clean(f"  collection error: {e.source}: {e.message}") for e in snap.errors]
-    shown = sorted(
-        (f for f in report.findings if f.status in FAILING),
-        key=lambda f: (-f.severity.rank, f.check_id),
-    )
-    lines += [f"  {f.status:<5}  {f.severity:<8}  {f.check_id:<14}  {f.title}" for f in shown]
-    counts = {s: sum(f.status == s for f in report.findings) for s in Status}
-    lines.append("  " + ", ".join(f"{n} {s}" for s, n in counts.items()))
+    """The terminal view: per target, what failed or could not be checked, most severe first."""
+    lines = []
+    for snap in report.snapshots:
+        lines.append(
+            clean(
+                f"{snap.target} ({snap.platform}), collected {snap.collected_at:%Y-%m-%d %H:%M} UTC"
+            )
+        )
+        lines += [clean(f"  collection error: {e.source}: {e.message}") for e in snap.errors]
+        mine = [f for f in report.findings if f.target == snap.target]
+        shown = sorted(
+            (f for f in mine if f.status in FAILING), key=lambda f: (-f.severity.rank, f.check_id)
+        )
+        lines += [f"  {f.status:<5}  {f.severity:<8}  {f.check_id:<14}  {f.title}" for f in shown]
+        counts = {s: sum(f.status == s for f in mine) for s in Status}
+        lines.append("  " + ", ".join(f"{n} {s}" for s, n in counts.items()))
     return "\n".join(lines)

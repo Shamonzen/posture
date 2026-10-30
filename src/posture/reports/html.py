@@ -41,7 +41,8 @@ def render_html(report: Report) -> str:
     failing = [f for f in report.findings if f.status in FAILING]
     return _ENV.get_template("report.html").render(
         report=report,
-        snap=report.snapshot,
+        targets=", ".join(s.target for s in report.snapshots),
+        errors=[(s.target, e) for s in report.snapshots for e in s.errors],
         # Markup on our own packaged CSS, never on collected data.
         css=Markup(css),  # noqa: S704  # nosec B704
         csp=f"default-src 'none'; style-src 'sha256-{digest}'",
