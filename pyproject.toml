@@ -30,7 +30,7 @@ dev = [
     "jsonschema>=4",
     "pip-audit>=2.9",
     "pytest>=8",
-    "ruff>=0.6",
+    "ruff>=0.17.4",
 ]
 
 [build-system]
